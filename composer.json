@@ -1,0 +1,22 @@
+{
+    "name":"softinline/sfwcomponent",
+    "description":"sfwcomponent",
+    "keywords" : ["softinline", "sfwcomponent"],
+    "type":"library",
+    "license":"MIT",    
+    "authors":[
+        {
+            "name":"Daniel",
+            "email":"daniel@softinline.com"
+        }
+    ],
+    "minimum-stability":"dev",
+    "require":{
+        "php":">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Softinline\\SfwComponent\\": "src/"
+        }
+    }
+}

@@ -1,0 +1,4 @@
+<div class="form-group">                                                    
+    <input type="checkbox" name="{{ $component['field'] }}" id="{{ $component['field'] }}" class="{{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ @$component['disabled'] ? 'disabled' : '' }} value="1" <?php echo @$item->{$component['field']} === 1 ? 'checked' : ''; ?> {{ $component['required'] ? 'required' : '' }} sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$component['title'])) }}">
+    <label>{{ ucfirst(trans('messages.'.$component['title'])) }} {{ $component['required'] ? '*' : '' }}</label>
+</div>
