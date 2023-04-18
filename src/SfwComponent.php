@@ -109,31 +109,31 @@
          */
         public function renderComponents($config, $components) {
 
-            $return = '';
             $content = '';
+            $return = '';
                         
             foreach($components as $component) {
-
+                                                
                 // if has sub elements render all childrens
                 if(array_key_exists('components', $component)) {
-
-                    foreach($component['components'] as $c) {                        
-
+                                                        
+                    foreach($component['components'] as $c) {
+                                                
                         $content .= self::renderComponents($config, [$c]);
 
                     }
 
+                    $return = self::renderComponent($config, $component, $content);
+                    
                 }
-            
-                // finaly render the object itself
-                if(array_key_exists('type', $component)) {
-                                        
-                    $return .= self::renderComponent($config, $component, $content);
+                else {
+                    
+                    $return = self::renderComponent($config, $component, $content);
 
                 }
-
+                                                                            
             }
-
+            
             return $return;
 
         }
