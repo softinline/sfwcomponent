@@ -1,0 +1,1 @@
+<input type="hidden" name="{{ $component['field'] }}" id="{{ $component['field'] }}"  value="{{ $component['value'] }}">

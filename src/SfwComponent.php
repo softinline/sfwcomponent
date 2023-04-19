@@ -82,6 +82,24 @@
 
         }
 
+         /**
+         * load model relations
+         * @return void
+         */        
+        public function loadRelations($relations) {
+
+            foreach($relations as $relation) {
+                
+                $this->_item->load($relation);
+                
+            }
+
+            $arr = \Arr::dot($this->_item->toArray());
+
+            $this->_item = $arr;
+
+        }
+
         /**
          * render the main component
          */
@@ -111,9 +129,11 @@
 
             $content = '';
             $return = '';
-                        
+
             foreach($components as $component) {
-                                                
+
+                echo '<br />aaa';
+                                                                                                
                 // if has sub elements render all childrens
                 if(array_key_exists('components', $component)) {
                                                         
@@ -123,17 +143,17 @@
 
                     }
 
-                    $return = self::renderComponent($config, $component, $content);
+                    $return .= self::renderComponent($config, $component, $content);
                     
                 }
                 else {
                     
-                    $return = self::renderComponent($config, $component, $content);
+                    $return .= self::renderComponent($config, $component, $content);
 
                 }
                                                                             
             }
-            
+                                    
             return $return;
 
         }
@@ -143,6 +163,7 @@
          */
         public function renderComponent($config, $component, $content) {
 
+            /*
             // set languages
             $languages = [];
             if(array_key_exists('translate', $component)) {
@@ -193,6 +214,7 @@
             }
                                                                         
             return $return;
+            */
 
         }
 

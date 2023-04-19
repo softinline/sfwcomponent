@@ -28,7 +28,13 @@
         ?>
         <?php if($show) { ?>
             <div class="tab-pane <?php echo $first ? 'active' : ''; ?>" id="tab_{{ $c['key'] }}">                
-                <?php echo $content; ?>
+                <?php                                        
+                    foreach($c['components'] as $subC) {                                                
+                        $jcomponent = new \Softinline\SfwComponent\SfwComponent($controller);
+                        $jcomponent->setItem(@$item);                        
+                        echo $jcomponent->renderComponents($config, [$subC]);
+                    }
+                ?>
             </div>
             <?php $first = false; ?>
         <?php } ?>
