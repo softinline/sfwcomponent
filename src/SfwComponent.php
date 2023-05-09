@@ -131,9 +131,7 @@
             $return = '';
 
             foreach($components as $component) {
-
-                echo '<br />aaa';
-                                                                                                
+                                                                                                                
                 // if has sub elements render all childrens
                 if(array_key_exists('components', $component)) {
                                                         
@@ -163,7 +161,6 @@
          */
         public function renderComponent($config, $component, $content) {
 
-            /*
             // set languages
             $languages = [];
             if(array_key_exists('translate', $component)) {
@@ -214,8 +211,7 @@
             }
                                                                         
             return $return;
-            */
-
+            
         }
 
         /**
