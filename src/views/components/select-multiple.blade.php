@@ -1,10 +1,37 @@
 <?php 
+
+    // options
     $method = $component['selector'];                                                    
     $options = $controller::$method(@$item, @$id);
+
+    // field
+    $field = $component['field'];
+
+    // title
+    $title = $component['title'];
+
+    // required
+    $required = false;
+    if(isset($component['required'])) {
+        $required = $component['required'];
+    }
+
+    // disabled
+    $disabled = false;
+    if(isset($component['disabled'])) {
+        $disabled = $component['disabled'];
+    }
+
+    // class    
+    $class = '';
+    if(isset($component['class'])) {
+        $class = $component['class'];
+    }
+
 ?>
 <div class="form-group">
-    <label>{{ ucfirst(trans('messages.'.$component['title'])) }}: {{ $component['required'] ? '*' : '' }}</label>
-    <select name="{{ $component['field'] }}[]" id="{{ $component['field'] }}" class="form-control {{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} multiple="true" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$component['title'])) }}">
+    <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }}</label>
+    <select name="{{ $field }}[]" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} multiple="true" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
         <?php foreach($options['all'] as $optionKey => $optionValue) { ?>
             <option style="padding:5px" value="{{ $optionKey }}" <?php echo array_key_exists($optionKey, $options['selected']) ? 'selected' : ''; ?>>{{ ucfirst($optionValue) }}</option>
         <?php } ?>
