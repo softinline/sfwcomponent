@@ -1,4 +1,34 @@
+<?php
+
+    // field
+    $field = $component['field'];
+
+    // title
+    $title = $component['title'];
+    
+    // required
+    $required = false;
+    if(isset($component['required'])) {
+        $required = $component['required'];
+    }
+
+    // disabled
+    $disabled = false;
+    if(isset($component['disabled'])) {
+        $disabled = $component['disabled'];
+    }
+
+    // autocomplete
+    $autocomplete = "off";
+
+    // class    
+    $class = '';
+    if(isset($component['class'])) {
+        $class = $component['class'];
+    }
+
+?>
 <div class="form-group">
-    <label>{{ ucfirst(trans('messages.'.$component['title'])) }}: {{ $component['required'] ? '*' : '' }}</label>
-    <input type="password" name="{{ $component['field'] }}" id="{{ $component['field'] }}" class="form-control {{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$component['title'])) }}">
+    <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }}</label>
+    <input type="password" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
 </div>

@@ -1,1 +1,10 @@
-<input type="hidden" name="{{ $component['field'] }}" id="{{ $component['field'] }}"  value="{{ $component['value'] }}">
+<?php
+
+    // field
+    $field = $component['field'];
+
+    // value
+    $value = $component['value'];
+
+?>
+<input type="hidden" name="{{ $field }}" id="{{ $field }}"  value="{{ $value }}">

@@ -24,6 +24,12 @@
         $disabled = $component['disabled'];
     }
 
+    // id
+    $id = '';
+    if(isset($component['id'])) {
+        $id = ' id = "'.$component['id'].'" ';
+    }
+
 ?>
 <?php if($tmp[0] == 'js') { ?>
     <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="{{ $tmp[1] }}">{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>        
