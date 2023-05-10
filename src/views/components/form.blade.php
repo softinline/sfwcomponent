@@ -1,5 +1,14 @@
 <?php
+
     $action = $component['action'];
+
+    $id = $component['id'];
+
+    // class    
+    $class = '';
+    if(isset($component['class'])) {
+        $class = $component['class'];
+    }
 
     // check if its ajax    
     $ajax = '';
@@ -12,6 +21,6 @@
     // replace dynamic {id} with id
     $action = $ajax.str_replace('{id}', @$item->id, $action);
 ?>
-<form class="{{ $component['class'] }}" id="{{ $component['id'] }}" method="post" action="{{ url($action) }}">
+<form class="{{ $class }}" id="{{ $id }}" method="post" action="{{ url($action) }}">
     <?php echo $content; ?>
 </form>

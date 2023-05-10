@@ -1,4 +1,10 @@
+<?php
+
+    // title
+    $title = $component['title'];
+
+?>
 <fieldset>
-    <legend>{{ $component['title'] }}</legend>
+    <legend>{{ $title }}</legend>
     <?php echo $content; ?>
 </fieldset>

@@ -1,16 +1,40 @@
 <?php
+
+    // query
     $query = http_build_query(\Request::all());        
     if($query != '') {
         $query = '?'.$query;
     }    
     $query .= $query != '' ? '&' : '?';
     $query .= 'datatable='.$component['name'];    
+
+    // name
+    $name = $component['name'];
+
+    // url
+    $url = $component['url'];
+    
+    // selector
+    $selector = $component['selector'];
+
+    // class    
+    $class = "";
+    if(isset($component['class'])) {
+        $class = $component['class'];
+    }
+
+    // footer
+    $footer = false;
+    if(isset($component['footer'])) {
+        $footer = true;
+    }
+
 ?>
-<table id="table-sfwcomponent-{{ $component['name'] }}" sfwcomponent-data-url="{{ url($component['url']) }}" class="{{ $component['class'] }}" style="width:100%">
+<table id="table-sfwcomponent-{{ $name }}" sfwcomponent-data-url="{{ url($url) }}" class="{{ $class }}" style="width:100%">
     <thead>
         <tr>
-            <?php if($component['selector']) { ?>
-                <th><input type="checkbox" id="sfwcomponent-chk-select-all" name="sfwcomponent-chk-select-all" class="sfwcomponent-select-all-btn" sfwcomponent-data-datatable="{{ $component['name'] }}" sfwcomponent-data-url="{{ $component['url'] }}" /></th>
+            <?php if($selector) { ?>
+                <th><input type="checkbox" id="sfwcomponent-chk-select-all" name="sfwcomponent-chk-select-all" class="sfwcomponent-select-all-btn" sfwcomponent-data-datatable="{{ $name }}" sfwcomponent-data-url="{{ $url }}" /></th>
             <?php } ?>
             <?php foreach($component['columns'] as $column) { ?>
                 <?php         
@@ -34,9 +58,9 @@
     </thead>                    
     <tbody>
     </tbody>
-    <?php if(@$component['footer']) { ?>
+    <?php if($footer) { ?>
         <tfoot>
-            <?php if($component['selector']) { ?>
+            <?php if($selector) { ?>
                 <th></th>
             <?php } ?>
             <?php foreach($component['columns'] as $column) { ?>
@@ -56,14 +80,14 @@
 <script>
     $(function() {
     
-        if(sfwcomponent.tables["{{ $component['name'] }}"] == undefined || sfwcomponent.tables["{{ $component['name'] }}"] == 'undefined') {
-            sfwcomponent.tables["{{ $component['name'] }}"] = Array();
-            sfwcomponent.tables["{{ $component['name'] }}"].datatable = null;
-            sfwcomponent.tables["{{ $component['name'] }}"].selected = Array();
+        if(sfwcomponent.tables["{{ $name }}"] == undefined || sfwcomponent.tables["{{ $name }}"] == 'undefined') {
+            sfwcomponent.tables["{{ $name }}"] = Array();
+            sfwcomponent.tables["{{ $name }}"].datatable = null;
+            sfwcomponent.tables["{{ $name }}"].selected = Array();
         }
         
         <?php                
-            $data = url($component['url'].'/data/'.$query);            
+            $data = url($url.'/data/'.$query);            
             $orderCol = '0';
             $orderType = 'desc';
             if(array_key_exists('order', $component)) {
@@ -73,7 +97,7 @@
 
         ?>
         
-        sfwcomponent.tables["{{ $component['name'] }}"].datatable = $('#table-sfwcomponent-{{ $component['name'] }}').DataTable({
+        sfwcomponent.tables["{{ $name }}"].datatable = $('#table-sfwcomponent-{{ $name }}').DataTable({
             "sDom":"<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>\n        <'table-responsive'tr>\n        <'row align-items-center'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7 d-flex justify-content-end'p>>",            
             "stateSave": true,
             "processing": true,
@@ -82,7 +106,7 @@
             "order": [[ {{ $orderCol }}, "{{ $orderType }}" ]],                
             "pageLength": {{ @$component['pageLength'] != '' ? $component['pageLength'] : 10}},
             "columns": [        
-                <?php if($component['selector']) { ?>
+                <?php if($selector) { ?>
                     { width:"1%", data:"selector", name:"selector", orderable:false, searchable:false },
                 <?php } ?>                
                 <?php foreach($component['columns'] as $column) { ?>
@@ -100,9 +124,9 @@
                 <?php } ?>
             ],
             "rowCallback": function( row, data ) {                
-                <?php if($component['selector']) { ?>
+                <?php if($selector) { ?>
                     var id = data.DT_RowId.split('_');    
-                    if ( $.inArray(id[1], sfwcomponent.tables["{{ $component['name'] }}"].selected) !== -1 ) {
+                    if ( $.inArray(id[1], sfwcomponent.tables["{{ $name }}"].selected) !== -1 ) {
                         $(row).find('.sfwcomponent-selector').prop('checked', true);
                     }
                 <?php } ?>

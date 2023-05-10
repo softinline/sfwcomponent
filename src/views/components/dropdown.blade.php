@@ -1,6 +1,21 @@
+<?php
+
+    // field
+    $field = $component['field'];
+
+    // title
+    $title = $component['title'];
+
+    // class    
+    $class = '';
+    if(isset($component['class'])) {
+        $class = $component['class'];
+    }
+
+?>
 <div class="btn-group">
-    <button type="button" class="{{ $component['class'] }}">{{ ucfirst(trans('messages.'.$component['title'])) }}</button>
-    <button type="button" class="{{ $component['class'] }} dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
+    <button type="button" class="{{ $class }}">{{ ucfirst(trans('messages.'.$title)) }}</button>
+    <button type="button" class="{{ $class }} dropdown-toggle dropdown-icon" data-toggle="dropdown" aria-expanded="false">
         <span class="sr-only">Toggle Dropdown</span>
         <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-start">
             <?php foreach($component['options'] as $option) { ?>

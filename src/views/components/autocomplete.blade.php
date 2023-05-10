@@ -1,31 +1,65 @@
 <?php
-    $value = "";
-    $hidden = "";
+
+    // value
+    $value = "";    
+    
+    // hidden
+    $hidden = "";        
+    
+    // field
+    $field = $component['field'];
+    
+    // title
+    $title = $component['title'];
+
+    // autocompleteUrl
+    $autocompleteUrl = $component['autocompleteUrl'];
+
     // has item, then show value in db
-    if(isset($item)) {        
-        $method = $component['autocompleteFunction'];
-        $value = $controller::$method($item, @$id);
-        $hidden = $item->{$component['field']};
+    if(isset($item)) {                
+        $value = $controller::$autocompleteFunction($item, @$id);
+        $hidden = $item->{$field};
     }
     // no has item, check if we want a default value
     else {        
-        if(\Request::get($component['field']) != '') {
-            $method = $component['autocompleteFunction'];            
-            $value = $controller::$method(@$item, @$id, \Request::get($component['field']));
-            $hidden = \Request::get($component['field']);
+        if(\Request::get($field) != '') {            
+            $value = $controller::$autocompleteFunction(@$item, @$id, \Request::get($field));
+            $hidden = \Request::get($field);
         }
-    }    
+    }
+    
+    // minLength
+    $minLength = 2;
+    if(isset($component['minLength'])) {
+        $minLength = $component['minLength'];
+    }
+
+    // required
+    $required = false;
+    if(isset($component['required'])) {
+        $required = $component['required'];
+    }
+
+    // disabled
+    $disabled = false;
+    if(isset($component['disabled'])) {
+        $disabled = $component['disabled'];
+    }
+
+    // autocomplete
+    $autocomplete = "off"
+
 ?>
 <div class="form-group">
-    <label>{{ ucfirst(trans('messages.'.$component['title'])) }}: {{ $component['required'] ? '*' : '' }} ({{ trans('messages.start_writing_something') }})</label>
-    <input type="text" name="{{ $component['field'] }}" id="{{ $component['field'] }}" class="form-control {{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} {{ @$component['disabled'] ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$component['title'])) }}">
-    <input type="hidden" name="{{ $component['field'] }}_autocomplete" id="{{ $component['field'] }}_autocomplete" value="{{ $hidden }}"/>
+    <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }} ({{ trans('messages.start_writing_something') }})</label>
+    <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}" autocomplete="{{ $autocomplete }}">
+    <input type="hidden" name="{{ $field }}_autocomplete" id="{{ $field }}_autocomplete" value="{{ $hidden }}"/>
     <script>
         $(function() {
-            $("#{{ $component['field'] }}").autocomplete({
+            $("#{{ $field }}").autocomplete({
                 source: function( request, response ) {
                     $.ajax({
-                        url: "{{ $component['autocompleteUrl'] }}",
+                        url: "{{ $autocompleteUrl }}",
                         dataType: "jsonp",
                         data: {
                             term:request.term                                
@@ -37,9 +71,9 @@
                         }
                     });
                 },
-                minLength: 2,
+                minLength: {{ $minLength }},
                 select: function( event, ui ) {
-                    $("#{{ $component['field'] }}_autocomplete").val(ui.item.id);
+                    $("#{{ $field }}_autocomplete").val(ui.item.id);
                 }
             });
         });
