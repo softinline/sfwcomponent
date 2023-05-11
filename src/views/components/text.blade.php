@@ -36,6 +36,12 @@
         $disabled = $component['disabled'];
     }
 
+    // class    
+    $class = '';
+    if(isset($component['class'])) {
+        $class = $component['class'];
+    }    
+
 ?>
 <?php if($translate) { ?>
     <div class="form-group">
