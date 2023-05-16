@@ -190,13 +190,17 @@
                  // default file
                 $componentFile = 'sfwcomponent::components.'.$component['type'];
 
+                if(view()->exists('sfw.components.'.$component['type'])) {                    
+                    $componentFile = 'sfw.components.'.$component['type'];
+                }
+
                 // if component is a view use view instead of this
                 if($component['type'] == 'view') {
 
                     $componentFile = $component['view'];
 
                 }
-                        
+
                 // return render
                 $return = View($componentFile, [
                     'component' => $component,
