@@ -13,6 +13,12 @@
 
     // url
     $url = $component['url'];
+    $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($url, '{', '}');                                
+    foreach($occurences as $occurence) {        
+        if(\Request::route($occurence)) {
+            $url = str_replace('{'.$occurence.'}', \Request::route($occurence), $url);
+        }
+    }
     
     // selector
     $selector = $component['selector'];
