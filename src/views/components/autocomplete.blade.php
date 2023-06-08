@@ -15,6 +15,9 @@
     // autocompleteUrl
     $autocompleteUrl = $component['autocompleteUrl'];
 
+    // autocompleteFunction
+    $autocompleteFunction = $component['autocompleteFunction'];
+
     // has item, then show value in db
     if(isset($item)) {                
         $value = $controller::$autocompleteFunction($item, @$id);
