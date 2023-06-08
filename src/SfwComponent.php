@@ -82,7 +82,7 @@
 
         }
 
-         /**
+        /**
          * load model relations
          * @return void
          */        
@@ -234,9 +234,16 @@
                 $ajax = $cConfig['ajax'] ? '#' : '';
             }
 
-            // replace dynamic {id} with id
-            $config['url'] = $ajax.str_replace('{id}', $this->_id, $config['url']);
+            // replace dynamic {id} params
+            $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($config['url'], '{', '}');                                
+            foreach($occurences as $occurence) {        
+                if(\Request::route($occurence)) {
+                    $config['url'] = str_replace('{'.$occurence.'}', \Request::route($occurence), $config['url']);
+                }
+            }
 
+            $config['url'] = $ajax.$config['url'];
+            
             // set if redirects to back
             $redirectBack = false;
             if(array_key_exists('redirect', $cConfig)) {
