@@ -5,10 +5,10 @@
 
     // prepare action link
     $tmp = explode(':', $component['action']);
-    $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($tmp[0], '{', '}');                                
+    $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($tmp[1], '{', '}');                                
     foreach($occurences as $occurence) {        
         if(\Request::route($occurence)) {
-            $tmp[0] = str_replace('{'.$occurence.'}', \Request::route($occurence), $tmp[0]);
+            $tmp[1] = str_replace('{'.$occurence.'}', \Request::route($occurence), $tmp[1]);
         }
     }
        
