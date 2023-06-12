@@ -106,6 +106,48 @@
         }
 
         /**
+         * getById
+         * search in json file for component with id         
+         */
+        public function getById($id) {
+
+            return $this->_getById($this->_config['components'], $internalId);
+                                                                        
+        }
+
+        /**
+         * _getById
+         * private funciont doing the magic recursive
+         */
+        private function _getById($components, $internalId) {
+
+            foreach($components as $component) {
+                
+                // check if current element has the field
+                if(isset($component['id'])) {
+
+                    if($component['internalId'] == $internalId) {
+
+                        return $component;
+
+                    }                    
+
+                }
+
+                // if not has, then check if has subcomponents
+                if(isset($component['components'])) {
+                                                                                                        
+                    return $this->_getById($component['components'], $internalId);
+                                                                                                
+                }
+
+            }
+                                    
+            return false;
+
+        }
+
+        /**
          * getByInternalId
          * search in json file for component with internalId
          * NOTE: internalId is no the Id used in html code
