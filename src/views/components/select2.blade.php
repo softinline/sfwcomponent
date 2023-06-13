@@ -35,7 +35,7 @@
         <option value="">{{ ucfirst(trans('messages.select-option')) }}</option>
 
         <?php foreach($options as $option) { ?>
-        <optgroup label="{{$option['title']}}">
+        <?php if($option['title']) { ?> <optgroup label="{{$option['title']}}"> <?php } ?>
             <?php foreach($option['options'] as $optionKey => $optionValue) { ?>
                 <?php
                     $selected = '';  
@@ -51,7 +51,8 @@
                 ?>
                 <option value="{{ $optionKey }}" {{ $selected }}>{{ ucfirst($optionValue) }}</option>
             <?php } ?>
-        </optgroup>
+            
+        <?php if($option['title']) { ?> </optgroup> <?php } ?>
         <?php } ?>
 
     </select>
