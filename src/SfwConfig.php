@@ -342,14 +342,10 @@
 
             if($component != null) {
 
-                echo '<br />Get all For Components';
-
                 $this->_getAllElements($return, $component);
 
             }
             else {
-
-                echo '<br />Get all for the config loaded';
 
                 $this->_getAllElements($return, $this->_config);
 
