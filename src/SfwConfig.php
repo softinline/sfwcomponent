@@ -239,6 +239,49 @@
         }
 
         /**
+         * getFirstElementByType
+         * search in json file for first elementy by type
+         * NOTE: normally to get the first form component for validator
+         */
+        public function getFirstElementByType($type) {
+
+            return $this->_getFirstElementByType($this->_config['components'], $type);
+                                                                        
+        }
+
+        /**
+         * _getFirstElementByType
+         * do the magic         
+         */
+        private function _getFirstElementByType($components, $type) {
+
+            foreach($components as $component) {
+                
+                // check if current element has the field
+                if(isset($component['type'])) {
+
+                    if($component['type'] == $type) {
+
+                        return $component;
+
+                    }                    
+
+                }
+
+                // if not has, then check if has subcomponents
+                if(isset($component['components'])) {
+                                                                                                        
+                    return $this->_getFirstElementByType($component['components'], $type);
+                                                                                                
+                }
+
+            }
+                                    
+            return false;
+
+        }
+
+        /**
          * setByInternalId
          */
         public function setByInternalId($internalId, $arr) { 
@@ -287,6 +330,69 @@
                 
             }
 
+        }
+
+        /**
+         * getAllelements
+         * get all elements in array format
+         */
+        public function getAllElements($component = null) {
+
+            $return = [];
+
+            if($component != null) {
+
+                echo '<br />Get all For Components';
+
+                $this->_getAllElements($return, $component);
+
+            }
+            else {
+
+                echo '<br />Get all for the config loaded';
+
+                $this->_getAllElements($return, $this->_config);
+
+            }
+
+            return $return;
+
+        }
+
+        /**
+         * _getAllelements
+         * do the magic recursive
+         */
+        private function _getAllelements(&$return, &$config) {
+
+            $obj = &$config;
+
+            if(isset($obj['components'])) {
+
+                foreach($obj['components'] as $componentKey => $componentValue) {
+
+                    $this->_getAllelements($return, $obj['components'][$componentKey]);
+                        
+                }
+                
+            }
+            elseif(isset($obj['childrens'])) {
+
+                foreach($obj['childrens'] as $childrenKey => $childrenValue) {
+
+                    $this->_getAllelements($return, $obj['childrens'][$childrenKey]);
+                        
+                }
+                
+            }
+            else {
+
+                //echo '<br />Add Final Obj To Return';
+                //echo '<br />Final Object -> '.print_r($obj, true);
+                $return[] = $obj;
+
+            }
+                                                                    
         }
         
     }

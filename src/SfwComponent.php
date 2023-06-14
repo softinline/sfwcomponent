@@ -224,47 +224,47 @@
          * and return the response
          * @return operation
          */
-        public function submit($config, $method) {
+        public function submit($config, $method, $formId = null, $tabKey = null) {
             
-            $cConfig = $config;
+            $cConfig = $config->getConfig();
 
             // check if its ajax
             $ajax = '';
             if(array_key_exists('ajax', $cConfig)) {
                 $ajax = $cConfig['ajax'] ? '#' : '';
             }
+            
+            // default redirects on ok or ko
+            $cConfig['url'] = $ajax.$cConfig['url'];
+            $redirectOk = $cConfig['url'];
+            $redirectKo = $cConfig['url'];
 
-            // replace dynamic {id} params
-            $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($config['url'], '{', '}');                                
+            // check if form has a redirect param
+            $formComponent = null;            
+            if($formId != null) {
+                $formComponent = $config->getById($formId);
+                if($formComponent) {
+                    if(isset($formComponent['redirect'])) {
+                        $redirectOk = $formComponent['redirect'];
+                        $redirectKo = $formComponent['redirect'];
+                    }
+                }
+            }
+
+            // replace dynamic {id} params on final redirectOk or redirectKo
+            $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($redirectOk, '{', '}');                                
             foreach($occurences as $occurence) {        
                 if(\Request::route($occurence)) {
-                    $config['url'] = str_replace('{'.$occurence.'}', \Request::route($occurence), $config['url']);
+                    $redirectOk = str_replace('{'.$occurence.'}', \Request::route($occurence), $redirectOk);
+                    $redirectKo = str_replace('{'.$occurence.'}', \Request::route($occurence), $redirectKo);
                 }
             }
-
-            $config['url'] = $ajax.$config['url'];
-            
-            // set if redirects to back
-            $redirectBack = false;
-            if(array_key_exists('redirect', $cConfig)) {
-                if($cConfig['redirect'] == 'back') {
-                    $redirectBack = true;
-                }
-                else {
-                    $redirectOk = $ajax.str_replace('{id}', $this->_id, $cConfig['redirect'] );
-                    $redirectKo = $ajax.str_replace('{id}', $this->_id, $cConfig['redirect'] );
-                }
-            }
-            
-            // redirects url                                            
-            $redirectOk = $config['url'];
-            $redirectKo = $config['url'];
 
             // create or update message
             $msg = is_null($this->_id) ? 'created' : 'updated';
 
             // check Validators
-            $validator = $this->validate($config);
+            $validator = $this->validate($config, $formId, $tabKey);
 
             if(!$validator->fails()) {
                 
@@ -306,7 +306,7 @@
 
                             \Session::flash('message_success', $successMessageOk);
 
-                            if($redirectBack) {
+                            if($redirectOk) {
 
                                 return \Redirect::back();
 
@@ -336,7 +336,7 @@
 
                             \Session::flash('message_error', $successMessageKo);
                                                 
-                            if($redirectBack) {
+                            if($redirectKo) {
 
                                 return \Redirect::back()
                                     ->withInput();
@@ -373,7 +373,7 @@
 
                         \Session::flash('message_error', ucfirst(trans('sfw.'.$msg.'_error')));
                         
-                        if($redirectBack) {
+                        if($redirectKo) {
                             
                             return \Redirect::back()
                                 ->withInput();
@@ -429,47 +429,45 @@
          * perform the validation
          * rules
          */
-        private function validate($config) {
-            
-            $validatorRules = [];
+        private function validate($config, $formId, $tabKey) {
 
-            /*
-            if($config['forms'][$form]['tabs'][$tab]["type"] == 'form') {
+            if($formId != null) {
 
-                foreach($config['forms'][$form]['tabs'][$tab]['fields'] as $field) {
+                if($tabKey != null) {
+                    
+                    $compoment = $config->getByTypeAndField('tab', $tabKey);
 
-                    if($field['type'] != 'view') {
+                }
+                else {
 
-                        if($field['type'] == 'row' || $field['type'] == 'fieldset') {
-
-                            foreach($field['fields'] as $subfield) {
-
-                                if($subfield['required'] === 'true' || $subfield['required'] === true ) {
-
-                                    $validatorRules[$subfield['field']] = 'required';
-
-                                }    
-
-                            }
-
-                        }
-
-                        else {
-
-                            if($field['required'] === 'true' || $field['required'] === true ) {
-
-                                $validatorRules[$field['field']] = 'required';
-
-                            }
-
-                        }
-
-                    }
+                    $component = $config->getById($formId);
 
                 }
 
             }
-            */
+            else {
+                
+                $component = $config->getFirstElementByType('form');
+
+            }
+            
+            $validatorRules = [];
+
+            $allFields = $config->getAllElements($component);
+
+            foreach($allFields as $allField) {
+
+                $validatorRule = '';
+                if(isset($allField['required']) && $allField['required']) {
+                    $validatorRule .= 'required';
+                }
+                if(isset($allField['validator'])) {
+                    $validatorRule .= $validatorRule != '' ? '|' : '';
+                    $validatorRule .= $allField['validator'];
+                    $validatorRules[$allField['field']] = $validatorRule;
+                }
+                
+            }
 
             // make validator
             $validator = \Validator::make(\Request::all(), $validatorRules);
@@ -710,5 +708,5 @@
             }
 
         }
-            
+                                    
     }
