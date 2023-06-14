@@ -235,6 +235,7 @@
             }
             
             // default redirects on ok or ko
+            $redirectBack = false;
             $cConfig['url'] = $ajax.$cConfig['url'];
             $redirectOk = $cConfig['url'];
             $redirectKo = $cConfig['url'];
@@ -247,6 +248,9 @@
                     if(isset($formComponent['redirect'])) {
                         $redirectOk = $formComponent['redirect'];
                         $redirectKo = $formComponent['redirect'];
+                        if($formComponent['redirect'] == 'back') {
+                            $redirectBack = true;
+                        }
                     }
                 }
             }
@@ -306,7 +310,7 @@
 
                             \Session::flash('message_success', $successMessageOk);
 
-                            if($redirectOk) {
+                            if($redirectBack) {
 
                                 return \Redirect::back();
 
@@ -336,7 +340,7 @@
 
                             \Session::flash('message_error', $successMessageKo);
                                                 
-                            if($redirectKo) {
+                            if($redirectBack) {
 
                                 return \Redirect::back()
                                     ->withInput();
@@ -373,7 +377,7 @@
 
                         \Session::flash('message_error', ucfirst(trans('sfw.'.$msg.'_error')));
                         
-                        if($redirectKo) {
+                        if($redirectBack) {
                             
                             return \Redirect::back()
                                 ->withInput();
