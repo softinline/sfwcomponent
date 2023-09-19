@@ -107,7 +107,7 @@
 
             // get components childrens
             $components = $config['components'];
-
+            
             // render components using tree recursive
             $content = self::renderComponents($config, $components);
 
@@ -131,7 +131,7 @@
             $return = '';
 
             foreach($components as $component) {
-                                                                                                                
+                                                                                                                                
                 // if has sub elements render all childrens
                 if(array_key_exists('components', $component)) {
                                                         
@@ -242,9 +242,9 @@
 
             // check if form has a redirect param
             $formComponent = null;            
-            if($formId != null) {
+            if($formId != null) {                                
                 $formComponent = $config->getById($formId);
-                if($formComponent) {
+                if($formComponent) {                    
                     if(isset($formComponent['redirect'])) {
                         $redirectOk = $formComponent['redirect'];
                         $redirectKo = $formComponent['redirect'];
@@ -252,7 +252,7 @@
                             $redirectBack = true;
                         }
                     }
-                }
+                }                
             }
 
             // replace dynamic {id} params on final redirectOk or redirectKo

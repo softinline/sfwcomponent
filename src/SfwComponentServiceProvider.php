@@ -14,7 +14,11 @@ class SfwComponentServiceProvider extends ServiceProvider
     public function boot()
     {
 
+        // load views
         $this->loadViewsFrom(__DIR__.'/views', 'sfwcomponent');
+
+        // load routes
+        $this->loadRoutesFrom(__DIR__.'/routes/web.php');
                 
         // publish views        
         $this->publishes([
