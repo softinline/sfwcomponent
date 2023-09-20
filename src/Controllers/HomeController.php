@@ -13,7 +13,7 @@
          */
         public function index() {
 
-            return view('sfw.home.index', [
+            return view('sfwcomponent::backoffice.home.index', [
             ]);  
             
         }
