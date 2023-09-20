@@ -17,7 +17,7 @@
         public function index() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Roles/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Roles/index.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
             
@@ -29,7 +29,7 @@
         public function data() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Roles/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Roles/index.json');
                                     
             $query = \Softinline\SfwComponent\Models\SfwRole::all();
                                                 
@@ -56,7 +56,7 @@
         public function add() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Roles/add.json');                                    
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Roles/add.json');                                    
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
 
@@ -68,7 +68,7 @@
         public function create() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Roles/add.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Roles/add.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->submit($this->_sfwconfig, '_create');
 
@@ -99,7 +99,7 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Roles/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Roles/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwRole::getById($id));
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
@@ -114,7 +114,7 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Roles/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Roles/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwRole::getById($id));
             return $sfwcomponent->submit($this->_sfwconfig, '_update');
@@ -143,12 +143,12 @@
             $data = [
                 'title' => ucfirst(trans('messages.roles')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.roles')), url('/back/sfw/roles')],                    
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.roles'))],                    
                 ]
             ];
                         
-            return view('back.partials.breadcrumb', [
+            return view('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
             
@@ -162,13 +162,13 @@
             $data = [
                 'title' => ucfirst(trans('messages.roles')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.roles')), url('/back/sfw/roles')],
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.roles')), url('/sfw/roles')],
                     [trans('messages.add')]
                 ]
             ];
 
-            return View('back.partials.breadcrumb', [
+            return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
                         
@@ -182,13 +182,13 @@
             $data = [
                 'title' => ucfirst(trans('messages.roles')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.roles')), url('/back/sfw/roles')],
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.roles')), url('/sfw/roles')],
                     [$item->smtp]
                 ]
             ];
 
-            return View('back.partials.breadcrumb', [
+            return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
                        

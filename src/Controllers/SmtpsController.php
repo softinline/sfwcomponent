@@ -17,7 +17,7 @@
         public function index() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Smtps/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/index.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
             
@@ -29,7 +29,7 @@
         public function data() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Smtps/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/index.json');
                                     
             $query = \Softinline\SfwComponent\Models\SfwSmtp::all();
                                                 
@@ -84,7 +84,7 @@
         public function add() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Smtps/add.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/add.json');
                         
             // search component
             //$component = $this->_sfwconfig->getByInternalId('fieldSmtp');
@@ -107,7 +107,7 @@
         public function create() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Smtps/add.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/add.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->submit($this->_sfwconfig, '_create'); //, 'frm-back-super-smtps-add');
 
@@ -152,7 +152,7 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Smtps/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwSmtp::getById($id));
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
@@ -167,7 +167,7 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Smtps/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwSmtp::getById($id));
             return $sfwcomponent->submit($this->_sfwconfig, '_update');
@@ -216,7 +216,7 @@
                 ]
             ];
                         
-            return view('back.partials.breadcrumb', [
+            return view('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
             
@@ -236,7 +236,7 @@
                 ]
             ];
 
-            return View('back.partials.breadcrumb', [
+            return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
                         
@@ -256,7 +256,7 @@
                 ]
             ];
 
-            return View('back.partials.breadcrumb', [
+            return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
                        

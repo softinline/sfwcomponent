@@ -17,7 +17,7 @@
         public function index() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Tasks/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Tasks/index.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
             
@@ -29,7 +29,7 @@
         public function data() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Tasks/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Tasks/index.json');
                                     
             $query = \Softinline\SfwComponent\Models\SfwTask::all();
                                                 
@@ -58,7 +58,7 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Tasks/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Tasks/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwTask::getById($id));
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
@@ -73,7 +73,7 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Tasks/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Tasks/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwTask::getById($id));
             return $sfwcomponent->submit($this->_sfwconfig, '_update');
@@ -102,12 +102,12 @@
             $data = [
                 'title' => ucfirst(trans('messages.tasks')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.tasks')), url('/back/sfw/tasks')],                    
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.tasks'))],                    
                 ]
             ];
                         
-            return view('back.partials.breadcrumb', [
+            return view('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
             
@@ -121,13 +121,13 @@
             $data = [
                 'title' => ucfirst(trans('messages.tasks')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.tasks')), url('/back/sfw/tasks')],
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.tasks')), url('/sfw/tasks')],
                     [$item->smtp]
                 ]
             ];
 
-            return View('back.partials.breadcrumb', [
+            return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
                        

@@ -17,7 +17,7 @@
         public function index() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Audits/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Audits/index.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
             
@@ -29,7 +29,7 @@
         public function data() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Audits/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Audits/index.json');
                                     
             $query = \Softinline\SfwComponent\Models\SfwAudit::all();
                                                 
@@ -56,9 +56,9 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Audits/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Audits/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            $sfwcomponent->setItem(\App\Models\SfwAudit::getById($id));
+            $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwAudit::getById($id));
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
 
         }
@@ -71,12 +71,12 @@
             $data = [
                 'title' => ucfirst(trans('messages.audits')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.audits')), url('/back/sfw/audits')],                    
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.audits'))],                    
                 ]
             ];
                         
-            return view('back.partials.breadcrumb', [
+            return view('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
             
@@ -90,13 +90,13 @@
             $data = [
                 'title' => ucfirst(trans('messages.audits')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.audits')), url('/back/sfw/audits')],
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.audits')), url('/sfw/audits')],
                     [$item->smtp]
                 ]
             ];
 
-            return View('back.partials.breadcrumb', [
+            return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
                        

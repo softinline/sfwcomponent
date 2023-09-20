@@ -17,7 +17,7 @@
         public function index() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Languages/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/index.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
             
@@ -29,7 +29,7 @@
         public function data() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Languages/index.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/index.json');
                                     
             $query = \Softinline\SfwComponent\Models\SfwLanguage::all();
                                                 
@@ -56,7 +56,7 @@
         public function add() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Languages/add.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/add.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
 
@@ -68,7 +68,7 @@
         public function create() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Languages/add.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/add.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->submit($this->_sfwconfig, '_create'); //,
 
@@ -79,7 +79,7 @@
          */
         public static function _create() {
 
-            $item = new \App\Models\SfwLanguage();
+            $item = new \Softinline\SfwComponent\Models\SfwLanguage();
             $item->id = uniqid("L");
 
             if($item->save()) {
@@ -98,9 +98,9 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Languages/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            $sfwcomponent->setItem(\App\Models\SfwLanguage::getById($id));
+            $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwLanguage::getById($id));
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
 
         }
@@ -113,9 +113,9 @@
             $id = \Request::get('id');
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(app_path().'/Defines/Sfw/Languages/edit.json');
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            $sfwcomponent->setItem(\App\Models\SfwLanguage::getById($id));
+            $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwLanguage::getById($id));
             return $sfwcomponent->submit($this->_sfwconfig, '_update');
             
         }
@@ -143,12 +143,12 @@
             $data = [
                 'title' => ucfirst(trans('messages.languages')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.smtps')), url('/back/sfw/languages')],                    
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.languages'))],
                 ]
             ];
                         
-            return view('back.partials.breadcrumb', [
+            return view('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
             
@@ -162,13 +162,13 @@
             $data = [
                 'title' => ucfirst(trans('messages.languages')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.languages')), url('/back/sfw/languages')],
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.languages')), url('/sfw/languages')],
                     [trans('messages.add')]
                 ]
             ];
 
-            return View('back.partials.breadcrumb', [
+            return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
                         
@@ -182,13 +182,13 @@
             $data = [
                 'title' => ucfirst(trans('messages.languages')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/back/sfw')],
-                    [ucfirst(trans('messages.smtps')), url('/back/sfw/languages')],
+                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
+                    [ucfirst(trans('messages.smtps')), url('/sfw/languages')],
                     [$item->smtp]
                 ]
             ];
 
-            return View('back.partials.breadcrumb', [
+            return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
                        
