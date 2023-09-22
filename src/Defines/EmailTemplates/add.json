@@ -2,12 +2,12 @@
     "type":"screen",
     "layout":"sfwcomponent::backoffice.layouts.default",
     "ajax":false,
-    "name":"edit",
-    "url":"sfw/languages",
+    "name":"add",
+    "url":"sfw/email-templates",
     "components":[
         {
             "type":"function",
-            "function":"breadcrumbEdit"
+            "function":"breadcrumbAdd"
         },
         {
             "type":"div",
@@ -20,8 +20,8 @@
                         {                                                                    
                             "type":"form",
                             "class":"",
-                            "id":"frm-sfw-languages-edit",
-                            "action":"sfw/languages/{id}",
+                            "id":"frm-sfw-email-templates-add",
+                            "action":"sfw/email-templates/create",
                             "components":[
                                 {
                                     "type":"tabs",
@@ -29,7 +29,7 @@
                                         {
                                             "type":"tab",
                                             "title":"general",
-                                            "key":"general",                                            
+                                            "key":"general",
                                             "components":[
                                                 {
                                                     "type":"div",
@@ -38,18 +38,36 @@
                                                         {
                                                             "type":"div",
                                                             "class":"card-body",
-                                                            "components":[                                                                
+                                                            "components":[
                                                                 {
                                                                     "type":"text",
                                                                     "required":true,
-                                                                    "title":"language",
-                                                                    "field":"language"
+                                                                    "title":"email_template",
+                                                                    "field":"email_template"                                                                    
                                                                 },
                                                                 {
                                                                     "type":"text",
                                                                     "required":true,
-                                                                    "title":"iso",
-                                                                    "field":"iso"
+                                                                    "title":"key",
+                                                                    "field":"key"
+                                                                },
+                                                                {
+                                                                    "type":"text",
+                                                                    "required":true,
+                                                                    "title":"subject",
+                                                                    "field":"subject"
+                                                                },
+                                                                {
+                                                                    "type":"ckeditor",
+                                                                    "required":true,
+                                                                    "title":"body",
+                                                                    "field":"body"
+                                                                },
+                                                                {
+                                                                    "type":"checkbox",
+                                                                    "required":false,
+                                                                    "title":"default",
+                                                                    "field":"default"
                                                                 }
                                                             ]
                                                         }
@@ -65,13 +83,13 @@
                                     "components":[                                
                                         {
                                             "type":"button",
-                                            "action":"js:sfwcomponent.submit('frm-sfw-languages-edit')",
+                                            "action":"js:sfwcomponent.submit('frm-sfw-email-templates-add')",
                                             "title":"accept",
                                             "class":"btn btn-primary"
                                         },
                                         {
                                             "type":"button",
-                                            "action":"link:sfw/languages",
+                                            "action":"link:sfw/email-templates",
                                             "title":"cancel",
                                             "class":"btn btn-secondary"
                                         }

@@ -431,5 +431,8 @@ sfwcomponent = {
         else {
             return uri + separator + key + "=" + value;
         }
+    },
+    sendSmtpTestEmail: function(id) {
+        alert('Send -> '+id);
     }
 }

@@ -3,7 +3,7 @@
     "layout":"sfwcomponent::backoffice.layouts.default",
     "ajax":false,
     "name":"index",
-    "url":"sfw/audits",
+    "url":"sfw/email-templates",
     "components":[
         {
             "type":"function",
@@ -24,7 +24,21 @@
                                 {
                                     "type":"div",
                                     "class":"card-body",
-                                    "components":[
+                                    "components":[                    
+                                        {
+                                            "type":"div",
+                                            "class":"col-lg-12 text-end",
+                                            "components":[
+                                                {
+                                                    "type":"button",
+                                                    "action":"link:sfw/email-templates/add",
+                                                    "title":"add",
+                                                    "class":"btn btn-primary mb-2",
+                                                    "icon":"las la-plus-circle",
+                                                    "id":"btnAddLanguage"
+                                                }
+                                            ]
+                                        },
                                         {
                                             "type":"div",
                                             "class":"col-lg-12",
@@ -32,10 +46,10 @@
                                                 {
                                                     "type":"datatable",
                                                     "class":"table",
-                                                    "name":"sfw-audits",
+                                                    "name":"sfw-email-templates",
                                                     "footer":"true",
                                                     "pageLength":"50",
-                                                    "url":"/sfw/audits",
+                                                    "url":"/sfw/email-templates",
                                                     "selector":false,
                                                     "columns":[
                                                         {
@@ -44,20 +58,12 @@
                                                             "width":"1%"
                                                         },
                                                         {
-                                                            "name":"table",
-                                                            "field":"table"
+                                                            "name":"email_template",
+                                                            "field":"email_template"
                                                         },
                                                         {
-                                                            "name":"row_id",
-                                                            "field":"row_id"
-                                                        },
-                                                        {
-                                                            "name":"before",
-                                                            "field":"before"
-                                                        },
-                                                        {
-                                                            "name":"after",
-                                                            "field":"after"
+                                                            "name":"key",
+                                                            "field":"key"
                                                         },
                                                         {
                                                             "name":"created_at",

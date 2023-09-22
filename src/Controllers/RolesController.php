@@ -39,7 +39,7 @@
                 })                
                 ->addColumn('actions', function($item) {
                     $return = '';
-                    $return .= '<a href="'.url('sfw/roles/edit?id='.$item->id).'" title="Editar"><i class="las la-edit fa-fw"></i></a>';
+                    $return .= '<a href="'.url('sfw/roles/'.$item->id).'" title="'.ucfirst(trans('messages.edit')).'"><i class="las la-edit fa-fw"></i></a>';
                     $return .= '&nbsp;';                  
                     $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="'.$item->id.'" sfwcomponent-data-url="'.$this->_sfwconfig->getParam('url').'" sfwcomponent-data-datatable="'.\Request::get('datatable').'" sfwcomponent-data-title="'.$item->role.'" class="sfwcomponent-delete" title="'.ucfirst(trans('messages.delete')).'"><i class="las la-trash fa-fw"></i></a>';
                     return $return;
@@ -94,10 +94,8 @@
         /**
          * edit
          */
-        public function edit() {    
-
-            $id = \Request::get('id');
-
+        public function edit($id) {    
+            
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Roles/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
@@ -109,10 +107,8 @@
         /**
          * update
          */
-        public function update() {
-
-            $id = \Request::get('id');
-
+        public function update($id) {
+            
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Roles/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
@@ -184,7 +180,7 @@
                 'items' => [
                     [ucfirst(trans('messages.dashboard')), url('/sfw')],
                     [ucfirst(trans('messages.roles')), url('/sfw/roles')],
-                    [$item->smtp]
+                    [$item->role]
                 ]
             ];
 

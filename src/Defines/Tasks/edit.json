@@ -21,7 +21,7 @@
                             "type":"form",
                             "class":"",
                             "id":"frm-sfw-languages-edit",
-                            "action":"sfw/languages/update?id={id}",
+                            "action":"sfw/languages/{id}",
                             "components":[
                                 {
                                     "type":"tabs",

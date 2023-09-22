@@ -21,7 +21,7 @@
                             "type":"form",
                             "class":"",
                             "id":"frm-sfw-smtps-edit",
-                            "action":"sfw/smtps/update?id={id}",
+                            "action":"sfw/smtps/{id}",
                             "components":[
                                 {
                                     "type":"tabs",

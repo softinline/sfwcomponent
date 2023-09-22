@@ -111,7 +111,7 @@
          */
         public function getById($id) {
 
-            return $this->_getById($this->_config['components'], $internalId);
+            return $this->_getById($this->_config['components'], $id);
                                                                         
         }
 
@@ -119,14 +119,17 @@
          * _getById
          * private funciont doing the magic recursive
          */
-        private function _getById($components, $internalId) {
+        private function _getById($components, $id) {
+
+            //echo print_r($components, true);
+            //die();
 
             foreach($components as $component) {
-                
+                                
                 // check if current element has the field
                 if(isset($component['id'])) {
 
-                    if($component['internalId'] == $internalId) {
+                    if($component['id'] == $id) {
 
                         return $component;
 
@@ -137,7 +140,13 @@
                 // if not has, then check if has subcomponents
                 if(isset($component['components'])) {
                                                                                                         
-                    return $this->_getById($component['components'], $internalId);
+                    $found = $this->_getById($component['components'], $id);
+
+                    if($found) {
+
+                        return $found;
+
+                    }
                                                                                                 
                 }
 

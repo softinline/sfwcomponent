@@ -39,8 +39,10 @@
                 })                
                 ->addColumn('actions', function($item) {
                     $return = '';
-                    $return .= '<a href="'.url('sfw/smtps/edit?id='.$item->id).'" title="Editar"><i class="las la-edit fa-fw"></i></a>';
-                    $return .= '&nbsp;';                  
+                    $return .= '<a href="'.url('sfw/smtps/'.$item->id).'" title="Editar"><i class="las la-edit fa-fw"></i></a>';
+                    $return .= '&nbsp;';
+                    $return .= '<a href="javascript:void(0)" onclick=sfwcomponent.sendSmtpTestEmail("'.$item->id.'")><i class="las la-envelope"></i></a>';
+                    $return .= '&nbsp;';
                     $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="'.$item->id.'" sfwcomponent-data-url="'.$this->_sfwconfig->getParam('url').'" sfwcomponent-data-datatable="'.\Request::get('datatable').'" sfwcomponent-data-title="'.$item->smtp.'" class="sfwcomponent-delete" title="'.ucfirst(trans('messages.delete')).'"><i class="las la-trash fa-fw"></i></a>';
                     return $return;
                 })
@@ -51,7 +53,7 @@
         }
 
         /**
-         * selectPaymentMethodTypes
+         * selectTypes
          */
         public static function selectTypes($item = null) {
 
@@ -65,7 +67,7 @@
         }
 
         /**
-         * selectPaymentMethodTypes
+         * selectEncriptions
          */
         public static function selectEncriptions($item = null) {
 
@@ -84,8 +86,11 @@
         public function add() {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/add.json');
-                        
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/add.json');                                    
+            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
+            return $sfwcomponent->render($this->_sfwconfig->getConfig());
+
+            // samnple to override json config in real time
             // search component
             //$component = $this->_sfwconfig->getByInternalId('fieldSmtp');
             // override params
@@ -95,9 +100,6 @@
             //$this->_sfwconfig->setByInternalId('fieldSmtp', $component);
             //echo print_r($this->_sfwconfig->getConfig(), true);
             //die();
-
-            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            return $sfwcomponent->render($this->_sfwconfig->getConfig());
 
         }
         
@@ -147,9 +149,7 @@
         /**
          * edit
          */
-        public function edit() {    
-
-            $id = \Request::get('id');
+        public function edit($id) {
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/edit.json');
@@ -162,10 +162,8 @@
         /**
          * update
          */
-        public function update() {
-
-            $id = \Request::get('id');
-
+        public function update($id) {
+            
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());

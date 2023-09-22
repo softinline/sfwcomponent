@@ -21,7 +21,7 @@
                             "type":"form",
                             "class":"",
                             "id":"frm-sfw-roles-edit",
-                            "action":"sfw/roles/update?id={id}",
+                            "action":"sfw/roles/{id}",
                             "components":[
                                 {
                                     "type":"tabs",

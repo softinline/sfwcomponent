@@ -66,8 +66,8 @@
                                                         {
                                                             "name":"actions",
                                                             "field":"actions",
-                                                            "orderable":"false",
-                                                            "searchable":"false"
+                                                            "orderable":false,
+                                                            "searchable":false
                                                         }
                                                     ]
                                                 }
