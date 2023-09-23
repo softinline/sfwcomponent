@@ -21,7 +21,7 @@
                             "type":"form",
                             "class":"",
                             "id":"frm-sfw-roles-add",
-                            "action":"sfw/roles/create",
+                            "action":"sfw/roles/add",
                             "components":[
                                 {
                                     "type":"tabs",

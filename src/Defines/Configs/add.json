@@ -34,7 +34,7 @@
                             "type":"form",
                             "class":"",
                             "id":"frm-sfw-config-add",
-                            "action":"sfw/config/create",                            
+                            "action":"sfw/config/add",                            
                             "redirect":"/",
                             "components":[
                                 {

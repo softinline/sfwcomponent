@@ -21,7 +21,7 @@
                             "type":"form",
                             "class":"",
                             "id":"frm-sfw-email-templates-add",
-                            "action":"sfw/email-templates/create",
+                            "action":"sfw/email-templates/add",
                             "components":[
                                 {
                                     "type":"tabs",

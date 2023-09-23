@@ -69,7 +69,7 @@
     Route::get('sfw/email-templates', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@index');
     Route::get('sfw/email-templates/data', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@data');
     Route::get('sfw/email-templates/add', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@add');
-    Route::post('sfw/email-templates/create', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@create');
+    Route::post('sfw/email-templates/add', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@create');
     Route::get('sfw/email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@edit');
     Route::post('sfw/email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@update');
     Route::delete('sfw/email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@delete');

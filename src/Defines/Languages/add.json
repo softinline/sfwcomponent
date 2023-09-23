@@ -21,7 +21,7 @@
                             "type":"form",
                             "class":"",
                             "id":"frm-sfw-languages-add",                            
-                            "action":"sfw/languages/create",                            
+                            "action":"sfw/languages/add",                            
                             "components":[
                                 {
                                     "type":"tabs",
