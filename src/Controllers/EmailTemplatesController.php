@@ -126,6 +126,12 @@
          * @return bool
          */                
         public static function _update($item) {
+
+            $item->email_template = \Request::get('email_template') != '' ? \Request::get('email_template') : null;
+            $item->key = \Request::get('key') != '' ? \Request::get('key') : null;
+            $item->subject = \Request::get('subject') != '' ? \Request::get('subject') : null;
+            $item->body = \Request::get('body') != '' ? \Request::get('body') : null;
+            $item->default = \Request::get('default') ? 1 : 0;
                                     
             if($item->save()) {
                 return $item;

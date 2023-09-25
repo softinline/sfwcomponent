@@ -434,5 +434,17 @@ sfwcomponent = {
     },
     sendSmtpTestEmail: function(id) {
         alert('Send -> '+id);
+        $.ajax({
+            method: "post",
+            url: "/sfw/smtps/"+id+"/test-email",
+            success: function(data) {                    
+                if (data.success) {
+                    alerts.show('ok', data.message);
+                }
+                else{
+                    alerts.show('ko', data.message);
+                }
+            },
+        });
     }
 }

@@ -24,5 +24,17 @@
 		    return self::find($id);
 
         }
+
+        /**
+         * getByKey
+         * get by key
+         */
+	    public static function getByKey($key) {
+
+            return self::select()
+                ->where('key', '=', $key)
+                ->first();
+
+        }
     
     }

@@ -16,6 +16,7 @@
     Route::get('sfw/smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@edit');
     Route::post('sfw/smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@update');
     Route::delete('sfw/smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@delete');
+    Route::post('sfw/smtps/{id}/test-email', 'Softinline\SfwComponent\Controllers\SmtpsController@testEmail');
 
     // roles
     Route::get('sfw/roles', 'Softinline\SfwComponent\Controllers\RolesController@index');

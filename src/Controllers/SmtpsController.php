@@ -202,6 +202,20 @@
         }
 
         /**
+         * testEmail
+         * send email test
+         */
+        public static function testEmail($id) {
+
+            // get smtp config
+            $smtp = \Softinline\SfwComponent\Services\SmtpsService::getDefault();
+
+            // send email
+            \Softinline\SfwComponent\Services\EmailsService::send('notificaciones@softinline.com', $smtp, 'test', ['name' => 'dani']);
+
+        }
+
+        /**
          * breadcrumbIndex
          */
         public static function breadcrumbIndex() {
