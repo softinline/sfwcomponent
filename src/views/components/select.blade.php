@@ -28,29 +28,38 @@
         $class = $component['class'];
     }
 
+    // show condition
+    $show = true;
+    if(array_key_exists('beforeShow', $component)) {
+        $method = $component['beforeShow'];
+        $show = $controller::$method(@$item);
+    }
+
 ?>
-<div class="form-group">
-    <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }}</label>
-    <select name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
-        <option value="">{{ ucfirst(trans('messages.select-option')) }}</option>
-        <?php foreach($options as $optionKey => $optionValue) { ?>
-            <?php
-                $selected = '';  
-                // determine default value
-                // if edit, dont take effect
-                // on add check if Request has a param with this value    
-                if(@$item) {
-                    $selected = $optionKey == @$item->{$field} ? 'selected' : '';
-                }
-                else {
-                    $selected = $optionKey == \Request::get($field) ? 'selected' : '';
-                }
-            ?>
-            <option value="{{ $optionKey }}" {{ $selected }}>{{ ucfirst($optionValue) }}</option>
-        <?php } ?>
-    </select>
-</div>
-@include('sfwcomponent::conditional-components', [
-    'component' => $component,
-    'item' => @$item,
-])
+<?php if($show) { ?>
+    <div class="form-group">
+        <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }}</label>
+        <select name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
+            <option value="">{{ ucfirst(trans('messages.select-option')) }}</option>
+            <?php foreach($options as $optionKey => $optionValue) { ?>
+                <?php
+                    $selected = '';  
+                    // determine default value
+                    // if edit, dont take effect
+                    // on add check if Request has a param with this value    
+                    if(@$item) {
+                        $selected = $optionKey == @$item->{$field} ? 'selected' : '';
+                    }
+                    else {
+                        $selected = $optionKey == \Request::get($field) ? 'selected' : '';
+                    }
+                ?>
+                <option value="{{ $optionKey }}" {{ $selected }}>{{ ucfirst($optionValue) }}</option>
+            <?php } ?>
+        </select>
+    </div>
+    @include('sfwcomponent::conditional-components', [
+        'component' => $component,
+        'item' => @$item,
+    ])
+<?php } ?>

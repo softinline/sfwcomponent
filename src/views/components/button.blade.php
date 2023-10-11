@@ -36,9 +36,30 @@
         $id = ' id = "'.$component['id'].'" ';
     }
 
+    // extra
+    $extra = '';
+    if(isset($component['extra'])) {
+        $extra = ' '.$component['extra'].' ';
+    }
+
+    // target
+    $target = '_self';
+    if(isset($component['target'])) {
+        $target = $component['target'];
+    }
+
+    // show condition
+    $show = true;
+    if(array_key_exists('beforeShow', $component)) {
+        $method = $component['beforeShow'];
+        $show = $controller::$method(@$item);
+    }
+
 ?>
-<?php if($tmp[0] == 'js') { ?>
-    <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="{{ $tmp[1] }}">{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>        
-<?php } else { ?>
-    <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="window.open('{{ url($tmp[1]) }}','_self')">{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>
+<?php if($show) { ?>
+    <?php if($tmp[0] == 'js') { ?>
+        <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="{{ $tmp[1] }}" {!! $extra !!} target="{{ $target }}">{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>        
+    <?php } else { ?>
+        <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="window.open('{{ url($tmp[1]) }}','{{ $target }}')" {!! $extra !!} >{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>
+    <?php } ?>
 <?php } ?>

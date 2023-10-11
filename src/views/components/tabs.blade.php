@@ -3,8 +3,8 @@
     <?php foreach($component['components'] as $c) { ?>
         <?php
             $show = true;
-            if(array_key_exists('condition', $c)) {
-                $method = $c['condition'];
+            if(array_key_exists('beforeShow', $c)) {
+                $method = $c['beforeShow'];
                 $show = $controller::$method(@$item);
             }
         ?>
@@ -21,8 +21,8 @@
     <?php foreach($component['components'] as $c) { ?>
         <?php
             $show = true;
-            if(array_key_exists('condition', $c)) {
-                $method = $c['condition'];
+            if(array_key_exists('beforeShow', $c)) {
+                $method = $c['beforeShow'];
                 $show = $controller::$method(@$item);
             }
         ?>

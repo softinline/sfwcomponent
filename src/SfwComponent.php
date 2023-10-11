@@ -186,8 +186,8 @@
 
             }
             else {
-
-                 // default file
+                                
+                // default file
                 $componentFile = 'sfwcomponent::components.'.$component['type'];
 
                 if(view()->exists('sfw.components.'.$component['type'])) {                    
@@ -242,7 +242,7 @@
 
             // check if form has a redirect param
             $formComponent = null;            
-            if($formId != null) {                                
+            if($formId != null) {
                 $formComponent = $config->getById($formId);
                 if($formComponent) {                    
                     if(isset($formComponent['redirect'])) {
@@ -277,17 +277,31 @@
                 try {
 
                     $result = $this->_controller::$method($this->_item);
-
+                                        
                     // default response info
                     $successStatus = $result;
                     $successMessageOk = ucfirst(trans('sfw.'.$msg.'_ok'));
                     $successMessageKo = ucfirst(trans('sfw.'.$msg.'_error'));
 
                     // is response is array override with other data
-                    if(is_array($result)) {
+                    if(is_array($result)) {                        
+
                         $successStatus = $result['success'];
                         $successMessageOk = $result['message'];
                         $successMessageKo = $result['message'];
+
+                        // restore redirect Url
+                        $redirectOk = $cConfig['url'];
+                        $redirectKo = $cConfig['url'];
+
+                    }
+                    else {
+
+                        if($result) {
+                            $redirectOk = str_replace('{id}', $result->id, $redirectOk);
+                            $redirectKo = str_replace('{id}', $result->id, $redirectKo);
+                        }
+
                     }
                                         
                     // operation its ok
@@ -337,9 +351,9 @@
 
                         }
                         else {
-
+                            
                             \Session::flash('message_error', $successMessageKo);
-                                                
+                                                                            
                             if($redirectBack) {
 
                                 return \Redirect::back()

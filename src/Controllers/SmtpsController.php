@@ -111,7 +111,12 @@
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/add.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            return $sfwcomponent->submit($this->_sfwconfig, '_create'); //, 'frm-back-super-smtps-add');
+            //$config = $this->_sfwconfig->getById('frm-sfw-smtps-add');
+            //$config['redirect'] = '/sfw/smtps/{id}';
+            //echo print_r($config, true);
+            //die();
+            //$this->_sfwconfig->setById('frm-sfw-smtps-add', $config);
+            return $sfwcomponent->submit($this->_sfwconfig, '_create', 'frm-sfw-smtps-add');
 
         }
 
@@ -141,7 +146,7 @@
             if($item->save()) {
                 return $item;
             }
-
+            
             return false;
 
         }
@@ -273,5 +278,5 @@
             ]);
                        
         }
-
+        
     }

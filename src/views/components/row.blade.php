@@ -15,7 +15,16 @@
         $id = ' id = "'.$component['id'].'" ';
     }
 
+    // show condition
+    $show = true;
+    if(array_key_exists('beforeShow', $component)) {
+        $method = $component['beforeShow'];
+        $show = $controller::$method(@$item);
+    }
+
 ?>
-<div class="row {{ $class }}" {!! $id !!}>
-    <?php echo $content; ?>
-</div>
+<?php if($show) { ?>
+    <div class="row {{ $class }}" {!! $id !!}>
+        <?php echo $content; ?>
+    </div>
+<?php } ?>

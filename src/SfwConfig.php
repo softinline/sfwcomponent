@@ -120,10 +120,7 @@
          * private funciont doing the magic recursive
          */
         private function _getById($components, $id) {
-
-            //echo print_r($components, true);
-            //die();
-
+            
             foreach($components as $component) {
                                 
                 // check if current element has the field
@@ -340,6 +337,58 @@
             }
 
         }
+
+         /**
+         * setById
+         */
+        public function setById($id, $arr) { 
+            
+            $this->_setById($this->_config, $id, $arr);
+
+        }
+
+        /**
+         * _setById
+         * do the magic recursive
+         */
+        private function _setById(&$config, $id, $arr) {
+
+            $obj = &$config;
+
+            if(isset($obj['id'])) {
+
+                if($obj['id'] == $id) {
+
+                    $obj = $arr;
+                    
+                }
+                elseif(isset($obj['components'])) {
+
+                    foreach($obj['components'] as $componentKey => $componentValue) {                
+
+                        $this->_setById($obj['components'][$componenKey], $id, $arr);
+                        
+                    }
+
+                }
+                
+            }
+            else {
+
+                if(isset($obj['components'])) {
+
+                    foreach($obj['components'] as $componenKey => $componentValue) {                
+
+                        $this->_setById($obj['components'][$componenKey], $id, $arr);
+                        
+                    }
+                 
+                }
+                
+            }
+
+        }
+
 
         /**
          * getAllelements

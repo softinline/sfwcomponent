@@ -23,9 +23,18 @@
     if(isset($component['disabled'])) {
         $disabled = $component['disabled'];
     }
-    
+
+    // show condition
+    $show = true;
+    if(array_key_exists('beforeShow', $component)) {
+        $method = $component['beforeShow'];
+        $show = $controller::$method(@$item);
+    }
+
 ?>
-<div class="form-group">                                                    
-    <input type="checkbox" name="{{ $field }}" id="{{ $field }}" class="{{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $disabled ? 'disabled' : '' }} {{ $required ? 'required' : '' }} value="1" <?php echo @$item->{$field} === 1 ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
-    <label>{{ ucfirst(trans('messages.'.$title)) }} {{ $required ? '*' : '' }}</label>
-</div>
+<?php if($show) { ?>
+    <div class="form-group">                                                    
+        <input type="checkbox" name="{{ $field }}" id="{{ $field }}" class="{{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $disabled ? 'disabled' : '' }} {{ $required ? 'required' : '' }} value="1" <?php echo @$item->{$field} === 1 ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
+        <label>{{ ucfirst(trans('messages.'.$title)) }} {{ $required ? '*' : '' }}</label>
+    </div>
+<?php } ?>

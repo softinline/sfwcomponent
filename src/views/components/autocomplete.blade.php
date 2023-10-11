@@ -50,35 +50,44 @@
     }
 
     // autocomplete
-    $autocomplete = "off"
+    $autocomplete = "off";
 
+    // show condition
+    $show = true;
+    if(array_key_exists('beforeShow', $component)) {
+        $method = $component['beforeShow'];
+        $show = $controller::$method(@$item);
+    }
+   
 ?>
-<div class="form-group">
-    <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }} ({{ trans('messages.start_writing_something') }})</label>
-    <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}" autocomplete="{{ $autocomplete }}">
-    <input type="hidden" name="{{ $field }}_autocomplete" id="{{ $field }}_autocomplete" value="{{ $hidden }}"/>
-    <script>
-        $(function() {
-            $("#{{ $field }}").autocomplete({
-                source: function( request, response ) {
-                    $.ajax({
-                        url: "{{ $autocompleteUrl }}",
-                        dataType: "jsonp",
-                        data: {
-                            term:request.term                                
-                        },
-                        success: function(data) {
-                            response(data);
-                        },
-                        complete: function() {                                
-                        }
-                    });
-                },
-                minLength: {{ $minLength }},
-                select: function( event, ui ) {
-                    $("#{{ $field }}_autocomplete").val(ui.item.id);
-                }
+<?php if($show) { ?>
+    <div class="form-group">
+        <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }} ({{ trans('messages.start_writing_something') }})</label>
+        <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}" autocomplete="{{ $autocomplete }}">
+        <input type="hidden" name="{{ $field }}_autocomplete" id="{{ $field }}_autocomplete" value="{{ $hidden }}"/>
+        <script>
+            $(function() {
+                $("#{{ $field }}").autocomplete({
+                    source: function( request, response ) {
+                        $.ajax({
+                            url: "{{ $autocompleteUrl }}",
+                            dataType: "jsonp",
+                            data: {
+                                term:request.term                                
+                            },
+                            success: function(data) {
+                                response(data);
+                            },
+                            complete: function() {                                
+                            }
+                        });
+                    },
+                    minLength: {{ $minLength }},
+                    select: function( event, ui ) {
+                        $("#{{ $field }}_autocomplete").val(ui.item.id);
+                    }
+                });
             });
-        });
-    </script>
-</div>
+        </script>
+    </div>
+<?php } ?>

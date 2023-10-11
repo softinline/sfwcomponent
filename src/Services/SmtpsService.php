@@ -29,7 +29,7 @@
                     ];
 
                     \Config::set('mail', $config);
-                    //extract(\Config::get('mail'));
+                    extract(\Config::get('mail'));
 
                 }
                 

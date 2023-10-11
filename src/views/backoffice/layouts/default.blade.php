@@ -79,6 +79,7 @@
             <div class="content-wrapper">
                 <section class="content">
                     <div class="container-fluid">                        
+                        @include('sfwcomponent::backoffice.partials.flash-messages')
                         @include('sfwcomponent::backoffice.partials.header')
                         @yield('content')
                     </div>
