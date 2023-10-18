@@ -10,6 +10,7 @@
         private $_controller;
         private $_id;
         private $_item;
+        private $_lastSubmitResponse;
 
         /**
          * constructor
@@ -79,6 +80,12 @@
         public function setItem($item) {
 
             $this->_item = $item;
+
+        }
+
+        public function getLastSubmitResponse() {
+
+            return $this->_lastSubmitResponse;
 
         }
 
@@ -225,13 +232,182 @@
          * @return operation
          */
         public function submit($config, $method, $formId = null, $tabKey = null) {
+
+            $submitResponse = [
+                'success' => false, // status of the respone
+                'result' => null, // result of the controller call
+                'message' => null, // message generated automatically, on validator error first error message
+                'validator' => null, // on error gets all errors
+                'redirect' => null, // redirect url
+                'ajax' => false, // if ajax or not
+            ];
+
+            // check Validator
+            $validator = $this->validate($config, $formId, $tabKey);
+
+            if(!$validator->fails()) {
+                
+                \DB::beginTransaction();
+
+                try {
+
+                    $submitResponse['result'] = $this->_controller::$method($this->_item);
+
+                    if(is_array($submitResponse['result'])) {
+
+                        $submitResponse['success'] = $submitResponse['result']['success'];
+                        $submitResponse['message'] = $submitResponse['result']['message'];
+
+                    }
+                    else {
+                     
+                        if($submitResponse['result']) {
+
+                            $submitResponse['success'] = true;
+
+                            \DB::commit();
+
+                        }
+                        else {
+
+                            $submitResponse['success'] = false;
+
+                            \DB::rollback();
+
+                        }
+
+                    }
+
+                }                
+                catch(\Exception $e) {
+                    
+                    $submitResponse['success'] = false;
+                    $submitResponse['message'] = $e->getMessage();
+
+                    \DB::rollback();
+
+                }
+
+            }
+            else {
+
+                $submitResponse['success'] = false;
+                $submitResponse['message'] = $validator->errors()->first();
+                $submitResponse['validator'] = $validator->errors();
+
+            }
+
+            // get config
+            $cConfig = $config->getConfig();
             
+            $ajax = '';
+            if(array_key_exists('ajax', $cConfig)) {
+                $ajax = $cConfig['ajax'] ? '#' : '';
+                if($cConfig['ajax']) {
+                    $submitResponse['ajax'] = true;
+                }
+            }
+
+            // get redirect
+            $submitResponse['redirect'] = $ajax.$cConfig['url'];
+
+            // set default message
+            $msg = is_null($this->_id) ? 'created' : 'updated';
+
+            if($submitResponse['success']) {
+                $msg = ucfirst(trans('sfw.'.$msg.'_ok'));
+            }
+            else {
+                $msg = ucfirst(trans('sfw.'.$msg.'_error'));
+            }
+
+            $submitResponse['message'] = $msg;
+
+            // check if form has a redirect param
+            $formComponent = null;            
+            if($formId != null) {
+                $formComponent = $config->getById($formId);
+                if($formComponent) {                    
+                    if(isset($formComponent['redirect'])) {
+                        $submitResponse['redirect'] = $ajax.$formComponent['redirect'];
+                    }
+                }                
+            }
+
+            // replace dynamic {id} params on final redirect
+            $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($submitResponse['redirect'], '{', '}');
+            foreach($occurences as $occurence) {        
+                if(\Request::route($occurence)) {
+                    $submitResponse['redirect'] = str_replace('{'.$occurence.'}', \Request::route($occurence), $submitResponse['redirect']);
+                }
+            }
+
+            // save submit response if want to check
+            $this->_lastSubmitResponse = $submitResponse;
+
+            return $this->submitResponseProcess($submitResponse);
+
+        }
+
+        /**
+         * process the submit response
+         */
+        public function submitResponseProcess($submitResponse) {
+
+            // finnally all ok
+            if($submitResponse['success']) {
+
+                if($submitResponse['ajax']) {
+
+                    return \Response::json([
+                        'success' => true,
+                        'message' => $submitResponse['message'],
+                        'type' => 'redirect',
+                        'redirect' => $submitResponse['redirect'],
+                    ], 200);
+
+                }
+                else {
+
+                    \Session::flash('message_success', $submitResponse['message']);
+
+                    return \Redirect::to($submitResponse['redirect']);
+
+                }
+
+            }
+            // error
+            else {
+
+                if($submitResponse['ajax']) {
+
+                    return \Response::json([
+                        'success' => false,
+                        'message' => $submitResponse['message'],
+                    ], 200);
+
+
+                }
+                else {
+                    
+                    \Session::flash('message_error', $submitResponse['message']);
+                                                                            
+                    return \Redirect::to($submitResponse['redirect'])
+                        ->withInput();
+
+                }
+
+            }
+            
+            // echo print_r($submitResponse, true); die();
+
+            /*
             $cConfig = $config->getConfig();
 
             // check if its ajax
             $ajax = '';
             if(array_key_exists('ajax', $cConfig)) {
-                $ajax = $cConfig['ajax'] ? '#' : '';
+                $ajax = $cConfig['ajax'] ? '#' : '';             
             }
             
             // default redirects on ok or ko
@@ -422,6 +598,11 @@
                 }
                 else {
 
+                    //echo 'AAAA'; 
+                    //echo $redirectKo; 
+                    //echo $validator->errors()->first();
+                    //die();
+
                     return \Redirect::to($redirectKo)
                         ->withInput()
                         ->with('message_error', $validator->errors()->first());
@@ -430,17 +611,17 @@
 
             }
             
-            /*
-                if($successStatus) {
-                    // after execute method check if redirectOk must be changed
-                    if(array_key_exists('optionsPostSave', $config['forms'][$form])) {
-                        if(\Request::get('optionsPostSave') != '') {
-                            $redirectOk = $ajax.str_replace('{id}', $result->id, $config['forms'][$form]['optionsPostSave'][\Request::get('optionsPostSave')][3]);
-                        }
-                    }
-                }
-            */
             
+            //    if($successStatus) {
+            //        // after execute method check if redirectOk must be changed
+            //        if(array_key_exists('optionsPostSave', $config['forms'][$form])) {
+            //            if(\Request::get('optionsPostSave') != '') {
+            //                $redirectOk = $ajax.str_replace('{id}', $result->id, $config['forms'][$form]['optionsPostSave'][\Request::get('optionsPostSave')][3]);
+            //            }
+            //        }
+            //    }
+            
+            */
         }
 
         /**
