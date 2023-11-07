@@ -446,5 +446,13 @@ sfwcomponent = {
                 }
             },
         });
+    },
+    redirectToTab: function(param) {
+        const queryString = window.location.search;        
+        const urlParams = new URLSearchParams(queryString);
+        const sfwTab = urlParams.get(param);
+        if(sfwTab != '' && sfwTab != null) {
+            $('a[href="#'+sfwTab+'"]').click();
+        }
     }
 }
