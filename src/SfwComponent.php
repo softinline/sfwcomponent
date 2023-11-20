@@ -280,6 +280,9 @@
 
                 }                
                 catch(\Exception $e) {
+
+                    \Log::error('Error Message '.$e->getMessage());
+                    \Log::error('Error Trace '.$e->getTraceAsString());
                     
                     $submitResponse['success'] = false;
                     $submitResponse['message'] = $e->getMessage();
