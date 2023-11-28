@@ -144,17 +144,17 @@ sfwcomponent = {
         });
 
         // capture select all
-        $(document).on('click', '.sfwcomponent-select-all-btn',  function() {            
+        $(document).on('click', '.sfwcomponent-select-all-btn',  function() {
             sfwcomponent.selectAll($(this));
         });
 
         // capture select one
-        $(document).on('click', '.sfwcomponent-selector',  function() {            
+        $(document).on('click', '.sfwcomponent-selector',  function() {
             var id = $(this).attr('id');
-            var datatable = $(this).attr('sfwcomponent-data-datatable');            
+            var datatable = $(this).attr('sfwcomponent-data-datatable');
             var index = $.inArray(id, sfwcomponent.tables[datatable].selected);
             if ( index === -1 ) {
-                sfwcomponent.tables[datatable].selected.push(id);
+                sfwcomponent.tables[datatable].selected.push(id.toString());
             } 
             else {
                 sfwcomponent.tables[datatable].selected.splice( index, 1 );
