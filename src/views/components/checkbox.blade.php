@@ -37,4 +37,8 @@
         <input type="checkbox" name="{{ $field }}" id="{{ $field }}" class="{{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $disabled ? 'disabled' : '' }} {{ $required ? 'required' : '' }} value="1" <?php echo @$item->{$field} === 1 ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
         <label>{{ ucfirst(trans('messages.'.$title)) }} {{ $required ? '*' : '' }}</label>
     </div>
+    @include('sfwcomponent::conditional-components', [
+        'component' => $component,
+        'item' => @$item,
+    ])
 <?php } ?>
