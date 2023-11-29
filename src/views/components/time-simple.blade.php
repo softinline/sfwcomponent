@@ -5,7 +5,7 @@
 
     // title
     $title = $component['title'];
-    
+
     // required
     $required = false;
     if(isset($component['required'])) {
@@ -18,6 +18,12 @@
         $disabled = $component['disabled'];
     }
 
+    // format
+    $format = "d/m/Y";
+    if(isset($component['format'])) {
+        $format = $component['format'];
+    }
+
     // autocomplete
     $autocomplete = "off";
 
@@ -27,23 +33,17 @@
         $class = $component['class'];
     }
 
-    // step
-    $step = '';
-    if(isset($component['step'])) {
-        $step = $component['step'];
-    }
-
     // show condition
     $show = true;
     if(array_key_exists('beforeShow', $component)) {
         $method = $component['beforeShow'];
         $show = $controller::$method(@$item);
     }
-
+    
 ?>
 <?php if($show) { ?>
     <div class="form-group">
         <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <input type="number" step="{{ $step }}" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} }}" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
+        <input type="time" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} != '' ? $item->{$field}->format($format) : '' }}" autocomplete="{{ $autocomplete }}" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
     </div>
 <?php } ?>
