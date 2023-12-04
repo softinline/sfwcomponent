@@ -162,6 +162,26 @@ sfwcomponent = {
         });
 
     },
+    datatableConfigColumnsSave: function(frm) {        
+        var data = new FormData(document.getElementById(frm));
+        console.log('data -> ',data);
+        $.ajax({
+            method: "post",
+            url: '/sfw/datatable/config-columns-save',
+            data: data,
+            contentType: false,
+            cache: false,
+            processData:false,
+            success: function(response) {
+                location.reload();
+            },
+            error: function (xhr, ajaxOptions, thrownError) { 
+                alert('Error');
+            },
+            complete: function() {                
+            }    
+        });
+    },
     // formRequireds
     // check for required elements
     formRequireds: function(frm) {

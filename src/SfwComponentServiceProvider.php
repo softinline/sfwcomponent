@@ -3,6 +3,7 @@
 namespace Softinline\SfwComponent;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
 
 class SfwComponentServiceProvider extends ServiceProvider
 {
@@ -11,9 +12,9 @@ class SfwComponentServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(Router $router)
     {
-
+        
         // load views
         $this->loadViewsFrom(__DIR__.'/views', 'sfwcomponent');
 
@@ -29,6 +30,8 @@ class SfwComponentServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/resources' => public_path('vendor/softinline/sfwcomponent'),
         ], 'public');
+
+        $router->middlewareGroup('SfwProtected', [SfwProtectedMiddleware::class]);
         
     }
 
@@ -41,6 +44,8 @@ class SfwComponentServiceProvider extends ServiceProvider
     {
         //
         $this->app->make('Softinline\SfwComponent\SfwConfig');
-        $this->app->make('Softinline\SfwComponent\SfwComponent');        
+        $this->app->make('Softinline\SfwComponent\SfwComponent');    
+        
+        // app('router')->aliasMiddleware('SfwProtectedMiddleware', \Softinline\SfwComponent\SfwProtectedMiddleware::class);
     }
 }

@@ -42,8 +42,84 @@
         $show = $controller::$method(@$item);
     }
 
+    // config cols
+    $configCols = false;
+    if(array_key_exists('configCols', $component)) {
+        $configCols = $component['configCols'];
+    }
+
+    // get config in database for config cols
+    if(\Auth::user()) {
+
+        $datatableConfigCols = \Softinline\SfwComponent\Models\SfwDatatable::select()
+            ->where('datatable', '=', $name)
+            ->where('user_id', '=', \Auth::user()->id)
+            ->first();
+
+    }
+    else {
+
+        $datatableConfigCols = \Softinline\SfwComponent\Models\SfwDatatable::select()
+            ->where('datatable', '=', $name)            
+            ->first();
+
+    }
+
+    // if found one config, then override
+    if($datatableConfigCols) {
+
+        $component['columns'] = json_decode($datatableConfigCols->config, true);
+
+    }
+
 ?>
 <?php if($show) { ?>
+    <?php if($configCols) { ?>
+        <div class="row">
+            <div class="col-lg-12 text-right text-end mb-2">
+                <button class="btn btn-primary" onclick="$('#sfwcomponent-datatable-config-columns-{{ $name }}').modal('show')"><i class="las la-cog"></i></button>
+            </div>
+        </div>
+        <div class="modal fade show" tabindex="-1" id="sfwcomponent-datatable-config-columns-{{ $name }}" aria-modal="true" role="dialog">
+            <div class="modal-dialog  modal-lg ">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Configurar Columnas</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>                        
+                    </div>
+                    <div class="modal-body">
+                        <form id="sfwcomponent-form-datatable-config-columns-{{ $name }}" name="sfwcomponent-form-datatable-config-columns-{{ $name }}">                            
+                            <ul id="sortable">                                                            
+                                <?php foreach($component['columns'] as $column) { ?>
+                                    <?php
+                                        // defult false is not show
+                                        $default = true;
+                                        if(array_key_exists('default', $column)) {
+                                            $default = $column['default'];
+                                        }
+                                    ?>
+                                    <li class="ui-state-default" id="{{ $column['field'] }}">
+                                        <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
+                                        <input type="checkbox" id="check-{{ $column['field'] }}" name="check-{{ $column['field'] }}" value="1" <?php echo $default ? 'checked' : ''; ?>> {{ $column['field'] }}
+                                    </li>                                                                        
+                                    <input type="hidden" name="json-{{ $column['field'] }}" id="json-{{ $column['field'] }}" value="<?php echo htmlspecialchars(json_encode($column), ENT_QUOTES, 'UTF-8'); ?>" />
+                                <?php } ?>
+                            </ul>                            
+                            <input type="hidden" name="name" id="name" value="{{ $name }}" />
+                            <input type="hidden" name="file" id="file" value="{{ $name }}" />
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="sfwcomponent.datatableConfigColumnsSave('sfwcomponent-form-datatable-config-columns-{{ $name }}')">Guardar</button>
+                        <button type="button" class="btn btn-primary" onclick="sfwcomponent.datatableConfigColumnsSave('sfwcomponent-form-datatable-config-columns-{{ $name }}')">Guardar para Todos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $( "#sortable" ).sortable();
+        </script>
+    <?php } ?>    
     <table id="table-sfwcomponent-{{ $name }}" sfwcomponent-data-url="{{ url($url) }}" class="{{ $class }}" style="width:100%">
         <thead>
             <tr>
@@ -65,8 +141,15 @@
                         if(array_key_exists('options', $column)) {
                             $options = $column['options'];
                         }
+                        // defult false is not show
+                        $default = true;
+                        if(array_key_exists('default', $column)) {
+                            $default = $column['default'];
+                        }
                     ?>
-                    <th <?php echo $options; ?>>{{ $title }}</th>
+                    <?php if($default) { ?>
+                        <th <?php echo $options; ?>>{{ $title }}</th>
+                    <?php } ?>
                 <?php } ?>
             </tr>
         </thead>                    
@@ -78,14 +161,23 @@
                     <th></th>
                 <?php } ?>
                 <?php foreach($component['columns'] as $column) { ?>
-                    <?php if(array_key_exists('searchable', $column)) { ?>
-                        <?php if($column['searchable']) { ?>
-                            <th sfwcomponent-data-searchable="true"></th>
+                    <?php
+                        // defult false is not show
+                        $default = true;
+                        if(array_key_exists('default', $column)) {
+                            $default = $column['default'];
+                        }
+                    ?>
+                    <?php if($default) { ?>
+                        <?php if(array_key_exists('searchable', $column)) { ?>
+                            <?php if($column['searchable']) { ?>
+                                <th sfwcomponent-data-searchable="true"></th>
+                            <?php } else { ?>
+                                <th></th>
+                            <?php } ?>
                         <?php } else { ?>
-                            <th></th>
+                            <th sfwcomponent-data-searchable="true"></th>
                         <?php } ?>
-                    <?php } else { ?>
-                        <th sfwcomponent-data-searchable="true"></th>
                     <?php } ?>
                 <?php } ?>
             </tfoot>
@@ -133,8 +225,15 @@
                             if(@$column['searchable']===false) {
                                 $searchable = 'false';
                             }
+                            // defult false is not show
+                            $default = true;
+                            if(array_key_exists('default', $column)) {
+                                $default = $column['default'];
+                            }
                         ?>
-                        { width:"{{ @$column['width'] }}", data:"{{ $column['field'] }}", name:"{{ $column['name'] }}", orderable:{{ $orderable }}, searchable:{{ $searchable }} },
+                        <?php if($default) { ?>
+                            { width:"{{ @$column['width'] }}", data:"{{ $column['field'] }}", name:"{{ $column['name'] }}", orderable:{{ $orderable }}, searchable:{{ $searchable }} },
+                        <?php } ?>
                     <?php } ?>
                 ],
                 "rowCallback": function( row, data ) {                
