@@ -164,7 +164,9 @@ sfwcomponent = {
     },
     datatableConfigColumnsSave: function(frm) {        
         var data = new FormData(document.getElementById(frm));
+        data.append('sortable', $("#sortable").sortable("toArray"));
         console.log('data -> ',data);
+        console.log('sortable -> ',$("#sortable").sortable("toArray"));        
         $.ajax({
             method: "post",
             url: '/sfw/datatable/config-columns-save',
@@ -180,7 +182,7 @@ sfwcomponent = {
             },
             complete: function() {                
             }    
-        });
+        });      
     },
     // formRequireds
     // check for required elements
