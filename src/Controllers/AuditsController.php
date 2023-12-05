@@ -39,7 +39,7 @@
                 })                
                 ->addColumn('actions', function($item) {
                     $return = '';
-                    $return .= '<a href="'.url('sfw/audits/edit?id='.$item->id).'" title="Editar"><i class="las la-edit fa-fw"></i></a>';
+                    $return .= '<a href="'.url('sfw/audits/'.$item->id).'" title="Editar"><i class="las la-edit fa-fw"></i></a>';
                     return $return;
                 })
                 ->rawColumns(['actions']);
@@ -51,9 +51,7 @@
         /**
          * edit
          */
-        public function edit() {    
-
-            $id = \Request::get('id');
+        public function edit($id) {    
 
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Audits/edit.json');
@@ -92,7 +90,7 @@
                 'items' => [
                     [ucfirst(trans('messages.dashboard')), url('/sfw')],
                     [ucfirst(trans('messages.audits')), url('/sfw/audits')],
-                    [$item->smtp]
+                    [$item->id]
                 ]
             ];
 

@@ -33,26 +33,17 @@
             <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->        
-        <!-- Bootstrap 3.3.5 -->
-        <script src="https://cdn.softinline.com/templates/adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <!-- jQuery UI 1.12.1 -->
-        <script src="https://cdn.softinline.com/templates/adminlte3/plugins/jquery-ui/jquery-ui.min.js"></script>
         <link rel="stylesheet" href="{{ url('vendor/softinline/sfwcomponent/backoffice.css?'.time()) }}">
         <link rel="shortcut icon" type="image/x-icon" href="{{ url('/images/favicon.ico') }}" />
         <link rel="apple-touch-icon" type="image/x-icon" href="{{ url('/images/favicon.ico') }}" />
     </head>
-    <body class="hold-transition sidebar-mini layout-fixed sidebar-collapse">
-        @include('sfwcomponent::backoffice.partials.modal', ['counter' => 2])
-        <div class="wrapper">
-            @include('sfwcomponent::backoffice.partials.header')
-            @include('sfwcomponent::backoffice.partials.menu')
-            <div class="content-wrapper">
-                @yield('breadcrumb')
-                @include('sfwcomponent::backoffice.partials.flash-messages')
-                @yield('content')
-            </div>
-            @include('sfwcomponent::backoffice.partials.footer')
-        </div>        
+    <body class="hold-transition login-page">
+        @include('sfwcomponent::backoffice.partials.flash-messages')
+        @yield('content')
+        <!-- Bootstrap 3.3.5 -->
+        <script src="https://cdn.softinline.com/templates/adminlte3/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- jQuery UI 1.12.1 -->
+        <script src="https://cdn.softinline.com/templates/adminlte3/plugins/jquery-ui/jquery-ui.min.js"></script>
         <!-- DataTable -->
         <script src="https://cdn.softinline.com/templates/adminlte3/plugins/datatables/jquery.dataTables.min.js"></script>
         <script src="https://cdn.softinline.com/templates/adminlte3/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -86,17 +77,18 @@
         <script src="https://cdn.softinline.com/lib/alerts.js"></script>
         <script src="https://cdn.softinline.com/lib/modals.js"></script>
         <script src="https://cdn.softinline.com/lib/swal.js"></script>
-        <!--<script src="{{ url('js/app.js') }}"></script>        
+        <script src="{{ url('js/app.js') }}"></script>
+        {{-- <script src="{{ url('js/admin.js') }}"></script> --}}
         <script src="{{ url('js/i18n/'.\App::getLocale().'.js?'.time()) }}"></script>
-        <script src="{{ url('js/i18n.js?'.time()) }}"></script>-->
+        <script src="{{ url('js/i18n.js?'.time()) }}"></script>
         <script src="{{ url('vendor/softinline/sfwcomponent/sfwcomponent.js?'.time()) }}"></script>
 
         @yield('script')
         <script>
-            //app.ajax = true;
-            //app.locale = '{{ \App::getLocale() }}';
-            //app.init();
-            sfwcomponent.locale = '{{ \App::getLocale() }}';
+            app.ajax = true;
+            app.locale = '{{ \App::getLocale() }}';
+            app.init();
+            sfwcomponent.locale = app.locale;
             sfwcomponent.ajax = true;
             sfwcomponent.redirectToTab('sfwTab');
             sfwcomponent.init();

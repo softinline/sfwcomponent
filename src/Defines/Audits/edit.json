@@ -40,16 +40,16 @@
                                                             "class":"card-body",
                                                             "components":[                                                                
                                                                 {
-                                                                    "type":"text",
+                                                                    "type":"json",
                                                                     "required":true,
-                                                                    "title":"language",
-                                                                    "field":"language"
+                                                                    "title":"before",
+                                                                    "field":"before"
                                                                 },
                                                                 {
-                                                                    "type":"text",
+                                                                    "type":"json",
                                                                     "required":true,
-                                                                    "title":"iso",
-                                                                    "field":"iso"
+                                                                    "title":"after",
+                                                                    "field":"after"
                                                                 }
                                                             ]
                                                         }
@@ -62,16 +62,10 @@
                                 {
                                     "type":"div",
                                     "class":"mt-2 mb-2",
-                                    "components":[                                
+                                    "components":[
                                         {
                                             "type":"button",
-                                            "action":"js:sfwcomponent.submit('frm-sfw-languages-edit')",
-                                            "title":"accept",
-                                            "class":"btn btn-primary"
-                                        },
-                                        {
-                                            "type":"button",
-                                            "action":"link:sfw/languages",
+                                            "action":"link:sfw/audits",
                                             "title":"cancel",
                                             "class":"btn btn-secondary"
                                         }

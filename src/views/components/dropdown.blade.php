@@ -1,8 +1,5 @@
 <?php
 
-    // field
-    $field = $component['field'];
-
     // title
     $title = $component['title'];
 

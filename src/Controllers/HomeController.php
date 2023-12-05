@@ -12,7 +12,7 @@
          * back entry point index
          */
         public function index() {
-
+            
             return view('sfwcomponent::backoffice.home.index', [
             ]);  
             

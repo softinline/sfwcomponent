@@ -29,5 +29,18 @@
             return self::find($id);
 
         }
+
+        /**
+         * getAll         
+         */
+	    public static function getAll() {
+
+            $sql = self::select(
+                'sfw_smtps.*'
+            );
+
+            return $sql;
+
+        }
     
     }
