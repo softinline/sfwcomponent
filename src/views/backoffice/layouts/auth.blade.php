@@ -77,18 +77,17 @@
         <script src="https://cdn.softinline.com/lib/alerts.js"></script>
         <script src="https://cdn.softinline.com/lib/modals.js"></script>
         <script src="https://cdn.softinline.com/lib/swal.js"></script>
-        <script src="{{ url('js/app.js') }}"></script>
-        {{-- <script src="{{ url('js/admin.js') }}"></script> --}}
+        <script src="{{ url('vendor/softinline/sfwcomponent/backoffice.js?'.time()) }}"></script>
+        <!--{{-- <script src="{{ url('js/admin.js') }}"></script> --}}
         <script src="{{ url('js/i18n/'.\App::getLocale().'.js?'.time()) }}"></script>
-        <script src="{{ url('js/i18n.js?'.time()) }}"></script>
+        <script src="{{ url('js/i18n.js?'.time()) }}"></script>-->
         <script src="{{ url('vendor/softinline/sfwcomponent/sfwcomponent.js?'.time()) }}"></script>
-
         @yield('script')
         <script>
-            app.ajax = true;
-            app.locale = '{{ \App::getLocale() }}';
-            app.init();
-            sfwcomponent.locale = app.locale;
+            backoffice.ajax = true;
+            backoffice.locale = '{{ \App::getLocale() }}';
+            backoffice.init();
+            sfwcomponent.locale = backoffice.locale;
             sfwcomponent.ajax = true;
             sfwcomponent.redirectToTab('sfwTab');
             sfwcomponent.init();

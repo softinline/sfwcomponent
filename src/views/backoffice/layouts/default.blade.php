@@ -97,7 +97,7 @@
             backoffice.ajax = false;
             backoffice.locale = '{{ \App::getLocale() }}';
             backoffice.init();
-            sfwcomponent.locale = '{{ \App::getLocale() }}';
+            sfwcomponent.locale = backoffice.locale;
             sfwcomponent.ajax = true;
             sfwcomponent.redirectToTab('sfwTab');
             sfwcomponent.init();
