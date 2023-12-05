@@ -1,4 +1,4 @@
-app = {    
+backoffice = {    
     version: '1.0',
     locale: null,
     url: null,
