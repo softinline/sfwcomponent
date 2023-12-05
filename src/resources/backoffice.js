@@ -8,11 +8,11 @@ backoffice = {
     init: function() {
 
         // captyure hash change and load url
-        if(app.ajax) {
+        if(backoffice.ajax) {
             jQuery(window).on('hashchange', function() {
                 var hash = window.location.hash;
                 hash = hash.replace("#", "/");
-                app.loadUrl(hash);
+                backoffice.loadUrl(hash);
             });
         }
 
@@ -44,11 +44,11 @@ backoffice = {
             });
         });
 
-        $.datepicker.setDefaults($.datepicker.regional["'"+app.locale+"'"]);
+        $.datepicker.setDefaults($.datepicker.regional["'"+backoffice.locale+"'"]);
         
         // load app
-        if(app.ajax) {
-            app.loadDefaultUrl();
+        if(backoffice.ajax) {
+            backoffice.loadDefaultUrl();
         }
 
     },
@@ -56,16 +56,16 @@ backoffice = {
     loadDefaultUrl: function()     {
         var hash = window.location.hash;
         hash = hash.replace("#", "/");        
-        app.loadUrl(hash);
+        backoffice.loadUrl(hash);
     },
     // load url
     loadUrl: function(url) {      
         if(url=='') {            
-            url = app.defaultUrl;
+            url = backoffice.defaultUrl;
         }        
         $("body").LoadingOverlay('show');
         if(url != '') {
-            app.currentUrl = url;
+            backoffice.currentUrl = url;
             $.ajax({
                 method: "get",
                 url: url,
@@ -85,6 +85,6 @@ backoffice = {
     },
     // refresh
     refresh: function() {
-        app.loadUrl(app.currentUrl);
+        backoffice.loadUrl(backoffice.currentUrl);
     }
 }
