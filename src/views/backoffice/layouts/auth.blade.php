@@ -84,7 +84,7 @@
         <script src="{{ url('vendor/softinline/sfwcomponent/sfwcomponent.js?'.time()) }}"></script>
         @yield('script')
         <script>
-            backoffice.ajax = true;
+            backoffice.ajax = false;
             backoffice.locale = '{{ \App::getLocale() }}';
             backoffice.init();
             sfwcomponent.locale = backoffice.locale;
