@@ -48,27 +48,31 @@
         $configCols = $component['configCols'];
     }
 
-    // get config in database for config cols
-    if(\Auth::user()) {
+    if($configCols) {
 
-        $datatableConfigCols = \Softinline\SfwComponent\Models\SfwDatatable::select()
-            ->where('datatable', '=', $name)
-            ->where('user_id', '=', \Auth::user()->id)
-            ->first();
+        // get config in database for config cols
+        if(\Auth::user()) {
 
-    }
-    else {
+            $datatableConfigCols = \Softinline\SfwComponent\Models\SfwDatatable::select()
+                ->where('datatable', '=', $name)
+                ->where('user_id', '=', \Auth::user()->id)
+                ->first();
 
-        $datatableConfigCols = \Softinline\SfwComponent\Models\SfwDatatable::select()
-            ->where('datatable', '=', $name)            
-            ->first();
+        }
+        else {
 
-    }
+            $datatableConfigCols = \Softinline\SfwComponent\Models\SfwDatatable::select()
+                ->where('datatable', '=', $name)            
+                ->first();
 
-    // if found one config, then override
-    if($datatableConfigCols) {
+        }
 
-        $component['columns'] = json_decode($datatableConfigCols->config, true);
+        // if found one config, then override
+        if($datatableConfigCols) {
+
+            $component['columns'] = json_decode($datatableConfigCols->config, true);
+
+        }
 
     }
 
@@ -110,8 +114,8 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="sfwcomponent.datatableConfigColumnsSave('sfwcomponent-form-datatable-config-columns-{{ $name }}')">Guardar</button>
-                        <button type="button" class="btn btn-primary" onclick="sfwcomponent.datatableConfigColumnsSave('sfwcomponent-form-datatable-config-columns-{{ $name }}')">Guardar para Todos</button>
+                        <button type="button" class="btn btn-primary" onclick="sfwcomponent.datatableConfigColumnsSave('sfwcomponent-form-datatable-config-columns-{{ $name }}',1)">Guardar</button>
+                        <button type="button" class="btn btn-primary" onclick="sfwcomponent.datatableConfigColumnsSave('sfwcomponent-form-datatable-config-columns-{{ $name }}',2)">Guardar para Todos</button>
                     </div>
                 </div>
             </div>
