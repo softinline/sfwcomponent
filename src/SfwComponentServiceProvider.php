@@ -45,7 +45,6 @@ class SfwComponentServiceProvider extends ServiceProvider
         //
         $this->app->make('Softinline\SfwComponent\SfwConfig');
         $this->app->make('Softinline\SfwComponent\SfwComponent');    
-        
-        // app('router')->aliasMiddleware('SfwProtectedMiddleware', \Softinline\SfwComponent\SfwProtectedMiddleware::class);
+                
     }
 }

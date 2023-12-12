@@ -95,7 +95,13 @@
                 // if not has, then check if has subcomponents
                 if(isset($component['components'])) {
                                                                                                         
-                    return $this->_getByInternalId($component['components'], $internalId);
+                    $found = $this->_getByInternalId($component['components'], $internalId);
+
+                    if($found) {
+
+                        return $found;
+
+                    }
                                                                                                 
                 }
 
