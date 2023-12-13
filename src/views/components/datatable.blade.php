@@ -96,6 +96,15 @@
                             <ul id="sortable">                                                            
                                 <?php foreach($component['columns'] as $column) { ?>
                                     <?php
+                                        // title                                               
+                                        $title = $column['field'];
+                                        if(array_key_exists('title', $column)) {
+                                            $title = $column['title'];
+                                        }
+                                        if($title != '') {
+                                            $title = ucfirst(trans('messages.'.$title));
+                                        }
+
                                         // defult false is not show
                                         $default = true;
                                         if(array_key_exists('default', $column)) {
@@ -104,7 +113,7 @@
                                     ?>
                                     <li class="ui-state-default" id="{{ $column['field'] }}">
                                         <span class="ui-icon ui-icon-arrowthick-2-n-s"></span>
-                                        <input type="checkbox" id="check-{{ $column['field'] }}" name="check-{{ $column['field'] }}" value="1" <?php echo $default ? 'checked' : ''; ?>> {{ $column['field'] }}
+                                        <input type="checkbox" id="check-{{ $column['field'] }}" name="check-{{ $column['field'] }}" value="1" <?php echo $default ? 'checked' : ''; ?>> {{ $title }}
                                     </li>                                                                        
                                     <input type="hidden" name="json-{{ $column['field'] }}" id="json-{{ $column['field'] }}" value="<?php echo htmlspecialchars(json_encode($column), ENT_QUOTES, 'UTF-8'); ?>" />
                                 <?php } ?>
