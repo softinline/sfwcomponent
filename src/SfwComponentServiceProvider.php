@@ -31,6 +31,9 @@ class SfwComponentServiceProvider extends ServiceProvider
             __DIR__.'/resources' => public_path('vendor/softinline/sfwcomponent'),
         ], 'public');
 
+        // load translations
+        $this->loadJsonTranslationsFrom(__DIR__.'/resources/lang');
+
         $router->middlewareGroup('SfwProtected', [SfwProtectedMiddleware::class]);
         
     }

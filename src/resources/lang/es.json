@@ -1,0 +1,11 @@
+{
+    "sfwcomponent::email": "email",
+    "sfwcomponent::password": "password",
+    "sfwcomponent::login": "login",
+    "sfwcomponent::created_ok": "datos guardados correctamente",
+    "sfwcomponent::created_error": "ha ocurrido un error al guardar los datos",
+    "sfwcomponent::updated_ok": "datos actualizados correctamente",
+    "sfwcomponent::updated_error": "ha ocurrido un error al actualizar los datos",
+    "sfwcomponent::deleted_ok": "datos borrados correctamente",
+    "sfwcomponent::deleted_error": "ha ocurrido un error al borrar los datos"
+}
