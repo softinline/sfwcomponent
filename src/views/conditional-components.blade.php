@@ -25,7 +25,7 @@
                 <?php
                     $sfwcomponent = new \Softinline\SfwComponent\SfwComponent($controller);
                     $sfwcomponent->setItem($item);
-                    echo $sfwcomponent->renderComponent($config, $c, "");
+                    echo $sfwcomponent->renderComponents($config, [$c], "");
                 ?>
             <?php } ?>
         </div>
