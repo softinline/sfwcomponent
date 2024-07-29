@@ -263,7 +263,7 @@ sfwcomponent = {
         else {            
             $.ajax({
                 method: "post",
-                url: "/"+url+"/select-all",
+                url: url+"/select-all",
                 success: function(data) {                    
                     $.each(data.data, function(i, item) {
                         var id = data.data[i].id;
