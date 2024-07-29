@@ -162,11 +162,10 @@ sfwcomponent = {
         });
 
     },
-    datatableConfigColumnsSave: function(frm) {        
+    datatableConfigColumnsSave: function(frm, mode) {        
         var data = new FormData(document.getElementById(frm));
         data.append('sortable', $("#sortable").sortable("toArray"));
-        console.log('data -> ',data);
-        console.log('sortable -> ',$("#sortable").sortable("toArray"));        
+        data.append('mode', mode);
         $.ajax({
             method: "post",
             url: '/sfw/datatable/config-columns-save',
@@ -218,6 +217,7 @@ sfwcomponent = {
         if(sfwcomponent.tables[datatable].selected.length > 0) {
             var bConfirm = confirm(i18n.t('are you sure of export') + ' ' + sfwcomponent.tables[datatable].selected.length+' '+i18n.t('elements'));
             if(bConfirm) {
+                $("body").LoadingOverlay('show');
                 $.ajax({
                     method: "post",
                     url: url+'/export-selected',
@@ -239,6 +239,7 @@ sfwcomponent = {
                         alerts.show('ko', i18n.t('there was a problem'));
                     },
                     complete: function() {
+                        $("body").LoadingOverlay('hide');
                         alerts.show('ok', i18n.t('export completed'));
                     }            
                 });
@@ -251,11 +252,13 @@ sfwcomponent = {
     // selectAll
     // select all elements using sessions in controller stored
     selectAll: function(obj) {
+        $("body").LoadingOverlay('show');
         var url = obj.attr('sfwcomponent-data-url');
         var datatable = obj.attr('sfwcomponent-data-datatable');
         if(sfwcomponent.tables[datatable].selected.length > 0) {
             sfwcomponent.tables[datatable].selected = Array();
             sfwcomponent.tables[datatable].datatable.ajax.reload(null, false);
+            $("body").LoadingOverlay('hide');
         }
         else {            
             $.ajax({
@@ -270,12 +273,11 @@ sfwcomponent = {
                         }
                     });                    
                 },
-                error: function (xhr, ajaxOptions, thrownError) { 
-                    $(".wrapper").LoadingOverlay('hide');
+                error: function (xhr, ajaxOptions, thrownError) {                     
                     alerts.show('ko', i18n.t('there was a problem'));
                 },
                 complete: function() {
-                    $(".wrapper").LoadingOverlay('hide');
+                    $("body").LoadingOverlay('hide');
                     sfwcomponent.tables[datatable].datatable.ajax.reload(null, false);
                 }            
             });
@@ -421,7 +423,7 @@ sfwcomponent = {
                         $("#modal-options-post-save").modal('hide');
                         $("body").LoadingOverlay('hide');
                         $("#btn-submit").find('.loading').removeClass("fa fa-spinner spin");        
-                        $("#btn-submit").prop("disabled", false);
+                        $("#btn-submit").prop("disabled", false);                        
                     }
                 });
             }
@@ -468,13 +470,5 @@ sfwcomponent = {
                 }
             },
         });
-    },
-    redirectToTab: function(param) {
-        const queryString = window.location.search;        
-        const urlParams = new URLSearchParams(queryString);
-        const sfwTab = urlParams.get(param);
-        if(sfwTab != '' && sfwTab != null) {
-            $('a[href="#'+sfwTab+'"]').click();
-        }
-    }
+    },    
 }

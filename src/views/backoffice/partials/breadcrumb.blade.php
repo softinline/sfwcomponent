@@ -4,8 +4,8 @@
             <div class="col-sm-6">
                 <h3 class="m-0">{{ $data['title'] }}</h3>
             </div>
-            <div class="col-sm-6 text-right">
-                <ol class="breadcrumb">
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
                     <?php foreach($data['items'] as $item) { ?>
                         <?php if(count($item) > 1) { ?>
                             <li class="breadcrumb-item"><a href="{{ $item[1] }}">{{ $item[0] }}</a></li>
