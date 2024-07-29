@@ -137,7 +137,7 @@
         <thead>
             <tr>
                 <?php if($selector) { ?>
-                    <th><input type="checkbox" id="sfwcomponent-chk-select-all" name="sfwcomponent-chk-select-all" class="sfwcomponent-select-all-btn" sfwcomponent-data-datatable="{{ $name }}" sfwcomponent-data-url="{{ $url }}" /></th>
+                    <th><input type="checkbox" id="sfwcomponent-chk-select-all" name="sfwcomponent-chk-select-all" class="sfwcomponent-select-all-btn" sfwcomponent-data-datatable="{{ $name }}" sfwcomponent-data-url="{{ url($url) }}" /></th>
                 <?php } ?>
                 <?php foreach($component['columns'] as $column) { ?>
                     <?php         
