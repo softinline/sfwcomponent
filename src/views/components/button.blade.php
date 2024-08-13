@@ -60,6 +60,13 @@
     <?php if($tmp[0] == 'js') { ?>
         <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="{{ $tmp[1] }}" {!! $extra !!} target="{{ $target }}">{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>        
     <?php } else { ?>
+        <?php
+            // add query parameters            
+            $queryString =  http_build_query($_GET, '&');
+            if($queryString != '') {
+                $tmp[1] = $tmp[1].'?'.$queryString;
+            }
+        ?>
         <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="window.open('{{ url($tmp[1]) }}','{{ $target }}')" {!! $extra !!} >{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>
     <?php } ?>
 <?php } ?>

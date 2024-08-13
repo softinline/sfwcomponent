@@ -9,6 +9,12 @@
         }
     }
 
+    // add queryString on url            
+    $queryString =  http_build_query($_GET, '&');
+    if($queryString != '') {
+        $action = $action.'?'.$queryString;
+    }
+
     // id
     $id = $component['id'];
 

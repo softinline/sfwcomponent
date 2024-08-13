@@ -314,14 +314,20 @@
             // get redirect
             $submitResponse['redirect'] = $ajax.$cConfig['url'];
 
+            // add queryString on url            
+            $queryString =  http_build_query($_GET, '&');
+            if($queryString != '') {
+                $submitResponse['redirect'] = $submitResponse['redirect'].'?'.$queryString;
+            }
+
             // set default message
             $msg = is_null($this->_id) ? 'created' : 'updated';
 
             if($submitResponse['success']) {
-                $msg = ucfirst(trans('sfw.'.$msg.'_ok'));
+                $msg = ucfirst(trans('sfwcomponent::.'.$msg.'_ok'));
             }
             else {
-                $msg = ucfirst(trans('sfw.'.$msg.'_error'));
+                $msg = ucfirst(trans('sfwcomponent::'.$msg.'_error'));
             }
 
             $submitResponse['message'] = $msg;
