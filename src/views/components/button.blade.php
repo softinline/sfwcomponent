@@ -4,11 +4,15 @@
     $title = $component['title'];
 
     // prepare action link
-    $tmp = explode(':', $component['action']);
-    $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($tmp[1], '{', '}');                                
-    foreach($occurences as $occurence) {        
-        if(\Request::route($occurence)) {
-            $tmp[1] = str_replace('{'.$occurence.'}', \Request::route($occurence), $tmp[1]);
+    $actionType = "link";
+    if(array_key_exists('action', $component)) {
+        $tmp = explode(':', $component['action']);
+        $actionType = $tmp[0];
+        $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($tmp[1], '{', '}');                                
+        foreach($occurences as $occurence) {        
+            if(\Request::route($occurence)) {
+                $tmp[1] = str_replace('{'.$occurence.'}', \Request::route($occurence), $tmp[1]);
+            }
         }
     }
        
@@ -55,10 +59,22 @@
         $show = $controller::$method(@$item);
     }
 
+    // type button    
+    $buttonType = 'button';
+    if(array_key_exists('buttonType', $component)) {        
+        $buttonType = $component['buttonType'];
+    }
+
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+    
 ?>
-<?php if($show) { ?>
-    <?php if($tmp[0] == 'js') { ?>
-        <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="{{ $tmp[1] }}" {!! $extra !!} target="{{ $target }}">{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>        
+<?php if($show) { ?>    
+    <?php if($actionType == 'js') { ?>
+        <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="{{ $tmp[1] }}" {!! $extra !!} target="{{ $target }}">{!! $icon !!}{{ ucfirst(trans($translationFile.$title)) }}</button>        
     <?php } else { ?>
         <?php
             // add query parameters            
@@ -67,6 +83,10 @@
                 $tmp[1] = $tmp[1].'?'.$queryString;
             }
         ?>
-        <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="window.open('{{ url($tmp[1]) }}','{{ $target }}')" {!! $extra !!} >{!! $icon !!}{{ ucfirst(trans('messages.'.$title)) }}</button>
+        <?php if($buttonType == "button") { ?>
+            <button type="button" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} onclick="window.open('{{ url($tmp[1]) }}','{{ $target }}')" {!! $extra !!} >{!! $icon !!}{{ ucfirst(trans($translationFile.$title)) }}</button>
+        <?php } else { ?>
+            <button type="submit" {!! $class !!} {!! $id !!} {{ $disabled ? 'disabled' : '' }} {!! $extra !!} >{!! $icon !!}{{ ucfirst(trans($translationFile.$title)) }}</button>
+        <?php } ?>
     <?php } ?>
 <?php } ?>

@@ -1,22 +1,36 @@
 <?php 
+
+    // field
+    $field = $component['field'];
+
+    // title
+    $title = $component['title'];
+
     $method = $component['selector'];            
     $options = $controller::$method(@$item, @$id);
+
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+
 ?>
 <div class="form-group">
-    <label>{{ ucfirst(trans('messages.'.$component['title'])) }}: {{ $component['required'] ? '*' : '' }}</label>
-    <select name="{{ $component['field'] }}" id="{{ $component['field'] }}" class="form-control {{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$component['title'])) }}">
-        <option value="">{{ ucfirst(trans('messages.select-option')) }}</option>
+    <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $component['required'] ? '*' : '' }}</label>
+    <select name="{{ $component['field'] }}" id="{{ $component['field'] }}" class="form-control {{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+        <option value="">{{ ucfirst(trans($translationFile.'select-option')) }}</option>
         <?php foreach($options as $optionKey => $optionValue) { ?>
             <option value="{{ $optionKey }}" <?php echo $optionKey ==  @$item->{$component['field']} ? 'selected' : ''; ?>>{{ ucfirst($optionValue) }}</option>
         <?php } ?>
     </select>
-    <button type="button" class="btn btn-primary {{ @$config['btnStyles'] }} mt-2" onclick="$('#modal-{{ $component['field'] }}').modal()">{{ ucfirst(trans('messages.options')) }}</button>
+    <button type="button" class="btn btn-primary {{ @$config['btnStyles'] }} mt-2" onclick="$('#modal-{{ $component['field'] }}').modal()">{{ ucfirst(trans($translationFile.'options')) }}</button>
 </div>
 <div class="modal" tabindex="-1" role="dialog" id="modal-{{ $component['field'] }}">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">{{ ucfirst(trans('messages.select-option')) }} </h5>
+                <h5 class="modal-title">{{ ucfirst(trans($translationFile.'select-option')) }} </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -32,7 +46,7 @@
                 <?php } ?>
             </div>
             <div class="modal-footer">                        
-                <button type="button" class="btn btn-secondary {{ @$config['btnStyles'] }}" data-dismiss="modal">{{ ucfirst(trans('messages.accept')) }}</button>
+                <button type="button" class="btn btn-secondary {{ @$config['btnStyles'] }}" data-dismiss="modal">{{ ucfirst(trans($translationFile.'accept')) }}</button>
             </div>
         </div>
     </div>

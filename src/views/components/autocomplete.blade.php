@@ -58,12 +58,18 @@
         $method = $component['beforeShow'];
         $show = $controller::$method(@$item);
     }
+
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
    
 ?>
 <?php if($show) { ?>
     <div class="form-group">
-        <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }} ({{ trans('messages.start_writing_something') }})</label>
-        <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}" autocomplete="{{ $autocomplete }}">
+        <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }} ({{ trans($translationFile.'start_writing_something') }})</label>
+        <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" autocomplete="{{ $autocomplete }}">
         <input type="hidden" name="{{ $field }}_autocomplete" id="{{ $field }}_autocomplete" value="{{ $hidden }}"/>
         <script>
             $(function() {

@@ -1,4 +1,3 @@
-
 <?php if(array_key_exists('childrens', $component)) { ?>
     <?php foreach($component['childrens'] as $children) { ?>
         <script>

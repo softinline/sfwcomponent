@@ -31,11 +31,17 @@
         $show = $controller::$method(@$item);
     }
 
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+
 ?>
 <?php if($show) { ?>
     <div class="form-group">                                                    
-        <input type="checkbox" name="{{ $field }}" id="{{ $field }}" class="{{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $disabled ? 'disabled' : '' }} {{ $required ? 'required' : '' }} value="1" <?php echo @$item->{$field} === 1 ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
-        <label>{{ ucfirst(trans('messages.'.$title)) }} {{ $required ? '*' : '' }}</label>
+        <input type="checkbox" name="{{ $field }}" id="{{ $field }}" class="{{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $disabled ? 'disabled' : '' }} {{ $required ? 'required' : '' }} value="1" <?php echo @$item->{$field} === 1 ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+        <label for="{{ $field }}">{{ ucfirst(trans($translationFile.$title)) }} {{ $required ? '*' : '' }}</label>
     </div>
     @include('sfwcomponent::conditional-components', [
         'component' => $component,

@@ -18,5 +18,11 @@
         $class = ' class="'.$component['class'].'" ';
     }
 
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+
 ?>
-<h{{ $number }} {!! $class !!} {!! $id !!}>{{ trans('messages.'.$text) }}</h{{ $number }}>
+<h{{ $number }} {!! $class !!} {!! $id !!}>{{ trans($translationFile.$text) }}</h{{ $number }}>

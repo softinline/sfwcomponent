@@ -1,11 +1,26 @@
-<div class="form-group">
-    <label>{{ ucfirst(trans('messages.'.$component['title'])) }}: {{ $component['required'] ? '*' : '' }}</label>
+<?php
 
+    // field
+    $field = $component['field'];
+
+    // title
+    $title = $component['title'];
+
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+
+?>
+
+<div class="form-group">
+    <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $component['required'] ? '*' : '' }}</label>
     <div id="upload_box"  class="upload__box" style="min-height: 200px">
         <div class="upload__btn-box d-flex justify-content-center" style="min-height: inherit">
           <label class="btn btn-primary btn btn-profile d-flex justify-content-center align-items-center align-self-center">
-            + {{ ucfirst(trans('messages.'.$component['title'])) }}
-            <input id="{{ $component['field'] }}" name="{{ $component['field'] }}[]" type="file" multiple data-max_length="{{ $component['max-length'] }}" {{ $component['required'] ? 'required' : '' }} class="upload__inputfile {{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}">
+            + {{ ucfirst(trans($translationFile.$title)) }}
+            <input id="{{ $field }}" name="{{ $field }}[]" type="file" multiple data-max_length="{{ $component['max-length'] }}" {{ $component['required'] ? 'required' : '' }} class="upload__inputfile {{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}">
             <input id="delete-files" type="text" class="d-none" name="delete-files" value="">
             <input id="main_image" type="text" class="d-none" name="main_image" value="">
             <input id="main_image_preuploaded" type="text" class="d-none" name="main_image_preuploaded" value="">

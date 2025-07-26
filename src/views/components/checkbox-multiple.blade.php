@@ -19,12 +19,18 @@
         $method = $component['beforeShow'];
         $show = $controller::$method(@$item);
     }
+
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
 ?>
 <?php if($show) { ?>
     <div class="form-group">
-        <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required == 'required' ? '*' : '' }}</label>
+        <label for="{{ $field }}">{{ ucfirst(trans($translationFile.$title)) }}: {{ $required == 'required' ? '*' : '' }}</label>
         <?php foreach($options['all'] as $optionKey => $optionValue) { ?>
-            <br /><input type="checkbox" name="{{ $field }}[]" id="{{ $field }}" style="padding:5px" value="{{ $optionKey }}" <?php echo array_key_exists($optionKey, $options['selected']) ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}"> {{ ucfirst($optionValue) }}
+            <br /><input type="checkbox" name="{{ $field }}[]" id="{{ $field }}" style="padding:5px" value="{{ $optionKey }}" <?php echo array_key_exists($optionKey, $options['selected']) ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}"> {{ ucfirst($optionValue) }}
         <?php } ?>
     </div>
 <?php } ?>

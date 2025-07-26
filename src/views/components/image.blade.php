@@ -1,6 +1,22 @@
+<?php
+
+    // field
+    $field = $component['field'];
+
+    // title
+    $title = $component['title'];
+
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+
+?>
+
 <div class="form-group">
-    <label>{{ ucfirst(trans('messages.'.$component['title'])) }}: {{ $component['required'] ? '*' : '' }}</label>
-    <input type="file" name="{{ $component['field'] }}" id="{{ $component['field'] }}" class="{{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} value="{{ @$item->{$component['field']} }}" sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$component['title'])) }}"  accept="image/*">
+    <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $component['required'] ? '*' : '' }}</label>
+    <input type="file" name="{{ $field }}" id="{{ $field }}" class="{{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} value="{{ @$item->{$field} }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}"  accept="image/*">
     <br />
     <?php if(array_key_exists('show', $component)) { ?>
         <?php
@@ -10,12 +26,12 @@
         <?php echo $show; ?>
     <?php } ?>
     <br />
-    <canvas id="canvas-{{ $component['field'] }}" style="width:{{ $component['width'] }}px; height:auto;"></canvas>
+    <canvas id="canvas-{{ $field }}" style="width:{{ $component['width'] }}px; height:auto;"></canvas>
 </div>                
 <script>
     $(function() {
         
-        var input = document.querySelector('input[id={{ $component['field'] }}]');
+        var input = document.querySelector('input[id={{ $field }}]');
         input.onchange = function () {
             var file = input.files[0];
             drawOnCanvas(file);
@@ -25,7 +41,7 @@
             var reader = new FileReader();
             reader.onload = function (e) {
                 var dataURL = e.target.result,
-                c = document.querySelector("#canvas-{{ $component['field'] }}"),
+                c = document.querySelector("#canvas-{{ $field }}"),
                 ctx = c.getContext('2d'),
                 img = new Image();
 

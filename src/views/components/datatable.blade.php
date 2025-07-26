@@ -76,6 +76,12 @@
 
     }
 
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+
 ?>
 <?php if($show) { ?>
     <?php if($configCols) { ?>
@@ -102,7 +108,7 @@
                                             $title = $column['title'];
                                         }
                                         if($title != '') {
-                                            $title = ucfirst(trans('messages.'.$title));
+                                            $title = ucfirst(trans($translationFile.$title));
                                         }
 
                                         // defult false is not show
@@ -147,7 +153,7 @@
                             $title = $column['title'];
                         }
                         if($title != '') {
-                            $title = ucfirst(trans('messages.'.$title));
+                            $title = ucfirst(trans($translationFile.$title));
                         }
                         // options
                         $options = '';

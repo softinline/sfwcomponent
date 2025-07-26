@@ -35,13 +35,18 @@
         $show = $controller::$method(@$item);
     }
 
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+
 ?>
 <?php if($show) { ?>
     <div class="form-group">
-        <label>{{ ucfirst(trans('messages.'.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <select name="{{ $field }}" id="{{ $field }}" class="form-control sfwcomponent-select2 {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} sfwcomponent-data-title="{{ ucfirst(trans('messages.'.$title)) }}">
-            <option value="">{{ ucfirst(trans('messages.select-option')) }}</option>
-
+        <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+        <select name="{{ $field }}" id="{{ $field }}" class="form-control sfwcomponent-select2 {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+            <option value="">{{ ucfirst(trans($translationFile.'select-option')) }}</option>
             <?php foreach($options as $option) { ?>
             <?php if($option['title']) { ?> <optgroup label="{{$option['title']}}"> <?php } ?>
                 <?php foreach($option['options'] as $optionKey => $optionValue) { ?>

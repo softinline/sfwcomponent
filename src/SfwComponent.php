@@ -216,7 +216,7 @@
                     'item' => $this->_item,
                     'id' => $this->_id,
                     'config' => $config,
-                    "languages" => []//$languages,
+                    "languages" => $languages,
                 ])->render();
 
             }

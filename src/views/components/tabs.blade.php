@@ -1,3 +1,13 @@
+<?php
+
+    // get translation file
+    $translationFile = 'messages.';
+    if(array_key_exists('translationFile', $config)) {
+        $translationFile = $config['translationFile'];
+    }
+
+?>
+
 <ul class="nav nav-tabs">
     <?php $first = true; ?>
     <?php foreach($component['components'] as $c) { ?>
@@ -10,7 +20,7 @@
         ?>
         <?php if($show) { ?>
             <li class="nav-item">
-                <a class="nav-link <?php echo $first ? 'active' : ''; ?>" href="#tab_{{ $c['key'] }}" data-toggle="tab" aria-expanded="false">{{ ucfirst(trans('messages.'.$c['title'])) }}</a>
+                <a class="nav-link <?php echo $first ? 'active' : ''; ?>" href="#tab_{{ $c['key'] }}" data-toggle="tab" aria-expanded="false">{{ ucfirst(trans($translationFile.$c['title'])) }}</a>
             </li>
             <?php $first = false; ?>
         <?php } ?>
@@ -35,6 +45,7 @@
                         echo $jcomponent->renderComponents($config, [$subC]);
                     }
                 ?>
+                <input type="hidden" name="sfwTab" id="sfwTab" value="{{ $c['key'] }}" />
             </div>
             <?php $first = false; ?>
         <?php } ?>
