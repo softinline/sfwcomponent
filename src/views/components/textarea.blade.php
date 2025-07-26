@@ -89,7 +89,7 @@
                 <?php                                            
                     if($item) {
                         $method = $translations;
-                        $translations = $controller::$method($field, @$item, @$item->id);
+                        $translations = $controller::$method($item, $field);
                     }
                 ?>
                 @foreach($languages as $language)
