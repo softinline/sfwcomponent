@@ -19,9 +19,9 @@
     }
 
     // translations
-    $translations = '';
+    $translationsMethod = '';
     if(isset($component['translations'])) {
-        $translations = $component['translations'];
+        $translationsMethod = $component['translations'];
     }
 
     // required
@@ -46,6 +46,12 @@
     $class = '';
     if(isset($component['class'])) {
         $class = $component['class'];
+    }
+
+    // placeholder
+    $placeholder = '';
+    if(isset($component['placeholder'])) {
+        $placeholder = $component['placeholder'];
     }
 
     // show condition
@@ -83,19 +89,19 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_{{ $field }}_default">
                     <div class="form-group">                            
-                        <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">{{ @$item->{$field} }}</textarea>
+                        <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">{{ @$item->{$field} }}</textarea>
                     </div>
                 </div>
-                <?php                                            
+                <?php
+                    $translations = [];
                     if($item) {
-                        $method = $translations;
-                        $translations = $controller::$method($item, $field);
+                        $translations = $controller::$translationsMethod($item, $field);
                     }
                 ?>
                 @foreach($languages as $language)
                     <div class="tab-pane" id="tab_{{ $field }}_{{ $language->id }}">
                         <div class="form-group">                                
-                            <textarea name="{{ $field }}_{{ $language->id }}" id="{{ $field }}_{{ $language->id }}" class="form-control {{ $class }} {{ $translationRequired ? 'sfwcomponent-frm-item-required' : '' }}" {{ $translationRequired ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}  ({{ $language->id }})">{{ @$translations[$language->id] }}</textarea>
+                            <textarea name="{{ $field }}_{{ $language->id }}" id="{{ $field }}_{{ $language->id }}" class="form-control {{ $class }} {{ $translationRequired ? 'sfwcomponent-frm-item-required' : '' }}" {{ $translationRequired ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }} ({{ $language->id }})" placeholder="{{ $placeholder }}">{{ @$translations[$language->id] }}</textarea>
                         </div>
                     </div>
                 @endforeach                    
@@ -104,7 +110,7 @@
     <?php } else { ?>
         <div class="form-group">
             <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-            <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">{{ @$item->{$field} }}</textarea>
+            <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">{{ @$item->{$field} }}</textarea>
         </div>
     <?php } ?>
 <?php } ?>

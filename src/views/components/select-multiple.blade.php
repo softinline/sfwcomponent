@@ -45,7 +45,7 @@
 <?php if($show) { ?>
     <div class="form-group">
         <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <select name="{{ $field }}[]" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} multiple="true" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+        <select name="{{ $field }}[]" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} multiple="true" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
             <?php foreach($options['all'] as $optionKey => $optionValue) { ?>
                 <option style="padding:5px" value="{{ $optionKey }}" <?php echo array_key_exists($optionKey, $options['selected']) ? 'selected' : ''; ?>>{{ ucfirst($optionValue) }}</option>
             <?php } ?>

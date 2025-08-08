@@ -32,6 +32,12 @@
     if(isset($component['class'])) {
         $class = $component['class'];
     }
+
+    // placeholder
+    $placeholder = '';
+    if(isset($component['placeholder'])) {
+        $placeholder = $component['placeholder'];
+    }
     
     // show condition
     $show = true;
@@ -50,6 +56,6 @@
 <?php if($show) { ?>
     <div class="form-group">
         <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <input type="text" name="{{ $field }}" id="{{ $field }}" data-toggle="datetimepicker" class="form-control datetime-picker {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} != '' ? $item->{$field}->format($format) : '' }}" autocomplete="{{ $autocomplete }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+        <input type="text" name="{{ $field }}" id="{{ $field }}" data-toggle="datetimepicker" class="form-control datetime-picker {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} != '' ? $item->{$field}->format($format) : '' }}" autocomplete="{{ $autocomplete }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
     </div>
 <?php } ?>

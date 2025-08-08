@@ -19,9 +19,9 @@
     }
 
     // translations
-    $translations = '';
+    $translationsMethod = '';
     if(isset($component['translations'])) {
-        $translations = $component['translations'];
+        $translationsMethod = $component['translations'];
     }
 
     // required
@@ -79,10 +79,10 @@
                         <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">{{ @$item->{$field} }}</textarea>
                     </div>
                 </div>
-                <?php                                            
+                <?php
+                    $translations = [];
                     if($item) {
-                        $method = $translations;
-                        $translations = $controller::$method($item, $field);
+                        $translations = $controller::$translationsMethod($item, $field);
                     }
                 ?>
                 @foreach($languages as $language)

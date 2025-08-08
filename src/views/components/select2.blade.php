@@ -45,7 +45,7 @@
 <?php if($show) { ?>
     <div class="form-group">
         <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <select name="{{ $field }}" id="{{ $field }}" class="form-control sfwcomponent-select2 {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+        <select name="{{ $field }}" id="{{ $field }}" class="form-control sfwcomponent-select2 {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
             <option value="">{{ ucfirst(trans($translationFile.'select-option')) }}</option>
             <?php foreach($options as $option) { ?>
             <?php if($option['title']) { ?> <optgroup label="{{$option['title']}}"> <?php } ?>

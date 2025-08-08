@@ -324,7 +324,7 @@
             $msg = is_null($this->_id) ? 'created' : 'updated';
 
             if($submitResponse['success']) {
-                $msg = ucfirst(trans('sfwcomponent::.'.$msg.'_ok'));
+                $msg = ucfirst(trans('sfwcomponent::'.$msg.'_ok'));
             }
             else {
                 $msg = ucfirst(trans('sfwcomponent::'.$msg.'_error'));
@@ -408,229 +408,7 @@
 
             }
             
-            // echo print_r($submitResponse, true); die();
-
-            /*
-            $cConfig = $config->getConfig();
-
-            // check if its ajax
-            $ajax = '';
-            if(array_key_exists('ajax', $cConfig)) {
-                $ajax = $cConfig['ajax'] ? '#' : '';             
-            }
             
-            // default redirects on ok or ko
-            $redirectBack = false;
-            $cConfig['url'] = $ajax.$cConfig['url'];
-            $redirectOk = $cConfig['url'];
-            $redirectKo = $cConfig['url'];
-
-            // check if form has a redirect param
-            $formComponent = null;            
-            if($formId != null) {
-                $formComponent = $config->getById($formId);
-                if($formComponent) {                    
-                    if(isset($formComponent['redirect'])) {
-                        $redirectOk = $formComponent['redirect'];
-                        $redirectKo = $formComponent['redirect'];
-                        if($formComponent['redirect'] == 'back') {
-                            $redirectBack = true;
-                        }
-                    }
-                }                
-            }
-
-            // replace dynamic {id} params on final redirectOk or redirectKo
-            $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($redirectOk, '{', '}');                                
-            foreach($occurences as $occurence) {        
-                if(\Request::route($occurence)) {
-                    $redirectOk = str_replace('{'.$occurence.'}', \Request::route($occurence), $redirectOk);
-                    $redirectKo = str_replace('{'.$occurence.'}', \Request::route($occurence), $redirectKo);
-                }
-            }
-
-            // create or update message
-            $msg = is_null($this->_id) ? 'created' : 'updated';
-
-            // check Validators
-            $validator = $this->validate($config, $formId, $tabKey);
-
-            if(!$validator->fails()) {
-                
-                \DB::beginTransaction();
-
-                try {
-
-                    $result = $this->_controller::$method($this->_item);
-                                        
-                    // default response info
-                    $successStatus = $result;
-                    $successMessageOk = ucfirst(trans('sfw.'.$msg.'_ok'));
-                    $successMessageKo = ucfirst(trans('sfw.'.$msg.'_error'));
-
-                    // is response is array override with other data
-                    if(is_array($result)) {                        
-
-                        $successStatus = $result['success'];
-                        $successMessageOk = $result['message'];
-                        $successMessageKo = $result['message'];
-
-                        // restore redirect Url
-                        $redirectOk = $cConfig['url'];
-                        $redirectKo = $cConfig['url'];
-
-                    }
-                    else {
-
-                        if($result) {
-                            $redirectOk = str_replace('{id}', $result->id, $redirectOk);
-                            $redirectKo = str_replace('{id}', $result->id, $redirectKo);
-                        }
-
-                    }
-                                        
-                    // operation its ok
-                    if($successStatus) {
-
-                        \DB::commit();
-
-                        // makes the redirects
-                        if($cConfig['ajax']) {
-
-                            return \Response::json([
-                                'success' => true,
-                                'message' => $successMessageOk,
-                                'type' => 'redirect',
-                                'redirect' => $redirectOk,
-                            ], 200);
-
-                        }
-                        else {
-
-                            \Session::flash('message_success', $successMessageOk);
-
-                            if($redirectBack) {
-
-                                return \Redirect::back();
-
-                            }
-                            else {  
-
-                                return \Redirect::to($redirectOk);
-
-                            }
-
-                        }
-
-                    }
-                    else {
-
-                        \DB::rollback();
-
-                        if($cConfig['ajax']) {
-
-                            return \Response::json([
-                                'success' => false,
-                                'message' => $successMessageKo,
-                            ], 200);
-
-                        }
-                        else {
-                            
-                            \Session::flash('message_error', $successMessageKo);
-                                                                            
-                            if($redirectBack) {
-
-                                return \Redirect::back()
-                                    ->withInput();
-
-                            }
-                            else {
-
-                                return \Redirect::to($redirectKo)
-                                    ->withInput();
-
-                            }
-                            
-                        }
-
-                    }
-
-                }
-                catch(\Exception $e) {
-                    
-                    \DB::rollback();
-                    
-                    \Log::error('Error Message '.$e->getMessage());
-                    \Log::error('Error Trace '.$e->getTraceAsString());
-
-                    if($cConfig['ajax']) {
-
-                        return \Response::json([
-                            'success' => false,
-                            'message' => ucfirst(trans('sfw.'.$msg.'_error')),
-                        ], 200);
-
-                    }
-                    else {
-
-                        \Session::flash('message_error', ucfirst(trans('sfw.'.$msg.'_error')));
-                        
-                        if($redirectBack) {
-                            
-                            return \Redirect::back()
-                                ->withInput();
-                                
-                        }
-                        else  {
-
-                            return \Redirect::to($redirectKo)
-                                ->withInput();
-
-                        }
-
-                    }
-
-                    
-                }
-
-            }
-            else {
-
-                if($cConfig['ajax']) {
-
-                    return \Response::json([
-                        'success' => false,
-                        'message' => $validator->errors()->first(),
-                    ], 200);
-
-                }
-                else {
-
-                    //echo 'AAAA'; 
-                    //echo $redirectKo; 
-                    //echo $validator->errors()->first();
-                    //die();
-
-                    return \Redirect::to($redirectKo)
-                        ->withInput()
-                        ->with('message_error', $validator->errors()->first());
-
-                }
-
-            }
-            
-            
-            //    if($successStatus) {
-            //        // after execute method check if redirectOk must be changed
-            //        if(array_key_exists('optionsPostSave', $config['forms'][$form])) {
-            //            if(\Request::get('optionsPostSave') != '') {
-            //                $redirectOk = $ajax.str_replace('{id}', $result->id, $config['forms'][$form]['optionsPostSave'][\Request::get('optionsPostSave')][3]);
-            //            }
-            //        }
-            //    }
-            
-            */
         }
 
         /**
@@ -711,7 +489,7 @@
                                                                         
                         return \Response::json([
                             'success' => true,
-                            'message' => ucfirst(trans('sfw.updated_ok')),
+                            'message' => ucfirst(trans('sfwcomponent::updated_ok')),
                             'type' => 'redirect',
                             'redirect' => $config['url'],
                         ], 200);
@@ -721,7 +499,7 @@
                         
                         return \Response::json([
                             'success' => false,
-                            'message' => ucfirst(trans('sfw.updated_error')),
+                            'message' => ucfirst(trans('sfwcomponent::updated_error')),
                         ], 200);
                         
                     }
@@ -835,7 +613,7 @@
 
                             return \Response::json([
                                 'success' => true,
-                                'message' => ucfirst(trans('sfw.deleted_ok')),
+                                'message' => ucfirst(trans('sfwcomponent::deleted_ok')),
                                 'type' => 'redirect',
                                 'redirect' => $config['url'],
                             ], 200);
@@ -843,7 +621,7 @@
                         }
                         else {
 
-                            \Session::flash('flash_message', ucfirst(trans('sfw.deleted_ok')));
+                            \Session::flash('flash_message', ucfirst(trans('sfwcomponent::deleted_ok')));
 
                             return \Redirect::to($config['url']);
 
@@ -855,7 +633,7 @@
 
                             return \Response::json([
                                 'success' => false,
-                                'message' => ucfirst(trans('sfw.deleted_error')),
+                                'message' => ucfirst(trans('sfwcomponent::deleted_error')),
                             ], 200);
 
                         }
@@ -863,7 +641,7 @@
 
                             return \Redirect::to($config['url'])
                                 ->withInput()
-                                ->with('message', ucfirst(trans('sfw.deleted_error')));
+                                ->with('message', ucfirst(trans('sfwcomponent::deleted_error')));
 
                         }
                     }
@@ -880,7 +658,7 @@
 
                         return \Response::json([
                             'success' => false,
-                            'message' => ucfirst(trans('sfw.deleted_error')),
+                            'message' => ucfirst(trans('sfwcomponent::deleted_error')),
                         ], 200);
 
                     }
@@ -888,7 +666,7 @@
 
                         return \Redirect::to($redirectKo)
                             ->withInput()
-                            ->with('message', ucfirst(trans('sfw.deleted_error')));
+                            ->with('message', ucfirst(trans('sfwcomponent::deleted_error')));
                     }
 
                 }

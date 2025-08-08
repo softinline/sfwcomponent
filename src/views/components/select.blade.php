@@ -56,7 +56,7 @@
 <?php if($show) { ?>    
     <div class="form-group">
         <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <select name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+        <select name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
             <option value="">{{ ucfirst(trans($translationFile.'select-option')) }}</option>            
             <?php foreach($options as $optionKey => $optionValue) { ?>                
                 <?php                
@@ -82,7 +82,6 @@
     <?php if($linkedToObject) { ?>
         <script>
             $("#{{ $linkedToObject }}").on('change', function() {
-                alert('Change -> {{ $linkedToObject }}');
                 var select = $('#{{ $field }}');
                 $.ajax({
                     url: "{{ $linkedToUrl }}",
@@ -91,20 +90,15 @@
                         term:$("#{{ $linkedToObject }}").val()
                     },
                     success: function(data) {
-                        //term:request.term                                
                         var htmlOptions = [];
-                        html = '<option value="">-- select one option --</option>';
-                        htmlOptions[htmlOptions.length] = html;
-                        if( data.length ){
-                            for( item in data ) {
-                                html = '<option value="' + data[item].id + '">' + data[item].description + '</option>';
-                                htmlOptions[htmlOptions.length] = html;
-                            }
-                            // here you will empty the pre-existing data from you selectbox and will append the htmlOption created in the loop result
-                            select.empty().append( htmlOptions.join('') );
+                        for( item in data ) {
+                            html = '<option value="' + data[item].id + '">' + data[item].description + '</option>';
+                            htmlOptions[htmlOptions.length] = html;
                         }
+                        // here you will empty the pre-existing data from you selectbox and will append the htmlOption created in the loop result
+                        select.empty().append( htmlOptions.join('') );
                     },
-                    complete: function() {                                
+                    complete: function() {
                     }
                 });
             })

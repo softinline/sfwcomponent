@@ -389,10 +389,10 @@ sfwcomponent = {
                     contentType: false,
                     cache: false,
                     processData:false,
-                    success: function(data) {                
+                    success: function(data) {                        
                         if(data.success) {
                             alerts.show('ok', data.message);
-                            if(data.type == 'redirect') {                                
+                            if(data.type == 'redirect') {
                                 if(data.redirect != '') {
                                     var fullUrl = window.location.origin+"/"+data.redirect;
                                     if(location.href == fullUrl) {

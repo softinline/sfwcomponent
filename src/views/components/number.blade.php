@@ -27,6 +27,12 @@
         $class = $component['class'];
     }
 
+    // placeholder
+    $placeholder = '';
+    if(isset($component['placeholder'])) {
+        $placeholder = $component['placeholder'];
+    }
+
     // step
     $step = '';
     if(isset($component['step'])) {
@@ -50,6 +56,6 @@
 <?php if($show) { ?>
     <div class="form-group">
         <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <input type="number" step="{{ $step }}" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+        <input type="number" step="{{ $step }}" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
     </div>
 <?php } ?>

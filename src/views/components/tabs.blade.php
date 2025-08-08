@@ -12,15 +12,21 @@
     <?php $first = true; ?>
     <?php foreach($component['components'] as $c) { ?>
         <?php
+            // beforeShow tab
             $show = true;
             if(array_key_exists('beforeShow', $c)) {
                 $method = $c['beforeShow'];
                 $show = $controller::$method(@$item);
             }
+            // icon
+            $icon = "";
+            if(isset($c['icon'])) {
+                $icon = '<i class="'.$c['icon'].'"></i> ';
+            }
         ?>
         <?php if($show) { ?>
             <li class="nav-item">
-                <a class="nav-link <?php echo $first ? 'active' : ''; ?>" href="#tab_{{ $c['key'] }}" data-toggle="tab" aria-expanded="false">{{ ucfirst(trans($translationFile.$c['title'])) }}</a>
+                <a class="nav-link <?php echo $first ? 'active' : ''; ?>" href="#tab_{{ $c['key'] }}" data-toggle="tab" aria-expanded="false">{{ $icon }}{{ ucfirst(trans($translationFile.$c['title'])) }}</a>
             </li>
             <?php $first = false; ?>
         <?php } ?>
@@ -44,8 +50,7 @@
                         $jcomponent->setItem(@$item);                        
                         echo $jcomponent->renderComponents($config, [$subC]);
                     }
-                ?>
-                <input type="hidden" name="sfwTab" id="sfwTab" value="{{ $c['key'] }}" />
+                ?>                
             </div>
             <?php $first = false; ?>
         <?php } ?>

@@ -33,6 +33,12 @@
         $class = $component['class'];
     }
 
+    // placeholder
+    $placeholder = '';
+    if(isset($component['placeholder'])) {
+        $placeholder = $component['placeholder'];
+    }
+
     // show condition
     $show = true;
     if(array_key_exists('beforeShow', $component)) {
@@ -50,6 +56,6 @@
 <?php if($show) { ?>
     <div class="form-group">
         <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <input type="time" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} != '' ? $item->{$field}->format($format) : '' }}" autocomplete="{{ $autocomplete }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+        <input type="time" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} != '' ? $item->{$field}->format($format) : '' }}" autocomplete="{{ $autocomplete }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
     </div>
 <?php } ?>
