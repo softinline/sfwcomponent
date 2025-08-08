@@ -88,7 +88,7 @@
                 @foreach($languages as $language)
                     <div class="tab-pane" id="tab_{{ $field }}_{{ $language->id }}">
                         <div class="form-group">                                
-                            <textarea name="{{ $field }}_{{ $language->id }}" id="{{ $field }}_{{ $language->id }}" class="form-control {{ $component['translationRequired'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $translationRequired ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }} ({{ $language->id }})">{{ @$translations[$language->id] }}</textarea>
+                            <textarea name="{{ $field }}_{{ $language->id }}" id="{{ $field }}_{{ $language->id }}" class="form-control {{ $translationRequired ? 'sfwcomponent-frm-item-required' : '' }}" {{ $translationRequired ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }} ({{ $language->id }})">{{ @$translations[$language->id] }}</textarea>
                         </div>
                     </div>
                 @endforeach                    
