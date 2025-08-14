@@ -316,7 +316,6 @@ sfwcomponent = {
         
         // get data
         var id = obj.attr('sfwcomponent-data-id');
-        var url = obj.attr('sfwcomponent-data-url');        
         var title = obj.attr('sfwcomponent-data-title');
 
         // create the message
@@ -342,13 +341,14 @@ sfwcomponent = {
     // execute delete action
     deleteExec:function(obj) {
         var id = obj.attr('sfwcomponent-data-id');
-        var url = obj.attr('sfwcomponent-data-url');
+        var url = "/"+obj.attr('sfwcomponent-data-url');
+        url = url.replace('//', '/');// prevent double // in url
         var datatable = obj.attr('sfwcomponent-data-datatable');
         $("body").LoadingOverlay('show');
         $.ajax({
             method: "delete",
-            url: "/"+url+"/"+id,
-            success: function(data) {                    
+            url: url+"/"+id,
+            success: function(data) {
                 if (data.success) {
                     alerts.show('ok', data.message);
                 }
