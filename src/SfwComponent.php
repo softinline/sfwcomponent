@@ -217,6 +217,7 @@
                     'id' => $this->_id,
                     'config' => $config,
                     "languages" => $languages,
+                    "args" => @$component['args']
                 ])->render();
 
             }

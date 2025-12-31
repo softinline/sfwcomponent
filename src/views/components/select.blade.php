@@ -33,7 +33,7 @@
 
     // options
     $method = $component['selector'];
-    $options = $controller::$method(@$item, @$id);
+    $options = $controller::$method(@$item, @$id, @$args);
 
     // linkedToObject
     $linkedToObject = false;
