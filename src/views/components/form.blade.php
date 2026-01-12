@@ -1,13 +1,7 @@
 <?php
 
     // action
-    $action = $component['action'];
-    $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($action, '{', '}');                                
-    foreach($occurences as $occurence) {        
-        if(\Request::route($occurence)) {
-            $action = str_replace('{'.$occurence.'}', \Request::route($occurence), $action);
-        }
-    }
+    $action = \Softinline\SfwComponent\SfwUtils::replaceUrlParams($component['action']);
 
     // add queryString on url            
     $queryString =  http_build_query($_GET, '&');

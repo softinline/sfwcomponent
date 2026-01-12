@@ -11,15 +11,9 @@
     // name
     $name = $component['name'];
 
-    // url
-    $url = $component['url'];
-    $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($url, '{', '}');                                
-    foreach($occurences as $occurence) {        
-        if(\Request::route($occurence)) {
-            $url = str_replace('{'.$occurence.'}', \Request::route($occurence), $url);
-        }
-    }
-    
+    // url    
+    $url = \Softinline\SfwComponent\SfwUtils::replaceUrlParams($component['url']);
+        
     // selector
     $selector = $component['selector'];
 
@@ -160,6 +154,11 @@
                         if(array_key_exists('options', $column)) {
                             $options = $column['options'];
                         }
+                        // className used for dt-right, dt-body-right, etc... NOTE: must be defined this in your CSS
+                        $className = '';
+                        if(@$column['className'] != '') {
+                            $className = $column['className'];
+                        }
                         // defult false is not show
                         $default = true;
                         if(array_key_exists('default', $column)) {
@@ -251,7 +250,7 @@
                             }
                         ?>
                         <?php if($default) { ?>
-                            { width:"{{ @$column['width'] }}", data:"{{ $column['field'] }}", name:"{{ $column['name'] }}", orderable:{{ $orderable }}, searchable:{{ $searchable }} },
+                            { width:"{{ @$column['width'] }}", data:"{{ $column['field'] }}", name:"{{ $column['name'] }}", orderable:{{ $orderable }}, searchable:{{ $searchable }} className:'{{ $className }}'},
                         <?php } ?>
                     <?php } ?>
                 ],

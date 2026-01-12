@@ -8,12 +8,7 @@
     if(array_key_exists('action', $component)) {
         $tmp = explode(':', $component['action']);
         $actionType = $tmp[0];
-        $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($tmp[1], '{', '}');                                
-        foreach($occurences as $occurence) {        
-            if(\Request::route($occurence)) {
-                $tmp[1] = str_replace('{'.$occurence.'}', \Request::route($occurence), $tmp[1]);
-            }
-        }
+        $tmp[1] = \Softinline\SfwComponent\SfwUtils::replaceUrlParams($tmp[1]);
     }
        
     // icon
