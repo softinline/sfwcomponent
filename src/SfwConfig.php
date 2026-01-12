@@ -35,7 +35,8 @@
          */
         public function getParam($param) {
 
-            return $this->_config[$param];
+            // prevent params like {id} in url
+            return \Softinline\SfwComponent\SfwUtils::replaceUrlParams($this->_config[$param]);
 
         }
 

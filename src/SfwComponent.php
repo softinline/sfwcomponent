@@ -345,12 +345,7 @@
             }
 
             // replace dynamic {id} params on final redirect
-            $occurences = \Softinline\SfwComponent\SfwUtils::findAllBetween($submitResponse['redirect'], '{', '}');
-            foreach($occurences as $occurence) {        
-                if(\Request::route($occurence)) {
-                    $submitResponse['redirect'] = str_replace('{'.$occurence.'}', \Request::route($occurence), $submitResponse['redirect']);
-                }
-            }
+            $submitResponse['redirect'] = \Softinline\SfwComponent\SfwUtils::replaceUrlParams($submitResponse['redirect']);
 
             // save submit response if want to check
             $this->_lastSubmitResponse = $submitResponse;
