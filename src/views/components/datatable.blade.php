@@ -250,7 +250,7 @@
                             }
                         ?>
                         <?php if($default) { ?>
-                            { width:"{{ @$column['width'] }}", data:"{{ $column['field'] }}", name:"{{ $column['name'] }}", orderable:{{ $orderable }}, searchable:{{ $searchable }} className:'{{ $className }}'},
+                            { width:"{{ @$column['width'] }}", data:"{{ $column['field'] }}", name:"{{ $column['name'] }}", orderable:{{ $orderable }}, searchable:{{ $searchable }}, className:'{{ $className }}'},
                         <?php } ?>
                     <?php } ?>
                 ],
