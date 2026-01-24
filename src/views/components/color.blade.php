@@ -38,12 +38,18 @@
     $translationFile = 'messages.';
     if(array_key_exists('translationFile', $config)) {
         $translationFile = $config['translationFile'];
-    }    
+    }
+
+    // add help text
+    $help = false;
+    if(isset($component['help'])) {
+        $help = ucfirst($component['help']);
+    }
     
 ?>
 <?php if($show) { ?>
     <div class="form-group">
-        <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+        <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
         <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" autocomplete="{{ $autocomplete }}">
     </div>
     <script>

@@ -19,10 +19,16 @@
         $translationFile = $config['translationFile'];
     }
 
+    // add help text
+    $help = false;
+    if(isset($component['help'])) {
+        $help = ucfirst($component['help']);
+    }
+
 ?>
 <?php if($show) { ?>
     <div class="form-group">
-        <label>{{ ucfirst(trans($translationFile.$title)) }}: </label>
+        <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
         <div><pre><?php echo print_r($json, true); ?></pre></div>
     </div>
 <?php } ?>

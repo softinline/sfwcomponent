@@ -15,9 +15,15 @@
         $translationFile = $config['translationFile'];
     }
 
+    // add help text
+    $help = false;
+    if(isset($component['help'])) {
+        $help = ucfirst($component['help']);
+    }
+
 ?>
 <div class="form-group">
-    <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $component['required'] ? '*' : '' }}</label>
+    <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
     <select name="{{ $component['field'] }}" id="{{ $component['field'] }}" class="form-control {{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
         <option value="">{{ ucfirst(trans($translationFile.'select-option')) }}</option>
         <?php foreach($options as $optionKey => $optionValue) { ?>

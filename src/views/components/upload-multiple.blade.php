@@ -12,10 +12,12 @@
         $translationFile = $config['translationFile'];
     }
 
+    
+
 ?>
 
 <div class="form-group">
-    <label>{{ ucfirst(trans($translationFile.$title)) }}: {{ $component['required'] ? '*' : '' }}</label>
+    <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
     <div id="upload_box"  class="upload__box" style="min-height: 200px">
         <div class="upload__btn-box d-flex justify-content-center" style="min-height: inherit">
           <label class="btn btn-primary btn btn-profile d-flex justify-content-center align-items-center align-self-center">
