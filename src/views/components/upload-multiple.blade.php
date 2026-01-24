@@ -12,8 +12,12 @@
         $translationFile = $config['translationFile'];
     }
 
+    // add help text
+    $help = false;
+    if(isset($component['help'])) {
+        $help = ucfirst(trans($translationFile.$component['help']));
+    }
     
-
 ?>
 
 <div class="form-group">
