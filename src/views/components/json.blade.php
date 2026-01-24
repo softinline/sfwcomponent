@@ -22,7 +22,7 @@
     // add help text
     $help = false;
     if(isset($component['help'])) {
-        $help = ucfirst($component['help']);
+        $help = ucfirst(trans('messages.').$component['help']);
     }
 
 ?>
