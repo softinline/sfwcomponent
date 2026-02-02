@@ -1,5 +1,11 @@
 <?php
 
+    // before render    
+    if(array_key_exists('beforeRender', $component)) {
+        $method = $component['beforeRender'];
+        $component = $controller::$method($component, @$item);
+    }
+
     // value
     $value = "";    
     
