@@ -47,7 +47,7 @@
 ?>
 <?php if($show) { ?>
     <div class="form-group">
-        <label for="{{ $field }}" <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>        
+        <label for="{{ $field }}" <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }} {{ $required ? '*' : '' }}</label>
         <?php if($searchBar) { ?>
             <input type="text" class="form-control mb-2" name="search-bar-{{ $field }}" id="search-bar-{{ $field }}" placeholder="{{ ucfirst(trans($translationFile.'search')) }}">
         <?php } ?>
