@@ -14,7 +14,7 @@ sfwcomponent = {
         // extends datatable
         $.extend(true, $.fn.dataTable.defaults, {
             language: {
-                url: "/js/datatables/i18n/"+sfwcomponent.locale+".json",
+                url: sfwcomponent._generateUrl("/js/datatables/i18n/"+sfwcomponent.locale+".json"),
             },
             pageLength : 10,
             stateSave: true,
@@ -168,7 +168,7 @@ sfwcomponent = {
         data.append('mode', mode);
         $.ajax({
             method: "post",
-            url: '/sfw/datatable/config-columns-save',
+            url: sfwcomponent._generateUrl('/sfw/datatable/config-columns-save'),
             data: data,
             contentType: false,
             cache: false,
@@ -213,14 +213,14 @@ sfwcomponent = {
     // export to excel file
     export: function(datatable) {
         var obj = $("#table-sfwcomponent-"+datatable);
-        var url = $(obj).attr('sfwcomponent-data-url');        
+        var url = sfwcomponent._generateUrl($(obj).attr('sfwcomponent-data-url')+'/export-selected');
         if(sfwcomponent.tables[datatable].selected.length > 0) {
             var bConfirm = confirm(i18n.t('are you sure of export') + ' ' + sfwcomponent.tables[datatable].selected.length+' '+i18n.t('elements'));
             if(bConfirm) {
                 $("body").LoadingOverlay('show');
                 $.ajax({
                     method: "post",
-                    url: url+'/export-selected',
+                    url: url,
                     data: {
                         ids: JSON.stringify(sfwcomponent.tables[datatable].selected),
                         datatable:datatable,
@@ -253,7 +253,7 @@ sfwcomponent = {
     // select all elements using sessions in controller stored
     selectAll: function(obj) {
         $("body").LoadingOverlay('show');
-        var url = obj.attr('sfwcomponent-data-url');
+        var url = sfwcomponent._generateUrl(obj.attr('sfwcomponent-data-url')+"/select-all");
         var datatable = obj.attr('sfwcomponent-data-datatable');
         if(sfwcomponent.tables[datatable].selected.length > 0) {
             sfwcomponent.tables[datatable].selected = Array();
@@ -263,7 +263,7 @@ sfwcomponent = {
         else {            
             $.ajax({
                 method: "post",
-                url: url+"/select-all",
+                url: url,
                 success: function(data) {                    
                     $.each(data.data, function(i, item) {
                         var id = data.data[i].id;
@@ -287,12 +287,12 @@ sfwcomponent = {
     // enable / disable element using toggle-enable
     toggleEnable: function(obj) {
         var id = obj.attr('sfwcomponent-data-id');
-        var url = obj.attr('sfwcomponent-data-url');
+        var url = sfwcomponent._generateUrl(obj.attr('sfwcomponent-data-url')+"/"+id+"/toggle-enable");
         var datatable = obj.attr('sfwcomponent-data-datatable');
         $("body").LoadingOverlay('show');
         $.ajax({
             method: "post",
-            url: "/"+url+"/"+id+"/toggle-enable",
+            url: url,
             success: function(data) {
                 if (data.success) {
                     alerts.show('ok', data.message);
@@ -341,13 +341,12 @@ sfwcomponent = {
     // execute delete action
     deleteExec:function(obj) {
         var id = obj.attr('sfwcomponent-data-id');
-        var url = "/"+obj.attr('sfwcomponent-data-url');
-        url = url.replace('//', '/');// prevent double // in url
+        var url = sfwcomponent._generateUrl(obj.attr('sfwcomponent-data-url')+"/"+id);        
         var datatable = obj.attr('sfwcomponent-data-datatable');
         $("body").LoadingOverlay('show');
         $.ajax({
             method: "delete",
-            url: url+"/"+id,
+            url: url,
             success: function(data) {
                 if (data.success) {
                     alerts.show('ok', data.message);
@@ -460,7 +459,7 @@ sfwcomponent = {
         alert('Send -> '+id);
         $.ajax({
             method: "post",
-            url: "/sfw/smtps/"+id+"/test-email",
+            url: sfwcomponent._generateUrl('sfw/smtps/'+id+'/test-email'),
             success: function(data) {                    
                 if (data.success) {
                     alerts.show('ok', data.message);
@@ -470,5 +469,12 @@ sfwcomponent = {
                 }
             },
         });
-    },    
+    },
+    _generateUrl: function(path) {
+        var url = window.location.protocol+'//'+window.location.host+'/'+path;
+        url = url.replace(/(?<!:)(\/{2,})/g, '/')         // quita // repetidos (excepto ://)
+            .replace(/^(https?:\/)(\/+)/, '$1/')    // arregla http:/// → http://
+            .replace(/([^:])\/{3,}/g, '$1//');      // casos extraños con triple o más        
+        return url;
+    }
 }
