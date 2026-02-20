@@ -121,6 +121,10 @@
                 skin:'kama',         
                 enterMode: CKEDITOR.ENTER_BR,
                 shiftEnterMode: CKEDITOR.ENTER_BR,
+                coreStyles_bold: {
+                    element: 'b',
+                    overrides: 'strong'       // ← importante para que convierta <strong> → <b>
+                }
                 /*extraPlugins:'justify',*/
             };
             <?php if($translate) { ?>
