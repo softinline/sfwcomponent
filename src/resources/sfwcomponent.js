@@ -133,6 +133,17 @@ sfwcomponent = {
             });
         });
 
+        // capture relation checkox extra fields show / hide
+        $(document).on('change', '.sfwcomponent-relation-toggle-check', function() {
+            var $row = $(this).closest('.sfwcomponent-relation-toggle-row');
+            var $extras = $row.find('.sfwcomponent-relation-toggle-extra');
+            if ($(this).is(':checked')) {
+                $extras.show();
+            } else {
+                $extras.hide();
+            }
+        });
+
         // capture delete click event on row
         $(document).on('change', '.sfwcomponent-toggle-enabled',  function() {
             sfwcomponent.toggleEnable($(this));

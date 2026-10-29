@@ -42,6 +42,18 @@
         $disabled = $component['disabled'];
     }
 
+    // visible
+    $visible = true;
+    if(isset($component['visible'])) {
+        $visible = $component['visible'];
+    }
+
+    // showLavel
+    $showLabel = true;
+    if(isset($component['showLabel'])) {
+        $showLabel = $component['showLabel'];
+    }
+
     // class    
     $class = '';
     if(isset($component['class'])) {
@@ -79,11 +91,19 @@
         $help = ucfirst(trans($translationFile.$component['help']));
     }
 
+    // name input
+    $name = $field;
+    if(isset($component['name'])) {
+        $name = $component['name'];
+    }
+
 ?>
 <?php if($show) { ?>
     <?php if($translate) { ?>
         <div class="form-group">
-            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+            <?php if($showLabel) { ?>
+                <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+            <?php } ?>
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" href="#tab_{{ $field }}_default" data-toggle="tab" aria-expanded="false" id="li-text-area">
@@ -101,7 +121,7 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="tab_{{ $field }}_default">
                     <div class="form-group">
-                        <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} }}" placeholder="{{ $placeholder }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" autocomplete="{{ $autocomplete }}">
+                        <input type="text" name="{{ $name }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} }}" placeholder="{{ $placeholder }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" autocomplete="{{ $autocomplete }}">
                     </div>
                 </div>
                 <?php
@@ -113,16 +133,25 @@
                 @foreach($languages as $language)
                     <div class="tab-pane" id="tab_{{ $field }}_{{ $language->id }}">
                         <div class="form-group">                                
-                            <input type="text" name="{{ $field }}_{{ $language->id }}" id="{{ $field }}_{{ $language->id }}" class="form-control {{ $class }} {{ $translationRequired ? 'sfwcomponent-frm-item-required' : '' }}" {{ $translationRequired ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$translations[$language->id] }}" placeholder="{{ $placeholder }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }} ({{ $language->id }})" autocomplete="{{ $autocomplete }}">
+                            <input type="text" name="{{ $name }}_{{ $language->id }}" id="{{ $field }}_{{ $language->id }}" class="form-control {{ $class }} {{ $translationRequired ? 'sfwcomponent-frm-item-required' : '' }}" {{ $translationRequired ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$translations[$language->id] }}" placeholder="{{ $placeholder }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }} ({{ $language->id }})" autocomplete="{{ $autocomplete }}">
                         </div>
                     </div>
                 @endforeach                    
             </div>     
         </div>
     <?php } else { ?>
+        <?php
+            // value
+            $value = @$item->{$field};
+            if(isset($component['value'])) {
+                $value = $component['value'];
+            }
+        ?>
         <div class="form-group">
-            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-            <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} }}" placeholder="{{ $placeholder }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" autocomplete="{{ $autocomplete }}">
+            <?php if($showLabel) { ?>
+                <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+            <?php } ?>
+            <input type="text" style="{{ (!$visible ? 'display:none' : '') }}" name="{{ $name }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" placeholder="{{ $placeholder }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" autocomplete="{{ $autocomplete }}">
         </div>
     <?php } ?>
 <?php } ?>

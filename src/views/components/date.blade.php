@@ -63,11 +63,31 @@
     if(isset($component['help'])) {
         $help = ucfirst(trans($translationFile.$component['help']));
     }
+
+    // visible
+    $visible = true;
+    if(isset($component['visible'])) {
+        $visible = $component['visible'];
+    }
+
+    // showLavel
+    $showLabel = true;
+    if(isset($component['showLabel'])) {
+        $showLabel = $component['showLabel'];
+    }
+
+    // name input
+    $name = $field;
+    if(isset($component['name'])) {
+        $name = $component['name'];
+    }
     
 ?>
 <?php if($show) { ?>
     <div class="form-group">
-        <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control date-picker {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} != '' ? $item->{$field}->format($format) : '' }}" autocomplete="{{ $autocomplete }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
+        <?php if($showLabel) { ?>
+            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+        <?php } ?>
+        <input type="text" style="{{ (!$visible ? 'display:none' : '') }}" name="{{ $name }}" id="{{ $field }}" class="form-control date-picker {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} != '' ? $item->{$field}->format($format) : '' }}" autocomplete="{{ $autocomplete }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
     </div>
 <?php } ?>

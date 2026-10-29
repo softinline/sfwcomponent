@@ -9,6 +9,9 @@
     // title
     $title = $component['title'];
 
+    // field
+    $field = $component['field'];
+
     // get translation file
     $translationFile = 'messages.';
     if(array_key_exists('translationFile', $config)) {
@@ -21,15 +24,41 @@
         $help = ucfirst(trans($translationFile.$component['help']));
     }
 
+    // required
+    $required = false;
+    if(isset($component['required'])) {
+        $required = $component['required'];
+    }
+
+    // visible
+    $visible = true;
+    if(isset($component['visible'])) {
+        $visible = $component['visible'];
+    }
+
+    // showLavel
+    $showLabel = true;
+    if(isset($component['showLabel'])) {
+        $showLabel = $component['showLabel'];
+    }
+
+    // name input
+    $name = $field;
+    if(isset($component['name'])) {
+        $name = $component['name'];
+    }
+
 ?>
 <div class="form-group">
-    <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-    <input type="file" name="{{ $component['field'] }}" id="{{ $component['field'] }}" class="{{ $component['required'] ? 'sfwcomponent-frm-item-required' : '' }}" {{ $component['required'] ? 'required' : '' }} value="{{ @$item->{$component['field']} }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+    <?php if($showLabel) { ?>
+        <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+    <?php } ?>
+    <?php if(array_key_exists('show', $component)) { ?>
+        <?php
+            $method = $component['show'];
+            $show = $controller::$method(@$item, @$id);
+        ?>
+        <?php echo $show; ?>
+    <?php } ?>    
+    <input type="file" style="{{ (!$visible ? 'display:none' : '') }}" name="{{ $name }}" id="{{ $field }}" class="{{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} value="{{ @$item->{$field} }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
 </div>
-<?php if(array_key_exists('show', $component)) { ?>
-    <?php
-        $method = $component['show'];
-        $show = $controller::$method(@$item, @$id);
-    ?>
-    <?php echo $show; ?>
-<?php } ?>

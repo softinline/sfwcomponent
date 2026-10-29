@@ -24,6 +24,18 @@
         $disabled = $component['disabled'];
     }
 
+    // visible
+    $visible = true;
+    if(isset($component['visible'])) {
+        $visible = $component['visible'];
+    }
+
+    // showLavel
+    $showLabel = true;
+    if(isset($component['showLabel'])) {
+        $showLabel = $component['showLabel'];
+    }
+
     // autocomplete
     $autocomplete = "off";
 
@@ -64,10 +76,24 @@
         $help = ucfirst(trans($translationFile.$component['help']));
     }
 
+    // name input
+    $name = $field;
+    if(isset($component['name'])) {
+        $name = $component['name'];
+    }
+
+    // value
+    $value = @$item->{$field};
+    if(isset($component['value'])) {
+        $value = $component['value'];
+    }
+
 ?>
 <?php if($show) { ?>
     <div class="form-group">
-        <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <input type="number" step="{{ $step }}" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ @$item->{$field} }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
+        <?php if($showLabel) { ?>
+            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+        <?php } ?>
+        <input type="number" style="{{ (!$visible ? 'display:none' : '') }}" step="{{ $step }}" name="{{ $name }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">
     </div>
 <?php } ?>
