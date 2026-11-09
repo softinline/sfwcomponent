@@ -26,5 +26,6 @@
         
 ?>
 <form class="{{ $class }}" name="{{ $id }}" id="{{ $id }}" method="post" action="{{ url($action) }}" enctype="multipart/form-data">
+    @csrf
     <?php echo $content; ?>
 </form>
