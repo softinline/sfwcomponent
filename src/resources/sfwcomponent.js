@@ -379,7 +379,11 @@ sfwcomponent = {
     },
     // submit
     // exeucte submit form
-    submit:function(frm) {
+    submit:function(frm, confirmRequired) {
+        if(confirmRequired && !confirm(i18n.t('are you sure to submit'))) {
+            return false;
+        }
+
         if(typeof CKEDITOR != undefined && typeof CKEDITOR != 'undefined') {
             for (var i in CKEDITOR.instances) {
                 CKEDITOR.instances[i].updateElement();
