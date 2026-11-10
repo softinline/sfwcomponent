@@ -16,8 +16,14 @@
 
     // tableClass
     $tableClass = isset($component['tableClass']) ? $component['tableClass'] : 'table table-bordered table-striped';
+
+    // items
+    $items = $items ?? [];
 ?>
-<div class="sfwcomponent-relation-toggle-list mt-3">    
+<div class="sfwcomponent-relation-toggle-list mt-3">
+<?php if (count($items) == 0) { ?>
+    <div class="alert alert-info">{{ ucfirst(trans('messages.no_data_found')) }}</div>
+<?php } else { ?>
     <table class="sfwcomponent-relation-toggle-table {{ $tableClass }}">
         <thead>
             <tr>
@@ -71,4 +77,5 @@
             <?php } ?>
         </tbody>
     </table>
+<?php } ?>
 </div>

@@ -378,7 +378,7 @@ sfwcomponent = {
         $("#modal-options-post-save").modal();
     },
     // submit
-    // exeucte submit form
+    // Submit a form, optionally asking the user to confirm first.
     submit:function(frm, confirmRequired) {
         if(confirmRequired && !confirm(i18n.t('are you sure to submit'))) {
             return false;
