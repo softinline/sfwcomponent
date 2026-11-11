@@ -11,15 +11,17 @@
         private $_id;
         private $_item;
         private $_lastSubmitResponse;
+        private SfwFlags $_flags;
 
         /**
          * constructor
          * @param $id, is the base id for all requests
          * urls, etc...
          */
-        public function __construct($controller=null) {
+        public function __construct($controller=null, ?SfwFlags $flags=null) {
             
             $this->_controller = $controller;
+            $this->_flags = $flags ?? new SfwFlags();
 
         }
         
@@ -30,6 +32,16 @@
         public function getController() {
 
             return $this->_controller;
+
+        }
+
+        /**
+         * return the render flags
+         * @return SfwFlags
+         */
+        public function getFlags() {
+
+            return $this->_flags;
 
         }
 
@@ -167,6 +179,8 @@
          * render individual component
          */
         public function renderComponent($config, $component, $content) {
+
+            $component['flags'] = $this->_flags;
 
             // set languages
             $languages = [];

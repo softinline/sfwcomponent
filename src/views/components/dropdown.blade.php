@@ -19,7 +19,7 @@
     $show = true;
     if(array_key_exists('beforeShow', $component)) {
         $method = $component['beforeShow'];
-        $show = $controller::$method(@$item);
+        $show = $controller::$method($component, @$item);
     }
 
     // get translation file

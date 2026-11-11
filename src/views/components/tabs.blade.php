@@ -13,10 +13,11 @@
     <?php foreach($component['components'] as $c) { ?>
         <?php
             // beforeShow tab
+            $c['flags'] = $component['flags'];
             $show = true;
             if(array_key_exists('beforeShow', $c)) {
                 $method = $c['beforeShow'];
-                $show = $controller::$method(@$item);
+                $show = $controller::$method($c, @$item);
             }
             // icon
             $icon = "";
@@ -36,17 +37,18 @@
     <?php $first = true; ?>    
     <?php foreach($component['components'] as $c) { ?>
         <?php
+            $c['flags'] = $component['flags'];
             $show = true;
             if(array_key_exists('beforeShow', $c)) {
                 $method = $c['beforeShow'];
-                $show = $controller::$method(@$item);
+                $show = $controller::$method($c, @$item);
             }
         ?>
         <?php if($show) { ?>
             <div class="tab-pane <?php echo $first ? 'active' : ''; ?>" id="tab_{{ $c['key'] }}">                
                 <?php                                        
                     foreach($c['components'] as $subC) {                                                
-                        $jcomponent = new \Softinline\SfwComponent\SfwComponent($controller);
+                        $jcomponent = new \Softinline\SfwComponent\SfwComponent($controller, $component['flags']);
                         $jcomponent->setItem(@$item);                        
                         echo $jcomponent->renderComponents($config, [$subC]);
                     }

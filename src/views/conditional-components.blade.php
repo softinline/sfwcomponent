@@ -22,7 +22,7 @@
         <div id="div-{{ $component['field'] }}-{{ $children['value'] }}" style="display:{{ $display }}" class="sfwcomponent-childrens-div">
             <?php foreach($children['components'] as $c) { ?>
                 <?php
-                    $sfwcomponent = new \Softinline\SfwComponent\SfwComponent($controller);
+                    $sfwcomponent = new \Softinline\SfwComponent\SfwComponent($controller, $component['flags']);
                     $sfwcomponent->setItem($item);
                     echo $sfwcomponent->renderComponents($config, [$c], "");
                 ?>
