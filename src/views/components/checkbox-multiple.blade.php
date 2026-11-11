@@ -26,10 +26,10 @@
         $show = $controller::$method($component, @$item);
     }
 
-    // search bar
+    // search bar (only when there are options to search)
     $searchBar = false;
     if(isset($component['searchBar'])) {
-        $searchBar = $component['searchBar'];
+        $searchBar = $component['searchBar'] && !empty($options['all']);
     }
 
     // get translation file
@@ -48,15 +48,20 @@
 <?php if($show) { ?>
     <div class="form-group">
         <label for="{{ $field }}" <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }} {{ $required ? '*' : '' }}</label>
-        <?php if($searchBar) { ?>
-            <input type="text" class="form-control mb-2" name="search-bar-{{ $field }}" id="search-bar-{{ $field }}" placeholder="{{ ucfirst(trans($translationFile.'search')) }}">
-        <?php } ?>
-        <?php foreach($options['all'] as $optionKey => $optionValue) { ?>
-            <div class="option-search-bar-{{ $field }}" data-title="{{ mb_strtolower($optionValue) }}">
-                <input type="checkbox" name="{{ $field }}[]" id="{{ $field }}" style="padding:5px" value="{{ $optionKey }}" <?php echo array_key_exists($optionKey, $options['selected']) ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}"> {{ ucfirst($optionValue) }}
-            </div>
+        <?php if(empty($options['all'])) { ?>
+            <div class="alert alert-info">{{ ucfirst(trans($translationFile.'no_data_found')) }}</div>
+        <?php } else { ?>
+            <?php if($searchBar) { ?>
+                <input type="text" class="form-control mb-2" name="search-bar-{{ $field }}" id="search-bar-{{ $field }}" placeholder="{{ ucfirst(trans($translationFile.'search')) }}">
+            <?php } ?>
+            <?php foreach($options['all'] as $optionKey => $optionValue) { ?>
+                <div class="option-search-bar-{{ $field }}" data-title="{{ mb_strtolower($optionValue) }}">
+                    <input type="checkbox" name="{{ $field }}[]" id="{{ $field }}" style="padding:5px" value="{{ $optionKey }}" <?php echo array_key_exists($optionKey, $options['selected']) ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}"> {{ ucfirst($optionValue) }}
+                </div>
+            <?php } ?>
         <?php } ?>
     </div>
+    <?php if($searchBar) { ?>
         <script>
             $('#search-bar-{{ $field }}').keyup(function() {
             var value = $(this).val().toLowerCase();
@@ -69,4 +74,5 @@
             }
         });
     </script>
+    <?php } ?>
 <?php } ?>
