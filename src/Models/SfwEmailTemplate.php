@@ -1,40 +1,64 @@
 <?php
 
     namespace Softinline\SfwComponent\Models;
-        
+
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\SoftDeletes;
+    use Softinline\SfwComponent\Models\Traits\HasSfwRecordAccess;
 
     class SfwEmailTemplate extends Model
     {
-        // softdeletes
         use SoftDeletes;
-        
-        // incrementing
+        use HasSfwRecordAccess;
+
         public $incrementing = false;
+        protected $table = 'sfw_email_templates';
 
-        // table
-        protected $table = 'sfw_emails_templates';
+        protected $guarded = [];
+
+        protected $casts = [
+            'is_active' => 'boolean',
+            'default' => 'boolean',
+            'meta' => 'array',
+        ];
 
         /**
-         * get by id
+         * Get an email template by ID.
+         *
+         * @param mixed $id
+         * @return \Softinline\SfwComponent\Models\SfwEmailTemplate|false
          */
-	    public static function getById($id) {
+        public static function getById($id)
+        {
+            static::sfwClearLastAccessError();
 
-		    return self::find($id);
+            $item = self::find($id);
+            if (!$item) {
+                static::sfwDenyAccess(404, 'object_not_exists');
+                return false;
+            }
 
+            return $item;
         }
 
         /**
-         * getByKey
-         * get by key
+         * Get all email templates query.
+         *
+         * @return \Illuminate\Database\Eloquent\Builder
          */
-	    public static function getByKey($key) {
-
-            return self::select()
-                ->where('key', '=', $key)
-                ->first();
-
+        public static function getAll()
+        {
+            return self::select('sfw_email_templates.*');
         }
-    
+
+        /**
+         * Get an email template by key.
+         *
+         * @param string $key
+         * @return \Softinline\SfwComponent\Models\SfwEmailTemplate|null
+         */
+        public static function getByKey($key)
+        {
+            return self::select()->where('key', '=', $key)->first();
+        }
     }

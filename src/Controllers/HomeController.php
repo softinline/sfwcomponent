@@ -1,21 +1,29 @@
 <?php
 
-    namespace Softinline\SfwComponent\Controllers;
-    
-    use Softinline\SfwComponent;    
-    use App\Http\Controllers\Controller;    
-        
-    class HomeController extends Controller
-    {
+namespace Softinline\SfwComponent\Controllers;
 
-        /**
-         * back entry point index
-         */
-        public function index() {
-            
-            return view('sfwcomponent::backoffice.home.index', [
-            ]);  
-            
+use App\Http\Controllers\Controller;
+use Softinline\SfwComponent\Models\SfwConfig;
+
+class HomeController extends Controller
+{
+    /**
+     * Display the home screen.
+     *
+     * @return mixed
+     */
+    public function index()
+    {
+        $config = null;
+
+        try {
+            $config = SfwConfig::getFirst();
+        } catch (\Throwable $e) {
+            $config = null;
         }
-        
+
+        return view('sfwcomponent::backoffice.home.index', [
+            'config' => $config,
+        ]);
     }
+}
