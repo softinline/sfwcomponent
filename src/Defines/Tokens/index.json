@@ -1,0 +1,83 @@
+{
+    "type": "screen",
+    "layout": "sfwcomponent::backoffice.layouts.default",
+    "ajax": false,
+    "name": "index",
+    "url": "sfw/tokens",
+    "components": [
+        {
+            "type": "function",
+            "function": "breadcrumbIndex"
+        },
+        {
+            "type": "div",
+            "class": "row",
+            "components": [
+                {
+                    "type": "div",
+                    "class": "col-lg-12",
+                    "components": [
+                        {
+                            "type": "div",
+                            "class": "card",
+                            "components": [
+                                {
+                                    "type": "div",
+                                    "class": "card-body",
+                                    "components": [
+                                        {
+                                            "type": "datatable",
+                                            "class": "table",
+                                            "name": "sfw-tokens",
+                                            "footer": "true",
+                                            "pageLength": "50",
+                                            "url": "/sfw/tokens",
+                                            "selector": false,
+                                            "columns": [
+                                                {
+                                                    "name": "id",
+                                                    "field": "id",
+                                                    "width": "1%"
+                                                },
+                                                {
+                                                    "name": "name",
+                                                    "field": "name"
+                                                },
+                                                {
+                                                    "name": "tokenable_type",
+                                                    "field": "tokenable_type"
+                                                },
+                                                {
+                                                    "name": "tokenable_id",
+                                                    "field": "tokenable_id"
+                                                },
+                                                {
+                                                    "name": "last_used_at",
+                                                    "field": "last_used_at"
+                                                },
+                                                {
+                                                    "name": "expires_at",
+                                                    "field": "expires_at"
+                                                },
+                                                {
+                                                    "name": "created_at",
+                                                    "field": "created_at"
+                                                },
+                                                {
+                                                    "name": "actions",
+                                                    "field": "actions",
+                                                    "orderable": false,
+                                                    "searchable": false
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

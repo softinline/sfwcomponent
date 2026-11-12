@@ -5,20 +5,18 @@
                 <i class="fas fa-bars"></i>
             </a>
         </li>
-    </ul>  
+    </ul>
     <ul class="navbar-nav ml-auto">
-        <li class="nav-item dropdown">
-            <a class="nav-link" data-toggle="dropdown" href="#">
-                <i class="far fa-user"></i> 
-                welcome
-            </a>
-            <?php if(\Session::get('sfw-user-logged')) { ?>
-                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <a href="{{ url('sfw/auth/logoff') }}" class="dropdown-item">
-                        <i class="las la-sign-out-alt mr-2"></i> logoff
-                    </a>
-                </div>
-            <?php } ?>
-        </li>
+        <?php $sfwPrefix = trim((string) config('sfw.route_prefix'), '/'); ?>
+        <?php if(\Session::get('sfw-user-logged')) { ?>
+            <li class="nav-item">
+                <span class="nav-link"><i class="far fa-user"></i> {{ \Session::get('sfw-user-name', 'admin') }}</span>
+            </li>
+            <li class="nav-item">
+                <a href="{{ url($sfwPrefix . '/auth/logoff') }}" class="nav-link">
+                    <i class="las la-sign-out-alt"></i> {{ trans('sfwcomponent::logout') }}
+                </a>
+            </li>
+        <?php } ?>
     </ul>
 </nav>

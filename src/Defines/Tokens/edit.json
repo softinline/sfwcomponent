@@ -1,0 +1,88 @@
+{
+    "type": "screen",
+    "layout": "sfwcomponent::backoffice.layouts.default",
+    "ajax": false,
+    "name": "edit",
+    "url": "sfw/tokens",
+    "components": [
+        {
+            "type": "function",
+            "function": "breadcrumbEdit"
+        },
+        {
+            "type": "div",
+            "class": "row",
+            "components": [
+                {
+                    "type": "div",
+                    "class": "col-lg-12",
+                    "components": [
+                        {
+                            "type": "form",
+                            "class": "",
+                            "id": "frm-sfw-tokens-edit",
+                            "action": "sfw/tokens/{id}/edit",
+                            "components": [
+                                {
+                                    "type": "tabs",
+                                    "components": [
+                                        {
+                                            "type": "tab",
+                                            "title": "general",
+                                            "key": "general",
+                                            "components": [
+                                                {
+                                                    "type": "div",
+                                                    "class": "card",
+                                                    "components": [
+                                                        {
+                                                            "type": "div",
+                                                            "class": "card-body",
+                                                            "components": [
+                                                                {
+                                                                    "type": "text",
+                                                                    "title": "user_id",
+                                                                    "field": "user_id",
+                                                                    "disabled": true
+                                                                },
+                                                                {
+                                                                    "type": "text",
+                                                                    "title": "user_email",
+                                                                    "field": "user_email",
+                                                                    "disabled": true,
+                                                                    "beforeRender": "beforeRenderUserEmail"
+                                                                },
+                                                                {
+                                                                    "type": "text",
+                                                                    "title": "device_id",
+                                                                    "field": "device_id",
+                                                                    "disabled": true
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "div",
+                                                            "class": "card-footer",
+                                                            "components": [
+                                                                {
+                                                                    "type": "button",
+                                                                    "action": "link:sfw/tokens",
+                                                                    "title": "cancel",
+                                                                    "class": "btn btn-secondary"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
