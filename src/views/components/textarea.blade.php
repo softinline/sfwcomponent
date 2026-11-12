@@ -120,9 +120,16 @@
             </div>     
         </div>
     <?php } else { ?>
+        <?php
+            // value
+            $value = @$item->{$field};
+            if(isset($component['value'])) {
+                $value = $component['value'];
+            }
+        ?>
         <div class="form-group">
             <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-            <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">{{ @$item->{$field} }}</textarea>
+            <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">{{ $value }}</textarea>
         </div>
     <?php } ?>
 <?php } ?>
