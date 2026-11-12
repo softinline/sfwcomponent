@@ -1,193 +1,239 @@
 <?php
 
     namespace Softinline\SfwComponent\Controllers;
-    
-    use Softinline\SfwComponent;    
-    use App\Http\Controllers\Controller;    
+
+    use App\Http\Controllers\Controller;
+    use Softinline\SfwComponent\Models\SfwLanguage;
+    use Softinline\SfwComponent\SfwComponent;
+    use Softinline\SfwComponent\SfwConfig;
     use Yajra\DataTables\Facades\DataTables;
-        
+
     class LanguagesController extends Controller
     {
-
         var $_sfwconfig;
 
         /**
-         * index
+         * Display the index screen.
+         *
+         * @return mixed
          */
         public function index() {
 
-            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
+            $this->_sfwconfig = new SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/index.json');
-            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
+            $sfwcomponent = new SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
-            
+
         }
 
         /**
-         * data
+         * Provide datatable data.
+         *
+         * @return mixed
          */
         public function data() {
 
-            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
+            $this->_sfwconfig = new SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/index.json');
-                                    
-            $query = \Softinline\SfwComponent\Models\SfwLanguage::all();
-                                                
-            $datatable = Datatables::of($query)                                
-                ->editColumn('created_at', function($item) {
-                    return $item->created_at != '' ? $item->created_at->format("d/m/Y") : '';
-                })                
-                ->addColumn('actions', function($item) {
+
+            $query = SfwLanguage::getAll();
+
+            $datatable = Datatables::of($query)
+                ->editColumn('created_at', function ($item) {
+                    return $item->created_at != '' ? $item->created_at->format('d/m/Y') : '';
+                })
+                ->addColumn('actions', function ($item) {
                     $return = '';
                     $return .= '<a href="'.url('sfw/languages/'.$item->id).'" title="Editar"><i class="las la-edit fa-fw"></i></a>';
-                    $return .= '&nbsp;';                  
-                    $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="'.$item->id.'" sfwcomponent-data-url="'.$this->_sfwconfig->getParam('url').'" sfwcomponent-data-datatable="'.\Request::get('datatable').'" sfwcomponent-data-title="'.$item->language.'" class="sfwcomponent-delete" title="'.ucfirst(trans('messages.delete')).'"><i class="las la-trash fa-fw"></i></a>';
+                    $return .= '&nbsp;';
+                    $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="'.$item->id.'" sfwcomponent-data-url="'.$this->_sfwconfig->getParam('url').'" sfwcomponent-data-datatable="'.\Request::get('datatable').'" sfwcomponent-data-title="'.e($item->language ?? $item->name ?? '').'" class="sfwcomponent-delete" title="'.ucfirst(trans('sfwcomponent::delete')).'"><i class="las la-trash fa-fw"></i></a>';
                     return $return;
                 })
                 ->rawColumns(['actions']);
-            
-            return $datatable->make(true);            
-            
+            return $datatable->make(true);
+
         }
-                
+
         /**
-         * add
+         * Display the add screen.
+         *
+         * @return mixed
          */
         public function add() {
 
-            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
+            $this->_sfwconfig = new SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/add.json');
-            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
+            $sfwcomponent = new SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
 
         }
-        
+
         /**
-         * create
+         * Handle create form submission.
+         *
+         * @return mixed
          */
         public function create() {
 
-            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
+            $this->_sfwconfig = new SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/add.json');
-            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            return $sfwcomponent->submit($this->_sfwconfig, '_create'); //,
+            $sfwcomponent = new SfwComponent(get_class());
+            return $sfwcomponent->submit($this->_sfwconfig, '_create');
 
         }
 
         /**
-         * _create
+         * Create a new record.
+         *
+         * @return mixed
          */
         public static function _create() {
+            $item = new SfwLanguage();
+            $item->id = uniqid('L');
+            $item->language = \Request::get('language') != '' ? \Request::get('language') : null;
+            $item->name = \Request::get('name') != '' ? \Request::get('name') : null;
+            $item->iso = \Request::get('iso') != '' ? \Request::get('iso') : null;
+            $item->locale = \Request::get('locale') != '' ? \Request::get('locale') : null;
 
-            $item = new \Softinline\SfwComponent\Models\SfwLanguage();
-            $item->id = uniqid("L");
-
-            if($item->save()) {
+            if ($item->save()) {
                 return $item;
             }
 
             return false;
-
         }
 
         /**
-         * edit
+         * Display the edit screen.
+         *
+         * @param string $id
+         * @return mixed
          */
-        public function edit($id) {    
-            
-            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
+        public function edit($id) {
+
+            $this->_sfwconfig = new SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/edit.json');
-            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwLanguage::getById($id));
+            $sfwcomponent = new SfwComponent(get_class());
+            $sfwcomponent->setItem(SfwLanguage::getByIdOrAbort($id));
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
 
         }
 
         /**
-         * update
+         * Handle update form submission.
+         *
+         * @param string $id
+         * @return mixed
          */
         public function update($id) {
-            
-            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
+
+            $this->_sfwconfig = new SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/edit.json');
-            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwLanguage::getById($id));
-            return $sfwcomponent->submit($this->_sfwconfig, '_update');
-            
+            $sfwcomponent = new SfwComponent(get_class());
+            $sfwcomponent->setItem(SfwLanguage::getByIdOrAbort($id));
+            return $sfwcomponent->submit($this->_sfwconfig, '_update', 'frm-sfw-languages-edit');
+
         }
 
         /**
-         * update
-         * @return bool
-         */                
+         * Update a record.
+         *
+         * @param mixed $item
+         * @return mixed
+         */
         public static function _update($item) {
 
-            $item->language = \Request::get('language');
-            $item->iso = \Request::get('iso');
-            
-            if($item->save()) {
+            $item->language = \Request::get('language') != '' ? \Request::get('language') : null;
+            $item->name = \Request::get('name') != '' ? \Request::get('name') : null;
+            $item->iso = \Request::get('iso') != '' ? \Request::get('iso') : null;
+            $item->locale = \Request::get('locale') != '' ? \Request::get('locale') : null;
+
+            if ($item->save()) {
                 return $item;
             }
 
+            return false;
         }
 
         /**
-         * breadcrumbIndex
+         * Delete a record.
+         *
+         * @param string $id
+         * @return mixed
+         */
+        public function delete($id) {
+
+            $this->_sfwconfig = new SfwConfig();
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Languages/index.json');
+            $sfwcomponent = new SfwComponent(get_class());
+            $sfwcomponent->setItem(SfwLanguage::getByIdOrAbort($id));
+            return $sfwcomponent->delete($this->_sfwconfig->getConfig(), '_delete');
+
+        }
+
+        /**
+         * Perform record deletion.
+         *
+         * @param mixed $item
+         * @return mixed
+         */
+        public static function _delete($item) {
+            return (bool) $item->delete();
+        }
+
+        /**
+         * Render the index breadcrumb.
+         *
+         * @return mixed
          */
         public static function breadcrumbIndex() {
-            
+
             $data = [
-                'title' => ucfirst(trans('messages.languages')),
+                'title' => ucfirst(trans('sfwcomponent::languages')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
-                    [ucfirst(trans('messages.languages'))],
+                    [ucfirst(trans('sfwcomponent::dashboard')), url('/sfw')],
+                    [ucfirst(trans('sfwcomponent::languages'))],
                 ]
             ];
-                        
-            return view('sfwcomponent::backoffice.partials.breadcrumb', [
-                'data' => $data
-            ]);
-            
+            return view('sfwcomponent::backoffice.partials.breadcrumb', ['data' => $data]);
+
         }
 
         /**
-         * breadcrumbAdd
+         * Render the add breadcrumb.
+         *
+         * @return mixed
          */
         public static function breadcrumbAdd() {
-
             $data = [
-                'title' => ucfirst(trans('messages.languages')),
+                'title' => ucfirst(trans('sfwcomponent::languages')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
-                    [ucfirst(trans('messages.languages')), url('/sfw/languages')],
-                    [trans('messages.add')]
+                    [ucfirst(trans('sfwcomponent::dashboard')), url('/sfw')],
+                    [ucfirst(trans('sfwcomponent::languages')), url('/sfw/languages')],
+                    [trans('sfwcomponent::add')]
                 ]
             ];
 
-            return View('sfwcomponent::backoffice.partials.breadcrumb', [
-                'data' => $data
-            ]);
-                        
+            return View('sfwcomponent::backoffice.partials.breadcrumb', ['data' => $data]);
         }
 
         /**
-         * breadcrumbEdit
+         * Render the edit breadcrumb.
+         *
+         * @param mixed $item
+         * @return mixed
          */
         public static function breadcrumbEdit($item) {
 
             $data = [
-                'title' => ucfirst(trans('messages.languages')),
+                'title' => ucfirst(trans('sfwcomponent::languages')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
-                    [ucfirst(trans('messages.smtps')), url('/sfw/languages')],
-                    [$item->language]
+                    [ucfirst(trans('sfwcomponent::dashboard')), url('/sfw')],
+                    [ucfirst(trans('sfwcomponent::languages')), url('/sfw/languages')],
+                    [$item->language ?? $item->name ?? $item->id]
                 ]
             ];
 
-            return View('sfwcomponent::backoffice.partials.breadcrumb', [
-                'data' => $data
-            ]);
-                       
+            return View('sfwcomponent::backoffice.partials.breadcrumb', ['data' => $data]);
+            
         }
-
     }
