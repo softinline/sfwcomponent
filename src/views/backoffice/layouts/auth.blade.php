@@ -88,7 +88,7 @@
             backoffice.locale = '{{ \App::getLocale() }}';
             backoffice.init();
             sfwcomponent.locale = backoffice.locale;
-            sfwcomponent.ajax = true;            
+            sfwcomponent.ajax = false;            
             sfwcomponent.init();
         </script>
     </body>

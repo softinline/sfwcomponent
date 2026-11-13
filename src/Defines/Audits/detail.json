@@ -1,0 +1,108 @@
+{
+    "type": "screen",
+    "layout": "sfwcomponent::backoffice.layouts.default",
+    "ajax": false,
+    "name": "detail",
+    "url": "sfw/audits",
+    "translationFile": "sfwcomponent::",
+    "components": [
+        {
+            "type": "div",
+            "class": "container-fluid",
+            "components": [
+                {
+                    "type": "function",
+                    "function": "breadcrumbEdit"
+                },
+                {
+                    "type": "div",
+                    "class": "row",
+                    "components": [
+                        {
+                            "type": "div",
+                            "class": "col-lg-12",
+                            "components": [
+                                {
+                                    "type": "div",
+                                    "class": "card",
+                                    "components": [
+                                        {
+                                            "type": "div",
+                                            "class": "card-body",
+                                            "components": [
+                                                {
+                                                    "type": "text",
+                                                    "title": "table",
+                                                    "field": "table",
+                                                    "disabled": true
+                                                },
+                                                {
+                                                    "type": "text",
+                                                    "title": "row_id",
+                                                    "field": "row_id",
+                                                    "disabled": true
+                                                },
+                                                {
+                                                    "type": "text",
+                                                    "title": "event",
+                                                    "field": "event",
+                                                    "disabled": true
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "class": "row",
+                                                    "components": [
+                                                        {
+                                                            "type": "div",
+                                                            "class": "col-lg-6",
+                                                            "components": [
+                                                                {
+                                                                    "type": "textarea",
+                                                                    "title": "before",
+                                                                    "field": "before",
+                                                                    "rows": 15,
+                                                                    "disabled": true,
+                                                                    "beforeRender": "beforeRenderBefore"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "div",
+                                                            "class": "col-lg-6",
+                                                            "components": [
+                                                                {
+                                                                    "type": "textarea",
+                                                                    "title": "after",
+                                                                    "field": "after",
+                                                                    "rows": 15,
+                                                                    "disabled": true,
+                                                                    "beforeRender": "beforeRenderAfter"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "div",
+                                            "class": "card-footer",
+                                            "components": [
+                                                {
+                                                    "type": "button",
+                                                    "action": "link:sfw/audits",
+                                                    "title": "back",
+                                                    "class": "btn btn-secondary"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

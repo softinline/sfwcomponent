@@ -4,7 +4,7 @@
 
     use Illuminate\Database\Eloquent\Model;
 
-    class SfwAuditable extends Model 
+    class SfwAuditable extends Model
     {
                 
         /**
@@ -14,25 +14,25 @@
             
             // event update
             static::updating(function ($model) {                
-                $audit = new \Softinline\SfwComponent\Models\sfwAudit();                                
-                $audit->id = uniqid("A", true);
+                $audit = new \Softinline\SfwComponent\Models\SfwAudit();
+                $audit->id = uniqid("A");
                 $audit->user_id = \Auth::user() ? \Auth::user()->id : null;
-                $audit->action = 'u';
+                $audit->event = 'u';
                 $audit->row_id = $model->id;
-                $audit->table = $model->getTable();
+                $audit->setAttribute('table', $model->getTable());
                 $audit->before = json_encode($model->getOriginal());
-                $audit->after = json_encode($model->getAttributes());                                                
+                $audit->after = json_encode($model->getAttributes());
                 $audit->save();    
             });
 
             // event delete
             static::deleting(function ($model) {                
-                $audit = new \Softinline\SfwComponent\Models\sfwAudit();                                
-                $audit->id = uniqid("A", true);
+                $audit = new \Softinline\SfwComponent\Models\SfwAudit();
+                $audit->id = uniqid("A");
                 $audit->user_id = \Auth::user() ? \Auth::user()->id : null;
-                $audit->action = 'd';
+                $audit->event = 'd';
                 $audit->row_id = $model->id;
-                $audit->table = $model->getTable();
+                $audit->setAttribute('table', $model->getTable());
                 $audit->before = json_encode($model->getAttributes());               
                 $audit->save();    
             });
@@ -42,3 +42,4 @@
         }
         
     }
+

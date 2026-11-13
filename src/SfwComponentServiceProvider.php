@@ -2,52 +2,36 @@
 
 namespace Softinline\SfwComponent;
 
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
+use Illuminate\Support\ServiceProvider;
 
 class SfwComponentServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap the application services.
-     *
-     * @return void
-     */
     public function boot(Router $router)
     {
-        
-        // load views
         $this->loadViewsFrom(__DIR__.'/views', 'sfwcomponent');
-
-        // load routes
+        $this->loadJsonTranslationsFrom(__DIR__.'/resources/lang');
         $this->loadRoutesFrom(__DIR__.'/routes/web.php');
-                
-        // publish views        
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+
+        $this->publishes([
+            __DIR__.'/../database/migrations/' => database_path('migrations'),
+        ], 'sfw-migrations');
+
         $this->publishes([
             __DIR__.'/views' => base_path('resources/views/vendor/softinline/sfwcomponent'),
-        ]);
+        ], 'sfw-views');
 
-        // publish resources
         $this->publishes([
             __DIR__.'/resources' => public_path('vendor/softinline/sfwcomponent'),
-        ], 'public');
-
-        // load translations
-        $this->loadJsonTranslationsFrom(__DIR__.'/resources/lang');
+        ], 'sfw-assets');
 
         $router->middlewareGroup('SfwProtected', [SfwProtectedMiddleware::class]);
-        
     }
 
-    /**
-     * Register the application services.
-     *
-     * @return void
-     */
     public function register()
     {
-        //
         $this->app->make('Softinline\SfwComponent\SfwConfig');
-        $this->app->make('Softinline\SfwComponent\SfwComponent');    
-                
+        $this->app->make('Softinline\SfwComponent\SfwComponent');
     }
 }

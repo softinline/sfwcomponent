@@ -86,6 +86,7 @@
         <script src="https://cdn.softinline.com/lib/alerts.js"></script>
         <script src="https://cdn.softinline.com/lib/modals.js"></script>
         <script src="https://cdn.softinline.com/lib/swal.js"></script>
+        <!-- jquery sortable -->        
         <script src="{{ url('vendor/softinline/sfwcomponent/backoffice.js?'.time()) }}"></script>
         <!--<script src="{{ url('js/app.js') }}"></script>        
         <script src="{{ url('js/i18n/'.\App::getLocale().'.js?'.time()) }}"></script>
@@ -97,7 +98,7 @@
             backoffice.locale = '{{ \App::getLocale() }}';
             backoffice.init();
             sfwcomponent.locale = backoffice.locale;
-            sfwcomponent.ajax = true;
+            sfwcomponent.ajax = false;
             sfwcomponent.init();
         </script>
     </body>

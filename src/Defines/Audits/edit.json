@@ -2,7 +2,7 @@
     "type": "screen",
     "layout": "sfwcomponent::backoffice.layouts.default",
     "ajax": false,
-    "name": "edit",
+    "name": "detail",
     "url": "sfw/audits",
     "translationFile": "sfwcomponent::",
     "components": [
@@ -49,14 +49,38 @@
                                                     "disabled": true
                                                 },
                                                 {
-                                                    "type": "json",
-                                                    "title": "before",
-                                                    "field": "before"
-                                                },
-                                                {
-                                                    "type": "json",
-                                                    "title": "after",
-                                                    "field": "after"
+                                                    "type": "div",
+                                                    "class": "row",
+                                                    "components": [
+                                                        {
+                                                            "type": "div",
+                                                            "class": "col-lg-6",
+                                                            "components": [
+                                                                {
+                                                                    "type": "textarea",
+                                                                    "title": "before",
+                                                                    "field": "before",
+                                                                    "rows": 15,
+                                                                    "disabled": true,
+                                                                    "beforeRender": "beforeRenderBefore"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "div",
+                                                            "class": "col-lg-6",
+                                                            "components": [
+                                                                {
+                                                                    "type": "textarea",
+                                                                    "title": "after",
+                                                                    "field": "after",
+                                                                    "rows": 15,
+                                                                    "disabled": true,
+                                                                    "beforeRender": "beforeRenderAfter"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
                                                 }
                                             ]
                                         },

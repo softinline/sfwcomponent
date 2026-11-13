@@ -1,42 +1,50 @@
 <?php
 
-    namespace Softinline\SfwComponent;
+namespace Softinline\SfwComponent;
 
-    use Closure;
-    use Illuminate\Http\Request;
-    
-    class SfwProtectedMiddleware
+use Closure;
+
+class SfwProtectedMiddleware
+{
+    public static function setupFile(): string
     {
-        
+        return storage_path('app/sfw/setup.json');
+    }
 
-        /**
-         * Handle an incoming request.
-         *
-         * @param Request $request
-         * @param Closure $next
-         *
-         * @return mixed
-         */
-        public function handle($request, Closure $next)
-        {
-            
-            if(!\Session::get('sfw-user-logged')) {
-                
-                if($request->ajax()) {
-    
-                    return response('Unauthorized.', 401);
-    
-                } 
-                else {
-                                    
-                    return \Redirect::to('/sfw/auth/login');
-    
-                }
-                    
+    public static function isSetupComplete(): bool
+    {
+        $file = self::setupFile();
+        if (!is_file($file)) {
+            return false;
+        }
+        $data = json_decode((string) @file_get_contents($file), true);
+        return is_array($data) && !empty($data['password_hash']);
+    }
+
+    public function handle($request, Closure $next)
+    {
+        $prefix = SfwComponent::ROUTE_PREFIX;
+        $isSetupRoute = $request->is($prefix . '/setup') || $request->is($prefix . '/setup/*');
+
+        // First-time setup gate
+        if (!self::isSetupComplete()) {
+            if ($isSetupRoute) {
+                return $next($request);
             }
-            
-            return $next($request);
-
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'sfw_setup_required', 'setup_url' => url($prefix . '/setup')], 428);
+            }
+            return redirect()->to('/' . $prefix . '/setup');
         }
 
+        if (\Session::get('sfw-user-logged')) {
+            return $next($request);
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response('Unauthorized.', 401);
+        }
+
+        return redirect()->to('/' . $prefix . '/auth/login');
     }
+}

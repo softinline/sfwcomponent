@@ -432,7 +432,28 @@ sfwcomponent = {
                         else {
                             alerts.show('ko', data.message);
                         }
-                    },                        
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        var message = thrownError || 'Error';
+                        if(xhr && xhr.responseJSON) {
+                            var r = xhr.responseJSON;
+                            if(typeof r === 'string') {
+                                message = r;
+                            } else if(r.message && typeof r.message === 'string') {
+                                message = r.message;
+                            } else if(r.errors) {
+                                var parts = [];
+                                $.each(r.errors, function(k, v) {
+                                    if(Array.isArray(v)) { parts.push(v.join(', ')); }
+                                    else if(typeof v === 'string') { parts.push(v); }
+                                });
+                                if(parts.length) message = parts.join(' | ');
+                            }
+                        } else if(xhr && xhr.statusText) {
+                            message = xhr.statusText;
+                        }
+                        alerts.show('ko', message);
+                    },
                     complete: function() {
                         $("#modal-options-post-save").modal('hide');
                         $("body").LoadingOverlay('hide');

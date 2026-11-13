@@ -2,281 +2,362 @@
 
     namespace Softinline\SfwComponent\Controllers;
 
-    use Softinline\SfwComponent;    
-    use App\Http\Controllers\Controller;    
+    use Softinline\SfwComponent;
+    use App\Http\Controllers\Controller;
     use Yajra\DataTables\Facades\DataTables;
-        
+    use Softinline\SfwComponent\Models\SfwSmtp;
+
     class SmtpsController extends Controller
     {
-
         var $_sfwconfig;
 
         /**
-         * index
+         * Display the index screen.
+         *
+         * @return mixed
          */
-        public function index() {
-
+        public function index()
+        {
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/index.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
-            
         }
 
         /**
-         * data
+         * Provide datatable data.
+         *
+         * @return mixed
          */
-        public function data() {
-
+        public function data()
+        {
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/index.json');
-                                    
-            $query = \Softinline\SfwComponent\Models\SfwSmtp::all();
-                                                
-            $datatable = Datatables::of($query)                                
-                ->editColumn('created_at', function($item) {
+            $query = SfwSmtp::getAll();
+            if (\Request::get('type') != '') {
+                $query->where('type', '=', \Request::get('type'));
+            }
+            $datatable = Datatables::of($query)
+                ->editColumn('created_at', function ($item) {
                     return $item->created_at != '' ? $item->created_at->format("d/m/Y") : '';
-                })                
-                ->addColumn('actions', function($item) {
+                })
+                ->addColumn('actions', function ($item) {
                     $return = '';
                     $return .= '<a href="'.url('sfw/smtps/'.$item->id).'" title="Editar"><i class="las la-edit fa-fw"></i></a>';
                     $return .= '&nbsp;';
                     $return .= '<a href="javascript:void(0)" onclick=sfwcomponent.sendSmtpTestEmail("'.$item->id.'")><i class="las la-envelope"></i></a>';
                     $return .= '&nbsp;';
-                    $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="'.$item->id.'" sfwcomponent-data-url="'.$this->_sfwconfig->getParam('url').'" sfwcomponent-data-datatable="'.\Request::get('datatable').'" sfwcomponent-data-title="'.$item->smtp.'" class="sfwcomponent-delete" title="'.ucfirst(trans('messages.delete')).'"><i class="las la-trash fa-fw"></i></a>';
+                    $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="'.$item->id.'" sfwcomponent-data-url="'.$this->_sfwconfig->getParam('url').'" sfwcomponent-data-datatable="'.\Request::get('datatable').'" sfwcomponent-data-title="'.e($item->name ?? '').'" class="sfwcomponent-delete" title="'.ucfirst(trans('sfwcomponent::delete')).'"><i class="las la-trash fa-fw"></i></a>';
                     return $return;
                 })
                 ->rawColumns(['actions']);
-            
-            return $datatable->make(true);            
-            
+            return $datatable->make(true);
         }
 
         /**
-         * selectTypes
+         * Get selector options.
+         *
+         * @param mixed $item
+         * @return mixed
          */
-        public static function selectTypes($item = null) {
-
-            $return = [
+        public static function selectTypes($item = null)
+        {
+            return [
                 1 => 'SMTP',
-                2 => 'Amazon',                
-            ];            
-
-            return $return;
-
+                2 => 'Amazon',
+            ];
         }
 
         /**
-         * selectEncriptions
+         * Get selector options.
+         *
+         * @param mixed $item
+         * @return mixed
          */
-        public static function selectEncriptions($item = null) {
-
-            $return = [
-                1 => 'ninguna (null)',
+        public static function selectEncriptions($item = null)
+        {
+            return [
+                1 => trans('sfwcomponent::none').' (null)',
                 2 => 'tls',
-            ];            
-
-            return $return;
-
+                3 => 'ssl',
+            ];
         }
 
         /**
-         * add
+         * Display the add screen.
+         *
+         * @return mixed
          */
-        public function add() {
-
-            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
-            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/add.json');                                    
-            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            return $sfwcomponent->render($this->_sfwconfig->getConfig());
-
-            // samnple to override json config in real time
-            // search component
-            //$component = $this->_sfwconfig->getByInternalId('fieldSmtp');
-            // override params
-            //echo print_r($component, true);
-            //$component['type'] = 'email';                        
-            // set by internal id
-            //$this->_sfwconfig->setByInternalId('fieldSmtp', $component);
-            //echo print_r($this->_sfwconfig->getConfig(), true);
-            //die();
-
-        }
-        
-        /**
-         * create
-         */
-        public function create() {
-
+        public function add()
+        {
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/add.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            //$config = $this->_sfwconfig->getById('frm-sfw-smtps-add');
-            //$config['redirect'] = '/sfw/smtps/{id}';
-            //echo print_r($config, true);
-            //die();
-            //$this->_sfwconfig->setById('frm-sfw-smtps-add', $config);
-            return $sfwcomponent->submit($this->_sfwconfig, '_create', 'frm-sfw-smtps-add');
-
+            return $sfwcomponent->render($this->_sfwconfig->getConfig());
         }
 
         /**
-         * _create
+         * Handle create form submission.
+         *
+         * @return mixed
          */
-        public static function _create() {
+        public function create()
+        {
+            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/add.json');
+            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
+            return $sfwcomponent->submit($this->_sfwconfig, '_create', 'frm-sfw-smtps-add');
+        }
 
-            $item = new \Softinline\SfwComponent\Models\SfwSmtp();
-            $item->id = uniqid("S");            
-            $item->smtp = \Request::get('smtp');            
-            $item->type = \Request::get('type');
-            $item->from_address = \Request::get('from_address');
-            $item->smtp_host = \Request::get('smtp_host');
-            $item->smtp_port = \Request::get('smtp_port');
-            $item->smtp_user = \Request::get('smtp_user');
-            $item->smtp_password = \Request::get('smtp_password');
-            $item->smtp_encription = \Request::get('smtp_encription');
-            $item->aws_host = \Request::get('aws_host');
-            $item->aws_port = \Request::get('aws_port');
-            $item->aws_user = \Request::get('aws_user');
-            $item->aws_encription = \Request::get('aws_encription');
-            $item->aws_key = \Request::get('aws_key');
-            $item->aws_secret = \Request::get('aws_secret');
-            $item->aws_region = \Request::get('aws_region');
+        /**
+         * Create a new record.
+         *
+         * @return mixed
+         */
+        public static function _create()
+        {
+            $item = new SfwSmtp();
+            $item->id = uniqid('S');
+            $item->name = \Request::get('name') != '' ? \Request::get('name') : null;
+            $item->type = \Request::get('type') != '' ? \Request::get('type') : null;
+            $item->from_email = \Request::get('from_email') != '' ? \Request::get('from_email') : null;
+            $item->is_default = \Request::get('is_default') ? 1 : 0;
+            $item->smtp_host = \Request::get('smtp_host') != '' ? \Request::get('smtp_host') : null;
+            $item->smtp_port = \Request::get('smtp_port') != '' ? \Request::get('smtp_port') : null;
+            $item->smtp_user = \Request::get('smtp_user') != '' ? \Request::get('smtp_user') : null;
+            $item->smtp_password = \Request::get('smtp_password') != '' ? \Request::get('smtp_password') : null;
+            $item->smtp_encryption = \Request::get('smtp_encryption') != '' ? \Request::get('smtp_encryption') : null;                
+            $item->aws_host = \Request::get('aws_host') != '' ? \Request::get('aws_host') : null;
+            $item->aws_port = \Request::get('aws_port') != '' ? \Request::get('aws_port') : null;
+            $item->aws_user = \Request::get('aws_user') != '' ? \Request::get('aws_user') : null;
+            $item->aws_password = \Request::get('aws_password') != '' ? \Request::get('aws_password') : null;
+            $item->aws_encryption = \Request::get('aws_encryption') != '' ? \Request::get('aws_encryption') : null;
+            $item->aws_key = \Request::get('aws_key') != '' ? \Request::get('aws_key') : null;
+            $item->aws_secret = \Request::get('aws_secret') != '' ? \Request::get('aws_secret') : null;
+            $item->aws_region = \Request::get('aws_region') != '' ? \Request::get('aws_region') : null;
 
-            if($item->save()) {
+            if ($item->save()) {
                 return $item;
             }
-            
+
             return false;
 
         }
 
         /**
-         * edit
+         * Display the edit screen.
+         *
+         * @param string $id
+         * @return mixed
          */
-        public function edit($id) {
-
+        public function edit($id)
+        {
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwSmtp::getById($id));
+            $sfwcomponent->setItem(SfwSmtp::getByIdOrAbort($id));
             return $sfwcomponent->render($this->_sfwconfig->getConfig());
-
         }
 
         /**
-         * update
+         * Handle update form submission.
+         *
+         * @param string $id
+         * @return mixed
          */
-        public function update($id) {
-            
+        public function update($id)
+        {
             $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
             $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/edit.json');
             $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
-            $sfwcomponent->setItem(\Softinline\SfwComponent\Models\SfwSmtp::getById($id));
-            return $sfwcomponent->submit($this->_sfwconfig, '_update');
-            
+            $sfwcomponent->setItem(SfwSmtp::getByIdOrAbort($id));
+            return $sfwcomponent->submit($this->_sfwconfig, '_update', 'frm-sfw-smtps-edit');
         }
 
         /**
-         * update
-         * @return bool
-         */                
-        public static function _update($item) {
+         * Update a record.
+         *
+         * @param mixed $item
+         * @return mixed
+         */
+        public static function _update($item)
+        {
+            \Log::info(print_r(\Request::all(), true));
+            $item->name = \Request::get('name') != '' ? \Request::get('name') : null;
+            $item->type = \Request::get('type') != '' ? \Request::get('type') : null;
+            $item->from_email = \Request::get('from_email') != '' ? \Request::get('from_email') : null;
+            $item->is_default = \Request::get('is_default') ? 1 : 0;
+            $item->smtp_host = \Request::get('smtp_host') != '' ? \Request::get('smtp_host') : null;
+            $item->smtp_port = \Request::get('smtp_port') != '' ? \Request::get('smtp_port') : null;
+            $item->smtp_user = \Request::get('smtp_user') != '' ? \Request::get('smtp_user') : null;
+            $item->smtp_password = \Request::get('smtp_password') != '' ? \Request::get('smtp_password') : null;
+            $item->smtp_encryption = \Request::get('smtp_encryption') != '' ? \Request::get('smtp_encryption') : null;
+            $item->aws_host = \Request::get('aws_host') != '' ? \Request::get('aws_host') : null;
+            $item->aws_port = \Request::get('aws_port') != '' ? \Request::get('aws_port') : null;
+            $item->aws_user = \Request::get('aws_user') != '' ? \Request::get('aws_user') : null;
+            $item->aws_password = \Request::get('aws_password') != '' ? \Request::get('aws_password') : null;
+            $item->aws_encryption = \Request::get('aws_encryption') != '' ? \Request::get('aws_encryption') : null;
+            $item->aws_key = \Request::get('aws_key') != '' ? \Request::get('aws_key') : null;
+            $item->aws_secret = \Request::get('aws_secret') != '' ? \Request::get('aws_secret') : null;
+            $item->aws_region = \Request::get('aws_region') != '' ? \Request::get('aws_region') : null;
 
-            $item->smtp = \Request::get('smtp');
-            $item->type = \Request::get('type');
-            $item->from_address = \Request::get('from_address');
-            $item->default = \Request::get('default') ? 1 : 0;
-            $item->smtp_host = \Request::get('smtp_host');
-            $item->smtp_port = \Request::get('smtp_port');
-            $item->smtp_user = \Request::get('smtp_user');
-            $item->smtp_password = \Request::get('smtp_password');
-            $item->smtp_encription = \Request::get('smtp_encription');
-            $item->aws_host = \Request::get('aws_host');
-            $item->aws_port = \Request::get('aws_port');
-            $item->aws_user = \Request::get('aws_user');
-            $item->aws_encription = \Request::get('aws_encription');
-            $item->aws_key = \Request::get('aws_key');
-            $item->aws_secret = \Request::get('aws_secret');
-            $item->aws_region = \Request::get('aws_region');
-
-            if($item->save()) {
+            if ($item->save()) {
                 return $item;
             }
 
+            return false;
         }
 
         /**
-         * testEmail
-         * send email test
+         * Delete a record.
+         *
+         * @param string $id
+         * @return mixed
          */
-        public static function testEmail($id) {
+        public function delete($id)
+        {
+            $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
+            $this->_sfwconfig->load(__DIR__.'/../Defines/Smtps/edit.json');
+            $sfwcomponent = new \Softinline\SfwComponent\SfwComponent(get_class());
+            $sfwcomponent->setItem(SfwSmtp::getByIdOrAbort($id));
+            return $sfwcomponent->delete($this->_sfwconfig->getConfig(), '_delete');
+        }
 
-            // get smtp config
-            $smtp = \Softinline\SfwComponent\Services\SmtpsService::getDefault();
+        /**
+         * Perform record deletion.
+         *
+         * @param mixed $item
+         * @return mixed
+         */
+        public static function _delete($item)
+        {
+            return (bool) $item->delete();
+        }
 
-            // send email
+        /**
+         * Send a test email.
+         *
+         * @return mixed
+         */
+        public static function testEmail($id)
+        {
+            $smtp = SfwSmtp::getById($id) ?: SfwSmtp::getDefault();
             \Softinline\SfwComponent\Services\EmailsService::send('notificaciones@softinline.com', $smtp, 'test', ['name' => 'dani']);
-
         }
 
         /**
-         * breadcrumbIndex
+         * Render the index breadcrumb.
+         *
+         * @return mixed
          */
-        public static function breadcrumbIndex() {
-            
+        public static function breadcrumbIndex()
+        {
             $data = [
-                'title' => ucfirst(trans('messages.smtps')),
+                'title' => ucfirst(trans('sfwcomponent::smtps')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
-                    [ucfirst(trans('messages.smtps'))],                    
+                    [ucfirst(trans('sfwcomponent::dashboard')), url('/sfw')],
+                    [ucfirst(trans('sfwcomponent::smtps'))],
                 ]
             ];
-                        
             return view('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
-            
         }
 
         /**
-         * breadcrumbAdd
+         * Render the add breadcrumb.
+         *
+         * @return mixed
          */
-        public static function breadcrumbAdd() {
-
+        public static function breadcrumbAdd()
+        {
             $data = [
-                'title' => ucfirst(trans('messages.smtps')),
+                'title' => ucfirst(trans('sfwcomponent::smtps')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
-                    [ucfirst(trans('messages.smtps')), url('/sfw/smtps')],
-                    [trans('messages.add')]
+                    [ucfirst(trans('sfwcomponent::dashboard')), url('/sfw')],
+                    [ucfirst(trans('sfwcomponent::smtps')), url('/sfw/smtps')],
+                    [trans('sfwcomponent::add')]
                 ]
             ];
-
             return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
-                        
         }
 
         /**
-         * breadcrumbEdit
+         * Render the edit breadcrumb.
+         *
+         * @param mixed $item
+         * @return mixed
          */
-        public static function breadcrumbEdit($item) {
-
+        public static function breadcrumbEdit($item)
+        {
             $data = [
-                'title' => ucfirst(trans('messages.smtps')),
+                'title' => ucfirst(trans('sfwcomponent::smtps')),
                 'items' => [
-                    [ucfirst(trans('messages.dashboard')), url('/sfw')],
-                    [ucfirst(trans('messages.smtps')), url('/sfw/smtps')],
-                    [$item->smtp]
+                    [ucfirst(trans('sfwcomponent::dashboard')), url('/sfw')],
+                    [ucfirst(trans('sfwcomponent::smtps')), url('/sfw/smtps')],
+                    [$item->name ?? $item->id]
                 ]
             ];
-
             return View('sfwcomponent::backoffice.partials.breadcrumb', [
                 'data' => $data
             ]);
-                       
         }
-        
+
+        /**
+         * Get selector options.
+         *
+         * @param mixed $item
+         * @return mixed
+         */
+        /*
+        public static function selectDependend1($item = null)
+        {
+            if (\Request::has('term')) {
+                if (\Request::get('term') == 1) {
+                    $arr = [
+                        ['id'  => 1, 'description' => 'SMTP 1'],
+                        ['id'  => 2, 'description' => 'SMTP 2'],
+                    ];
+                } else {
+                    $arr = [
+                        ['id'  => 3, 'description' => 'AMAZON 1'],
+                        ['id'  => 4, 'description' => 'AMAZON 2'],
+                    ];
+                }
+                return response()->json($arr);
+            }
+            return [
+                1 => 'SMTP 1',
+                2 => 'SMTP 2',
+            ];
+        }
+        */
+
+        /**
+         * Get selector options.
+         *
+         * @param mixed $item
+         * @return mixed
+         */
+        /*
+        public static function selectDependend2()
+        {
+            if (\Request::has('term')) {
+                $term = \Request::get('term');
+                $map = [
+                    1 => [[ 'id' => 1, 'description' => 'SMTP 11'], [ 'id' => 2, 'description' => 'SMTP 12']],
+                    2 => [[ 'id' => 1, 'description' => 'SMTP 21'], [ 'id' => 2, 'description' => 'SMTP 22']],
+                    3 => [[ 'id' => 1, 'description' => 'AMAZON 11'], [ 'id' => 2, 'description' => 'AMAZON 12']],
+                    4 => [[ 'id' => 1, 'description' => 'AMAZON 21'], [ 'id' => 2, 'description' => 'AMAZON 22']],
+                ];
+                return response()->json($map[$term] ?? []);
+            }
+            return [
+                1 => 'SMTP 11',
+                2 => 'SMTP 22',
+            ];
+        }
+        */
     }

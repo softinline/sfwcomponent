@@ -4,43 +4,64 @@
 
     use Illuminate\Database\Eloquent\Model;
     use Illuminate\Database\Eloquent\SoftDeletes;
-    
-    class SfwSmtp extends Model {   
+    use Softinline\SfwComponent\Models\Traits\HasSfwRecordAccess;
 
-        // softdeletes
+    class SfwSmtp extends Model
+    {
         use SoftDeletes;
+        use HasSfwRecordAccess;
 
-        // incrementing
         public $incrementing = false;
-
-        // table
         protected $table = 'sfw_smtps';
 
-        // constants
         const SMTP = 1;
         const AMAZON = 2;
 
+        protected $guarded = [];
+
+        protected $casts = [
+            'is_default' => 'boolean',
+            'is_active' => 'boolean',
+            'meta' => 'array',
+        ];
+
         /**
-         * getById
-         * get by id
+         * Get a record by ID.
+         *
+         * @param mixed $id
+         * @return \Softinline\SfwComponent\Models\SfwSmtp|false|null
          */
-	    public static function getById($id) {
+        public static function getById($id)
+        {
+            static::sfwClearLastAccessError();
 
-            return self::find($id);
+            $item = self::find($id);
+            if (!$item) {
+                static::sfwDenyAccess(404, 'object_not_exists');
+                return false;
+            }
 
+            return $item;
         }
 
         /**
-         * getAll         
+         * Get all records query.
+         *
+         * @return \Illuminate\Database\Eloquent\Builder
          */
-	    public static function getAll() {
-
-            $sql = self::select(
-                'sfw_smtps.*'
-            );
-
-            return $sql;
-
+        public static function getAll()
+        {
+            return self::select('sfw_smtps.*');
         }
-    
+
+        /**
+         * Get the default SMTP record.
+         *
+         * @return \Softinline\SfwComponent\Models\SfwSmtp|null
+         */
+        public static function getDefault()
+        {
+            return self::where('is_default', 1)->first();
+        }
+                
     }

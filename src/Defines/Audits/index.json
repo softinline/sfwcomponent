@@ -4,6 +4,7 @@
     "ajax":false,
     "name":"index",
     "url":"sfw/audits",
+    "translationFile":"sfwcomponent::",
     "components":[
         {
             "type":"div",
@@ -56,12 +57,8 @@
                                                                     "field":"row_id"
                                                                 },
                                                                 {
-                                                                    "name":"before",
-                                                                    "field":"before"
-                                                                },
-                                                                {
-                                                                    "name":"after",
-                                                                    "field":"after"
+                                                                    "name":"event",
+                                                                    "field":"event"
                                                                 },
                                                                 {
                                                                     "name":"created_at",
