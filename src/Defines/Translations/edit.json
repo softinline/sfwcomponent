@@ -67,13 +67,15 @@
                                                             "type": "button",
                                                             "action": "js:sfwcomponent.submit('frm-sfw-translations-edit')",
                                                             "title": "accept",
-                                                            "class": "btn btn-primary"
+                                                            "class": "btn btn-primary",
+                                                            "icon": "las la-save"
                                                         },
                                                         {
                                                             "type": "button",
                                                             "action": "link:sfw/translations",
                                                             "title": "cancel",
-                                                            "class": "btn btn-secondary"
+                                                            "class": "btn btn-secondary",
+                                                            "icon": "las la-times"
                                                         }
                                                     ]
                                                 }

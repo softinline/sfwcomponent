@@ -95,13 +95,15 @@
                                                                             "type": "button",
                                                                             "action": "js:sfwcomponent.submit('frm-sfw-email-templates-edit')",
                                                                             "title": "accept",
-                                                                            "class": "btn btn-primary"
+                                                                            "class": "btn btn-primary",
+                                                                            "icon": "las la-save"
                                                                         },
                                                                         {
                                                                             "type": "button",
                                                                             "action": "link:sfw/email-templates",
                                                                             "title": "cancel",
-                                                                            "class": "btn btn-secondary"
+                                                                            "class": "btn btn-secondary",
+                                                                            "icon": "las la-times"
                                                                         }
                                                                     ]
                                                                 }

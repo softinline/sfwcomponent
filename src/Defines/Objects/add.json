@@ -74,21 +74,25 @@
                                                             "field": "sort_order"
                                                         },
                                                         {
-                                                            "type": "text",
+                                                            "type": "checkbox",
                                                             "title": "is_active",
-                                                            "field": "is_active",
-                                                            "value": "1"
+                                                            "field": "is_active"
+                                                        },
+                                                        {
+                                                            "type": "checkbox",
+                                                            "title": "is_system",
+                                                            "field": "system"
                                                         }
                                                     ]
                                                 },
                                                 {
                                                     "type": "div",
-                                                    "class": "card-footer text-right",
+                                                    "class": "card-footer",
                                                     "components": [
                                                         {
                                                             "type": "button",
                                                             "action": "js:sfwcomponent.submit('frm-sfw-objects-add')",
-                                                            "title": "save",
+                                                            "title": "accept",
                                                             "class": "btn btn-primary",
                                                             "icon": "las la-save"
                                                         },
@@ -96,7 +100,8 @@
                                                             "type": "button",
                                                             "action": "link:sfw/objects",
                                                             "title": "cancel",
-                                                            "class": "btn btn-secondary"
+                                                            "class": "btn btn-secondary",
+                                                            "icon": "las la-times"
                                                         }
                                                     ]
                                                 }

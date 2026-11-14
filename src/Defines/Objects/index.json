@@ -86,6 +86,10 @@
                                                                     "field": "is_active"
                                                                 },
                                                                 {
+                                                                    "name": "is_system",
+                                                                    "field": "system"
+                                                                },
+                                                                {
                                                                     "name": "actions",
                                                                     "field": "actions",
                                                                     "orderable": false,

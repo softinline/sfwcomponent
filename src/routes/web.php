@@ -52,6 +52,14 @@ Route::prefix('sfw')->middleware(['web', 'SfwProtected'])->group(function () {
     Route::post('objects/{id}', 'Softinline\SfwComponent\Controllers\ObjectsController@update');
     Route::delete('objects/{id}', 'Softinline\SfwComponent\Controllers\ObjectsController@delete');
 
+    Route::get('roles', 'Softinline\SfwComponent\Controllers\RolesController@index');
+    Route::get('roles/data', 'Softinline\SfwComponent\Controllers\RolesController@data');
+    Route::get('roles/add', 'Softinline\SfwComponent\Controllers\RolesController@add');
+    Route::post('roles/add', 'Softinline\SfwComponent\Controllers\RolesController@create');
+    Route::get('roles/{id}', 'Softinline\SfwComponent\Controllers\RolesController@edit');
+    Route::post('roles/{id}', 'Softinline\SfwComponent\Controllers\RolesController@update');
+    Route::delete('roles/{id}', 'Softinline\SfwComponent\Controllers\RolesController@delete');
+
     Route::get('files', 'Softinline\SfwComponent\Controllers\FilesController@index');
     Route::get('files/data', 'Softinline\SfwComponent\Controllers\FilesController@data');
     Route::get('files/add', 'Softinline\SfwComponent\Controllers\FilesController@add');

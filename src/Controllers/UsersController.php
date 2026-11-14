@@ -5,6 +5,7 @@ namespace Softinline\SfwComponent\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Softinline\SfwComponent\Models\SfwObject;
+use Softinline\SfwComponent\Models\SfwRole;
 use Softinline\SfwComponent\Models\SfwUser;
 use Softinline\SfwComponent\Models\SfwUserObject;
 use Softinline\SfwComponent\SfwComponent;
@@ -93,6 +94,7 @@ class UsersController extends Controller
         $item->name = \Request::get('name');
         $item->email = \Request::get('email');
         $item->role = \Request::get('role') ?: 'user';
+        $item->sfw_role_id = \Request::get('sfw_role_id') != '' ? \Request::get('sfw_role_id') : null;
         $item->status = \Request::get('status') ?: 'pending';
         $item->lover_level = \Request::get('lover_level') != '' ? \Request::get('lover_level') : null;
         $item->timezone = \Request::get('timezone') != '' ? \Request::get('timezone') : null;
@@ -145,6 +147,7 @@ class UsersController extends Controller
         $item->name = \Request::get('name');
         $item->email = \Request::get('email');
         $item->role = \Request::get('role') ?: $item->role;
+        $item->sfw_role_id = \Request::get('sfw_role_id') != '' ? \Request::get('sfw_role_id') : null;
         $item->status = \Request::get('status') ?: $item->status;
         $item->lover_level = \Request::get('lover_level') != '' ? \Request::get('lover_level') : null;
         $item->timezone = \Request::get('timezone') != '' ? \Request::get('timezone') : null;
@@ -370,5 +373,15 @@ class UsersController extends Controller
             ]
         ];
         return View('sfwcomponent::backoffice.partials.breadcrumb', ['data' => $data]);
+    }
+
+    /**
+     * Get SFW role options for select.
+     *
+     * @return array
+     */
+    public static function selectSfwRoles()
+    {
+        return ['' => ''] + SfwRole::query()->orderBy('name')->pluck('name', 'id')->toArray();
     }
 }

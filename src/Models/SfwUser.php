@@ -23,6 +23,7 @@ class SfwUser extends Authenticatable
         'password',
         'remember_token',
         'role',
+        'sfw_role_id',
         'lover_level',
         'status',
         'timezone',
@@ -73,5 +74,10 @@ class SfwUser extends Authenticatable
     public function userObjects()
     {
         return $this->hasMany(SfwUserObject::class, 'user_id');
+    }
+
+    public function sfwRole()
+    {
+        return $this->belongsTo(SfwRole::class, 'sfw_role_id');
     }
 }
