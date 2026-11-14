@@ -55,6 +55,7 @@
     "sfwcomponent::required": "required",
     "sfwcomponent::disabled": "disabled",
     "sfwcomponent::before_show": "before show",
+    "sfwcomponent::before_render": "before render",
     "sfwcomponent::class": "class",
     "sfwcomponent::setup_title": "SFW initial setup",
     "sfwcomponent::setup_intro": "First access to sfw/admin. Set the SFW admin password. Migrations and seeders will run on save.",
