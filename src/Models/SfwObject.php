@@ -19,6 +19,7 @@
         protected $casts = [
             'meta' => 'array',
             'is_active' => 'boolean',
+            'system' => 'boolean',
         ];
 
         /**

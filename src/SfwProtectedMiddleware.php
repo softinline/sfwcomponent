@@ -23,7 +23,7 @@ class SfwProtectedMiddleware
 
     public function handle($request, Closure $next)
     {
-        $prefix = SfwComponent::ROUTE_PREFIX;
+        $prefix = 'sfw';
         $isSetupRoute = $request->is($prefix . '/setup') || $request->is($prefix . '/setup/*');
 
         // First-time setup gate
