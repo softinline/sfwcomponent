@@ -87,7 +87,7 @@
                                                         {
                                                             "type": "button",
                                                             "action": "link:sfw/users/{id}/objects-access",
-                                                            "title": "Permisos",
+                                                            "title": "permissions",
                                                             "class": "btn btn-info"
                                                         },
                                                         {

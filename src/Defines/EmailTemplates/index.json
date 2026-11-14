@@ -70,7 +70,7 @@
                                                                     "field": "key"
                                                                 },
                                                                 {
-                                                                    "name": "default",
+                                                                    "name": "is_default",
                                                                     "field": "default",
                                                                     "orderable": false,
                                                                     "searchable": false
