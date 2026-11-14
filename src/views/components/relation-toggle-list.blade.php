@@ -53,7 +53,8 @@
                                     {{ $active ? 'checked' : '' }}>
                         </td>                    
                         <?php foreach($component['cols'] as $col) { ?>
-                            <td>{{ ucfirst($row['cols'][$col['field']]) }}</td>
+                            <?php $colValue = isset($row['cols'][$col['field']]) ? $row['cols'][$col['field']] : ''; ?>
+                            <td>{!! !empty($col['raw']) ? $colValue : e(ucfirst($colValue)) !!}</td>
                         <?php } ?>                    
                         <?php foreach($component['components'] as $c) { ?>
                             <td>
