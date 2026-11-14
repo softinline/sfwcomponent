@@ -92,10 +92,6 @@
                                                                             "field": "name"
                                                                         },
                                                                         {
-                                                                            "name": "description",
-                                                                            "field": "description"
-                                                                        },
-                                                                        {
                                                                             "name": "access",
                                                                             "field": "access",
                                                                             "orderable": false,

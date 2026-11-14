@@ -39,10 +39,12 @@ class RolesController extends Controller
 
         $datatable = Datatables::of($query)
             ->editColumn('is_active', function ($item) {
-                return $item->is_active ? 'Sí' : 'No';
+                $checked = $item->is_active ? 'checked' : '';
+                return '<input type="checkbox" ' . $checked . ' disabled>';
             })
             ->editColumn('is_system', function ($item) {
-                return $item->is_system ? 'Sí' : 'No';
+                $checked = $item->is_system ? 'checked' : '';
+                return '<input type="checkbox" ' . $checked . ' disabled>';
             })
             ->addColumn('actions', function ($item) {
                 $return = '';
@@ -51,7 +53,7 @@ class RolesController extends Controller
                 $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="' . $item->id . '" sfwcomponent-data-url="' . $this->_sfwconfig->getParam('url') . '" sfwcomponent-data-datatable="' . \Request::get('datatable') . '" sfwcomponent-data-title="' . e($item->name ?? $item->key ?? $item->id) . '" class="sfwcomponent-delete" title="' . ucfirst(trans('sfwcomponent::delete')) . '"><i class="las la-trash fa-fw"></i></a>';
                 return $return;
             })
-            ->rawColumns(['actions']);
+            ->rawColumns(['is_active', 'is_system', 'actions']);
 
         return $datatable->make(true);
     }

@@ -53,30 +53,15 @@
                                                             "field": "password"
                                                         },
                                                         {
-                                                            "type": "text",
-                                                            "title": "role",
-                                                            "field": "role"
-                                                        },
-                                                        {
                                                             "type": "select",
-                                                            "title": "sfw_role",
+                                                            "title": "role",
                                                             "field": "sfw_role_id",
                                                             "selector": "selectSfwRoles"
                                                         },
                                                         {
-                                                            "type": "text",
-                                                            "title": "status",
+                                                            "type": "checkbox",
+                                                            "title": "is_active",
                                                             "field": "status"
-                                                        },
-                                                        {
-                                                            "type": "text",
-                                                            "title": "lover_level",
-                                                            "field": "lover_level"
-                                                        },
-                                                        {
-                                                            "type": "text",
-                                                            "title": "timezone",
-                                                            "field": "timezone"
                                                         }
                                                     ]
                                                 },

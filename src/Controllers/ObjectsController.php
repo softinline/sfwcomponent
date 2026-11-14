@@ -38,7 +38,12 @@ class ObjectsController extends Controller
 
         $datatable = Datatables::of($query)
             ->editColumn('is_active', function ($item) {
-                return $item->is_active ? '1' : '0';
+                $checked = $item->is_active ? 'checked' : '';
+                return '<input type="checkbox" ' . $checked . ' disabled>';
+            })
+            ->editColumn('system', function ($item) {
+                $checked = $item->system ? 'checked' : '';
+                return '<input type="checkbox" ' . $checked . ' disabled>';
             })
             ->addColumn('actions', function ($item) {
                 $return = '';
@@ -47,7 +52,7 @@ class ObjectsController extends Controller
                 $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="'.$item->id.'" sfwcomponent-data-url="'.$this->_sfwconfig->getParam('url').'" sfwcomponent-data-datatable="'.\Request::get('datatable').'" sfwcomponent-data-title="'.e($item->key ?? $item->name ?? '').'" class="sfwcomponent-delete" title="'.ucfirst(trans('sfwcomponent::delete')).'"><i class="las la-trash fa-fw"></i></a>';
                 return $return;
             })
-            ->rawColumns(['actions']);
+            ->rawColumns(['is_active', 'system', 'actions']);
 
         return $datatable->make(true);
     }
@@ -89,16 +94,11 @@ class ObjectsController extends Controller
         $item->id = uniqid('O');
 
         foreach (['key', 'name', 'type', 'route', 'parent_id'] as $f) {
-            if (\Request::has($f)) {
-                $item->{$f} = \Request::get($f) !== '' ? \Request::get($f) : null;
-            }
+            $item->{$f} = \Request::get($f) !== '' ? \Request::get($f) : null;
         }
-        if (\Request::has('sort_order')) {
-            $item->sort_order = (int) \Request::get('sort_order');
-        }
-        if (\Request::has('is_active')) {
-            $item->is_active = \Request::get('is_active') ? 1 : 0;
-        }
+        $item->sort_order = (int) (\Request::get('sort_order') ?: 0);
+        $item->is_active = \Request::has('is_active') ? 1 : 0;
+        $item->system = \Request::has('system') ? 1 : 0;
 
         return $item->save() ? $item : false;
     }
@@ -142,16 +142,11 @@ class ObjectsController extends Controller
     public static function _update($item)
     {
         foreach (['key', 'name', 'type', 'route', 'parent_id'] as $f) {
-            if (\Request::has($f)) {
-                $item->{$f} = \Request::get($f) !== '' ? \Request::get($f) : null;
-            }
+            $item->{$f} = \Request::get($f) !== '' ? \Request::get($f) : null;
         }
-        if (\Request::has('sort_order')) {
-            $item->sort_order = (int) \Request::get('sort_order');
-        }
-        if (\Request::has('is_active')) {
-            $item->is_active = \Request::get('is_active') ? 1 : 0;
-        }
+        $item->sort_order = (int) (\Request::get('sort_order') ?: 0);
+        $item->is_active = \Request::has('is_active') ? 1 : 0;
+        $item->system = \Request::has('system') ? 1 : 0;
 
         return $item->save() ? $item : false;
     }

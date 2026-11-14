@@ -71,7 +71,8 @@
                                                                 },
                                                                 {
                                                                     "name": "role",
-                                                                    "field": "role"
+                                                                    "field": "sfw_role_id",
+                                                                    "title": "role"
                                                                 },
                                                                 {
                                                                     "name": "status",

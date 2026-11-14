@@ -39,9 +39,12 @@ class UsersController extends Controller
         $this->_sfwconfig = new SfwConfig();
         $this->_sfwconfig->load(__DIR__ . '/../Defines/Users/index.json');
 
-        $sql = SfwUser::getAll();
+        $sql = SfwUser::getAll()->with('sfwRole');
 
         return DataTables::of($sql)
+            ->editColumn('sfw_role_id', function ($item) {
+                return $item->sfwRole ? ($item->sfwRole->name ?? $item->sfwRole->key ?? '') : '';
+            })
             ->editColumn('created_at', function ($item) {
                 return $item->created_at ? $item->created_at->format('d/m/Y H:i') : '';
             })
@@ -93,11 +96,10 @@ class UsersController extends Controller
         $item->id = uniqid('U');
         $item->name = \Request::get('name');
         $item->email = \Request::get('email');
-        $item->role = \Request::get('role') ?: 'user';
         $item->sfw_role_id = \Request::get('sfw_role_id') != '' ? \Request::get('sfw_role_id') : null;
-        $item->status = \Request::get('status') ?: 'pending';
-        $item->lover_level = \Request::get('lover_level') != '' ? \Request::get('lover_level') : null;
-        $item->timezone = \Request::get('timezone') != '' ? \Request::get('timezone') : null;
+        $sfwRole = $item->sfw_role_id ? SfwRole::getById($item->sfw_role_id) : null;
+        $item->role = $sfwRole ? ($sfwRole->key ?: $sfwRole->name) : (\Request::get('role') ?: 'user');
+        $item->status = \Request::has('status') ? 'active' : 'pending';
         $password = \Request::get('password');
         if (!empty($password)) {
             $item->password = Hash::make($password);
@@ -117,7 +119,9 @@ class UsersController extends Controller
         $this->_sfwconfig = new SfwConfig();
         $this->_sfwconfig->load(__DIR__ . '/../Defines/Users/edit.json');
         $sfwcomponent = new SfwComponent(get_class());
-        $sfwcomponent->setItem(SfwUser::getByIdOrAbort($id));
+        $item = SfwUser::getByIdOrAbort($id);
+        $item->status = ($item->status === 'active') ? 1 : 0;
+        $sfwcomponent->setItem($item);
         return $sfwcomponent->render($this->_sfwconfig->getConfig());
     }
 
@@ -146,11 +150,12 @@ class UsersController extends Controller
     {
         $item->name = \Request::get('name');
         $item->email = \Request::get('email');
-        $item->role = \Request::get('role') ?: $item->role;
         $item->sfw_role_id = \Request::get('sfw_role_id') != '' ? \Request::get('sfw_role_id') : null;
-        $item->status = \Request::get('status') ?: $item->status;
-        $item->lover_level = \Request::get('lover_level') != '' ? \Request::get('lover_level') : null;
-        $item->timezone = \Request::get('timezone') != '' ? \Request::get('timezone') : null;
+        $sfwRole = $item->sfw_role_id ? SfwRole::getById($item->sfw_role_id) : null;
+        if ($sfwRole) {
+            $item->role = $sfwRole->key ?: $sfwRole->name;
+        }
+        $item->status = \Request::has('status') ? 'active' : 'pending';
         $password = \Request::get('password');
         if (!empty($password)) {
             $item->password = Hash::make($password);
@@ -212,13 +217,18 @@ class UsersController extends Controller
         $this->_sfwconfig->load(__DIR__ . '/../Defines/Users/objects-access.json');
 
         $sql = SfwUserObject::getAccessForUserId($id)
+            ->where(function ($q) {
+                $q->where('sfw_objects.system', 0)->orWhereNull('sfw_objects.system');
+            })
             ->orderBy('sfw_objects.key')
             ->orderBy('sfw_objects.name');
 
         return DataTables::of($sql)
             ->addColumn('access', function ($item) use ($id) {
                 $checked = ($item->access > 0 ? 'checked' : '');
-                return '<input type="checkbox" ' . $checked . ' onclick="sfwUsers.objectAccess(\'' . $id . '\',\'' . $item->id . '\')">';
+                $disabled = !empty($item->system) ? 'disabled' : '';
+                $onclick = !empty($item->system) ? '' : ' onclick="sfwUsers.objectAccess(\'' . $id . '\',\'' . $item->id . '\')"';
+                return '<input type="checkbox" ' . $checked . ' ' . $disabled . $onclick . '>';
             })
             ->rawColumns(['access'])
             ->make(true);
@@ -232,6 +242,11 @@ class UsersController extends Controller
      */
     public function objectsAccessExec($userId)
     {
+        $object = SfwObject::getById(\Request::get('objectId'));
+        if (!$object || !empty($object->system)) {
+            return response()->json(['success' => false, 'message' => 'No se puede dar permisos sobre permisos de sistema'], 403);
+        }
+
         $userObject = SfwUserObject::query()
             ->where('user_id', '=', $userId)
             ->where('sfw_object_id', '=', \Request::get('objectId'))
@@ -258,7 +273,9 @@ class UsersController extends Controller
      */
     public function addAllPrivilegesObjects($userId)
     {
-        $objects = SfwObject::query()->select('sfw_objects.id')->get();
+        $objects = SfwObject::query()->select('sfw_objects.id', 'sfw_objects.system')->where(function ($q) {
+            $q->where('system', 0)->orWhereNull('system');
+        })->get();
         $mode = \Request::get('mode');
 
         foreach ($objects as $object) {
@@ -382,6 +399,6 @@ class UsersController extends Controller
      */
     public static function selectSfwRoles()
     {
-        return ['' => ''] + SfwRole::query()->orderBy('name')->pluck('name', 'id')->toArray();
+        return SfwRole::query()->orderBy('name')->pluck('name', 'id')->toArray();
     }
 }
