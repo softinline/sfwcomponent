@@ -1,83 +1,91 @@
 {
-    "type":"screen",    
-    "layout":"sfwcomponent::backoffice.layouts.default",
-    "ajax":false,
-    "name":"index",
-    "url":"sfw/languages",
-    "components":[
+    "type": "screen",
+    "layout": "sfwcomponent::backoffice.layouts.default",
+    "ajax": false,
+    "name": "index",
+    "url": "sfw/languages",
+    "components": [
         {
-            "type":"div",
-            "class":"container-fluid",
-            "components":[
+            "type": "div",
+            "class": "container-fluid",
+            "components": [
                 {
-                    "type":"function",
-                    "function":"breadcrumbIndex"
-                },        
+                    "type": "function",
+                    "function": "breadcrumbIndex"
+                },
                 {
-                    "type":"div",
-                    "class":"row",
-                    "components":[                
+                    "type": "div",
+                    "class": "row",
+                    "components": [
                         {
-                            "type":"div",
-                            "class":"col-lg-12",
-                            "components":[
+                            "type": "div",
+                            "class": "col-lg-12",
+                            "components": [
                                 {
-                                    "type":"div",
-                                    "class":"card",
-                                    "components":[
+                                    "type": "div",
+                                    "class": "card",
+                                    "components": [
                                         {
-                                            "type":"div",
-                                            "class":"card-body",
-                                            "components":[                    
+                                            "type": "div",
+                                            "class": "card-body",
+                                            "components": [
                                                 {
-                                                    "type":"div",
-                                                    "class":"col-lg-12 text-right",
-                                                    "components":[
+                                                    "type": "div",
+                                                    "class": "col-lg-12 text-right",
+                                                    "components": [
                                                         {
-                                                            "type":"button",
-                                                            "action":"link:sfw/languages/add",
-                                                            "title":"add",
-                                                            "class":"btn btn-primary mb-2",
-                                                            "icon":"las la-plus-circle",
-                                                            "id":"btnAddLanguage"
+                                                            "type": "button",
+                                                            "action": "link:sfw/languages/add",
+                                                            "title": "add",
+                                                            "class": "btn btn-primary mb-2",
+                                                            "icon": "las la-plus-circle",
+                                                            "id": "btnAddLanguage"
                                                         }
                                                     ]
                                                 },
                                                 {
-                                                    "type":"div",
-                                                    "class":"col-lg-12",
-                                                    "components":[
+                                                    "type": "div",
+                                                    "class": "col-lg-12",
+                                                    "components": [
                                                         {
-                                                            "type":"datatable",
-                                                            "class":"table",
-                                                            "name":"sfw-languages",
-                                                            "footer":"true",
-                                                            "pageLength":"50",
-                                                            "url":"/sfw/languages",
-                                                            "selector":false,
-                                                            "columns":[
+                                                            "type": "datatable",
+                                                            "class": "table",
+                                                            "name": "sfw-languages",
+                                                            "footer": "true",
+                                                            "pageLength": "50",
+                                                            "url": "/sfw/languages",
+                                                            "selector": false,
+                                                            "columns": [
                                                                 {
-                                                                    "name":"id",
-                                                                    "field":"id",
-                                                                    "width":"1%"
+                                                                    "name": "id",
+                                                                    "field": "id",
+                                                                    "width": "1%"
                                                                 },
                                                                 {
-                                                                    "name":"language",
-                                                                    "field":"language"
+                                                                    "name": "language",
+                                                                    "field": "language"
                                                                 },
                                                                 {
-                                                                    "name":"iso",
-                                                                    "field":"iso"
+                                                                    "name": "iso",
+                                                                    "field": "iso"
                                                                 },
                                                                 {
-                                                                    "name":"created_at",
-                                                                    "field":"created_at"
+                                                                    "name": "is_active",
+                                                                    "field": "is_active"
                                                                 },
                                                                 {
-                                                                    "name":"actions",
-                                                                    "field":"actions",
-                                                                    "orderable":false,
-                                                                    "searchable":false
+                                                                    "name": "is_default",
+                                                                    "field": "is_default"
+                                                                },
+                                                                {
+                                                                    "name": "sort_order",
+                                                                    "field": "sort_order"
+                                                                },
+                                                                {
+                                                                    "name": "actions",
+                                                                    "field": "actions",
+                                                                    "orderable": false,
+                                                                    "searchable": false
                                                                 }
                                                             ]
                                                         }
@@ -93,5 +101,6 @@
                 }
             ]
         }
-    ]
+    ],
+    "translationFile": "sfwcomponent::"
 }

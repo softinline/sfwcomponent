@@ -4,6 +4,8 @@
 
     use App\Http\Controllers\Controller;
     use Softinline\SfwComponent\Models\SfwEmailTemplate;
+    use Softinline\SfwComponent\Models\SfwLanguage;
+    use Softinline\SfwComponent\Services\TranslationsService;
     use Yajra\DataTables\Facades\DataTables;
 
     class EmailTemplatesController extends Controller
@@ -36,6 +38,9 @@
             $query = SfwEmailTemplate::getAll();
 
             $datatable = Datatables::of($query)
+                ->editColumn('default', function ($item) {
+                    return $item->default ? '<i class="las la-check-circle text-success"></i>' : '';
+                })
                 ->editColumn('created_at', function ($item) {
                     return $item->created_at != '' ? $item->created_at->format("d/m/Y") : '';
                 })
@@ -46,7 +51,7 @@
                     $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="'.$item->id.'" sfwcomponent-data-url="'.$this->_sfwconfig->getParam('url').'" sfwcomponent-data-datatable="'.\Request::get('datatable').'" sfwcomponent-data-title="'.e($item->email_template ?? $item->key ?? $item->id).'" class="sfwcomponent-delete" title="'.ucfirst(trans('sfwcomponent::delete')).'"><i class="las la-trash fa-fw"></i></a>';
                     return $return;
                 })
-                ->rawColumns(['actions']);
+                ->rawColumns(['default', 'actions']);
 
             return $datatable->make(true);
         }
@@ -90,9 +95,11 @@
             $item->key = \Request::get('key');
             $item->subject = \Request::get('subject');
             $item->body = \Request::get('body');
+            $item->layout = \Request::get('layout') != '' ? \Request::get('layout') : null;
             $item->default = \Request::get('default') ? 1 : 0;
 
             if ($item->save()) {
+                TranslationsService::setTranslation('sfw_email_templates', $item->id, ['subject', 'body']);
                 return $item;
             }
 
@@ -141,9 +148,11 @@
             $item->key = \Request::get('key') != '' ? \Request::get('key') : null;
             $item->subject = \Request::get('subject') != '' ? \Request::get('subject') : null;
             $item->body = \Request::get('body') != '' ? \Request::get('body') : null;
+            $item->layout = \Request::get('layout') != '' ? \Request::get('layout') : null;
             $item->default = \Request::get('default') ? 1 : 0;
 
             if ($item->save()) {
+                TranslationsService::setTranslation('sfw_email_templates', $item->id, ['subject', 'body']);
                 return $item;
             }
 
@@ -228,5 +237,27 @@
                 ]
             ];
             return View('sfwcomponent::backoffice.partials.breadcrumb', ['data' => $data]);
+        }
+
+        /**
+         * Get available languages for translation fields.
+         *
+         * @return mixed
+         */
+        public static function languages()
+        {
+            return SfwLanguage::getAll();
+        }
+
+        /**
+         * Get translations for a field.
+         *
+         * @param mixed $item
+         * @param string $field
+         * @return array
+         */
+        public static function getTranslations($item, $field)
+        {
+            return TranslationsService::getTranslation($item, 'sfw_email_templates', $item->id, $field, true);
         }
     }

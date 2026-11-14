@@ -2,10 +2,9 @@
 
     namespace Softinline\SfwComponent\Controllers;
 
-    use Softinline\SfwComponent;
     use App\Http\Controllers\Controller;
-    use Yajra\DataTables\Facades\DataTables;
     use Softinline\SfwComponent\Models\SfwEmailLog;
+    use Yajra\DataTables\Facades\DataTables;
 
     class EmailLogsController extends Controller
     {
@@ -37,13 +36,29 @@
             $query = SfwEmailLog::getAll();
 
             $datatable = Datatables::of($query)
+                ->addColumn('email', function ($item) {
+                    return $item->to ?? '';
+                })
+                ->editColumn('status', function ($item) {
+                    $status = (string) ($item->status ?? '');
+                    if ($status === 'sent') {
+                        return '<span class="badge badge-success">'.e(ucfirst(trans('sfwcomponent::sent'))).'</span>';
+                    }
+                    if ($status === 'error') {
+                        return '<span class="badge badge-danger" title="'.e($item->error ?? '').'">'.e(ucfirst(trans('sfwcomponent::error'))).'</span>';
+                    }
+                    return $status !== '' ? '<span class="badge badge-secondary">'.e($status).'</span>' : '';
+                })
+                ->editColumn('sent_at', function ($item) {
+                    return $item->sent_at ? $item->sent_at->format('d/m/Y H:i') : '';
+                })
                 ->editColumn('created_at', function ($item) {
-                    return $item->created_at != '' ? $item->created_at->format("d/m/Y H:i") : '';
+                    return $item->created_at ? $item->created_at->format('d/m/Y H:i') : '';
                 })
                 ->addColumn('actions', function ($item) {
                     return '';
                 })
-                ->rawColumns(['actions']);
+                ->rawColumns(['status', 'actions']);
 
             return $datatable->make(true);
         }

@@ -1,0 +1,106 @@
+{
+    "type": "screen",
+    "layout": "sfwcomponent::backoffice.layouts.default",
+    "ajax": false,
+    "name": "index",
+    "url": "sfw/users",
+    "components": [
+        {
+            "type": "div",
+            "class": "container-fluid",
+            "components": [
+                {
+                    "type": "function",
+                    "function": "breadcrumbIndex"
+                },
+                {
+                    "type": "div",
+                    "class": "row",
+                    "components": [
+                        {
+                            "type": "div",
+                            "class": "col-lg-12",
+                            "components": [
+                                {
+                                    "type": "div",
+                                    "class": "card",
+                                    "components": [
+                                        {
+                                            "type": "div",
+                                            "class": "card-body",
+                                            "components": [
+                                                {
+                                                    "type": "div",
+                                                    "class": "col-lg-12 text-right",
+                                                    "components": [
+                                                        {
+                                                            "type": "button",
+                                                            "action": "link:sfw/users/add",
+                                                            "title": "add",
+                                                            "class": "btn btn-primary mb-2",
+                                                            "icon": "las la-plus-circle",
+                                                            "id": "btnAddSfwUser"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "class": "col-lg-12",
+                                                    "components": [
+                                                        {
+                                                            "type": "datatable",
+                                                            "class": "table",
+                                                            "name": "sfw-users",
+                                                            "footer": "true",
+                                                            "pageLength": "50",
+                                                            "url": "/sfw/users",
+                                                            "selector": false,
+                                                            "columns": [
+                                                                {
+                                                                    "name": "id",
+                                                                    "field": "id",
+                                                                    "width": "1%"
+                                                                },
+                                                                {
+                                                                    "name": "name",
+                                                                    "field": "name"
+                                                                },
+                                                                {
+                                                                    "name": "email",
+                                                                    "field": "email"
+                                                                },
+                                                                {
+                                                                    "name": "role",
+                                                                    "field": "role"
+                                                                },
+                                                                {
+                                                                    "name": "status",
+                                                                    "field": "status"
+                                                                },
+                                                                {
+                                                                    "name": "created_at",
+                                                                    "field": "created_at"
+                                                                },
+                                                                {
+                                                                    "name": "actions",
+                                                                    "field": "actions",
+                                                                    "orderable": false,
+                                                                    "searchable": false
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "translationFile": "sfwcomponent::"
+}

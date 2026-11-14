@@ -28,54 +28,73 @@
                                     "action": "sfw/languages/{id}",
                                     "components": [
                                         {
-                                            "type": "tabs",
+                                            "type": "div",
+                                            "class": "card",
                                             "components": [
                                                 {
-                                                    "type": "tab",
-                                                    "title": "general",
-                                                    "key": "general",
+                                                    "type": "div",
+                                                    "class": "card-body",
                                                     "components": [
                                                         {
-                                                            "type": "div",
-                                                            "class": "card",
-                                                            "components": [
-                                                                {
-                                                                    "type": "div",
-                                                                    "class": "card-body",
-                                                                    "components": [
-                                                                        {
-                                                                            "type": "text",
-                                                                            "required": true,
-                                                                            "title": "language",
-                                                                            "field": "language"
-                                                                        },
-                                                                        {
-                                                                            "type": "text",
-                                                                            "required": true,
-                                                                            "title": "iso",
-                                                                            "field": "iso"
-                                                                        }
-                                                                    ]
-                                                                },
-                                                                {
-                                                                    "type": "div",
-                                                                    "class": "card-footer",
-                                                                    "components": [
-                                                                        {
-                                                                            "type": "button",
-                                                                            "action": "js:sfwcomponent.submit('frm-sfw-languages-edit')",
-                                                                            "title": "accept",
-                                                                            "class": "btn btn-primary"
-                                                                        },
-                                                                        {
-                                                                            "type": "button",
-                                                                            "action": "link:sfw/languages",
-                                                                            "title": "cancel",
-                                                                            "class": "btn btn-secondary"
-                                                                        }
-                                                                    ]
-                                                                }
-                                                            ]
+                                                            "type": "text",
+                                                            "title": "id",
+                                                            "field": "id",
+                                                            "readonly": true
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "required": true,
+                                                            "title": "language",
+                                                            "field": "language"
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "title": "name",
+                                                            "field": "name"
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "required": true,
+                                                            "title": "iso",
+                                                            "field": "iso"
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "title": "locale",
+                                                            "field": "locale"
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "title": "sort_order",
+                                                            "field": "sort_order"
+                                                        },
+                                                        {
+                                                            "type": "checkbox",
+                                                            "title": "is_active",
+                                                            "field": "is_active"
+                                                        },
+                                                        {
+                                                            "type": "checkbox",
+                                                            "title": "is_default",
+                                                            "field": "is_default"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "class": "card-footer",
+                                                    "components": [
+                                                        {
+                                                            "type": "button",
+                                                            "action": "js:sfwcomponent.submit('frm-sfw-languages-edit')",
+                                                            "title": "accept",
+                                                            "class": "btn btn-primary"
+                                                        },
+                                                        {
+                                                            "type": "button",
+                                                            "action": "link:sfw/languages",
+                                                            "title": "cancel",
+                                                            "class": "btn btn-secondary"
                                                         }
                                                     ]
                                                 }
@@ -89,5 +108,6 @@
                 }
             ]
         }
-    ]
+    ],
+    "translationFile": "sfwcomponent::"
 }

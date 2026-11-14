@@ -1,87 +1,91 @@
 {
-    "type":"screen",
-    "layout":"sfwcomponent::backoffice.layouts.default",
-    "ajax":false,
-    "name":"edit",
-    "url":"sfw/languages",
-    "components":[
+    "type": "screen",
+    "layout": "sfwcomponent::backoffice.layouts.default",
+    "ajax": false,
+    "name": "edit",
+    "url": "sfw/translations",
+    "translationFile": "sfwcomponent::",
+    "components": [
         {
-            "type":"function",
-            "function":"breadcrumbEdit"
-        },
-        {
-            "type":"div",
-            "class":"row",
-            "components":[                
+            "type": "div",
+            "class": "container-fluid",
+            "components": [
                 {
-                    "type":"div",
-                    "class":"col-lg-12",
-                    "components":[
-                        {                                                                    
-                            "type":"form",
-                            "class":"",
-                            "id":"frm-sfw-languages-edit",
-                            "action":"sfw/languages/{id}",
-                            "components":[
+                    "type": "function",
+                    "function": "breadcrumbEdit"
+                },
+                {
+                    "type": "div",
+                    "class": "row",
+                    "components": [
+                        {
+                            "type": "div",
+                            "class": "col-lg-12",
+                            "components": [
                                 {
-                                    "type":"tabs",
-                                    "components":[
+                                    "type": "form",
+                                    "class": "",
+                                    "id": "frm-sfw-translations-edit",
+                                    "action": "sfw/translations/{id}",
+                                    "components": [
                                         {
-                                            "type":"tab",
-                                            "title":"general",
-                                            "key":"general",                                            
-                                            "components":[
+                                            "type": "div",
+                                            "class": "card",
+                                            "components": [
                                                 {
-                                                    "type":"div",
-                                                    "class":"card",
-                                                    "components":[
+                                                    "type": "div",
+                                                    "class": "card-body",
+                                                    "components": [
                                                         {
-                                                            "type":"div",
-                                                            "class":"card-body",
-                                                            "components":[                                                                
-                                                                {
-                                                                    "type":"text",
-                                                                    "required":true,
-                                                                    "title":"language",
-                                                                    "field":"language"
-                                                                },
-                                                                {
-                                                                    "type":"text",
-                                                                    "required":true,
-                                                                    "title":"iso",
-                                                                    "field":"iso"
-                                                                }
-                                                            ]
+                                                            "type": "text",
+                                                            "title": "table",
+                                                            "field": "table"
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "title": "row_id",
+                                                            "field": "row_id"
+                                                        },
+                                                        {
+                                                            "type": "text",
+                                                            "title": "field",
+                                                            "field": "field"
+                                                        },
+                                                        {
+                                                            "type": "textarea",
+                                                            "title": "translation",
+                                                            "field": "translation",
+                                                            "rows": "12"
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "class": "card-footer",
+                                                    "components": [
+                                                        {
+                                                            "type": "button",
+                                                            "action": "js:sfwcomponent.submit('frm-sfw-translations-edit')",
+                                                            "title": "accept",
+                                                            "class": "btn btn-primary"
+                                                        },
+                                                        {
+                                                            "type": "button",
+                                                            "action": "link:sfw/translations",
+                                                            "title": "cancel",
+                                                            "class": "btn btn-secondary"
                                                         }
                                                     ]
                                                 }
                                             ]
                                         }
                                     ]
-                                },
-                                {
-                                    "type":"div",
-                                    "class":"mt-2 mb-2",
-                                    "components":[                                
-                                        {
-                                            "type":"button",
-                                            "action":"js:sfwcomponent.submit('frm-sfw-languages-edit')",
-                                            "title":"accept",
-                                            "class":"btn btn-primary"
-                                        },
-                                        {
-                                            "type":"button",
-                                            "action":"link:sfw/languages",
-                                            "title":"cancel",
-                                            "class":"btn btn-secondary"
-                                        }
-                                    ]
                                 }
-                            ]                                        
+                            ]
                         }
                     ]
                 }
             ]
-        }   
+        }
     ]
 }

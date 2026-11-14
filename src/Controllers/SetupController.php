@@ -18,9 +18,8 @@ class SetupController extends Controller
     public function index()
     {
         $complete = SfwProtectedMiddleware::isSetupComplete();
-        $prefix = SfwComponent::ROUTE_PREFIX;
         if ($complete) {
-            return redirect('/' . $prefix);
+            return redirect('/sfw');
         }
 
         return view('sfwcomponent::backoffice.setup.index', [
@@ -37,10 +36,8 @@ class SetupController extends Controller
      */
     public function store()
     {
-        $prefix = SfwComponent::ROUTE_PREFIX;
-
         if (SfwProtectedMiddleware::isSetupComplete()) {
-            return redirect('/' . $prefix);
+            return redirect('/sfw');
         }
 
         $current = (string) request()->get('current_password', '');
@@ -118,7 +115,7 @@ class SetupController extends Controller
                 ->with('sfw_setup_output', implode("\n", array_filter($output)));
         }
 
-        return redirect('/' . $prefix . '/auth/login')->with('sfw_setup_success', 'SFW configurado correctamente. Inicia sesiÃ³n con el usuario admin.')
+        return redirect('/sfw/auth/login')->with('sfw_setup_success', 'SFW configurado correctamente. Inicia sesión con el usuario admin.')
             ->with('sfw_setup_output', implode("\n", array_filter($output)));
     }
 }

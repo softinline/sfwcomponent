@@ -18,13 +18,11 @@ class AuthController extends Controller
      */
     public function loginGet()
     {
-        $prefix = SfwComponent::ROUTE_PREFIX;
-
         if (!SfwProtectedMiddleware::isSetupComplete()) {
-            return redirect('/' . $prefix . '/setup');
+            return redirect('/sfw/setup');
         }
         if (\Session::get('sfw-user-logged')) {
-            return redirect('/' . $prefix);
+            return redirect('/sfw');
         }
 
         $this->_sfwconfig = new \Softinline\SfwComponent\SfwConfig();
@@ -40,10 +38,8 @@ class AuthController extends Controller
      */
     public function loginPost()
     {
-        $prefix = SfwComponent::ROUTE_PREFIX;
-
         if (!SfwProtectedMiddleware::isSetupComplete()) {
-            return redirect('/' . $prefix . '/setup');
+            return redirect('/sfw/setup');
         }
 
         $username = (string) request()->get('username', request()->get('email', ''));
@@ -59,10 +55,10 @@ class AuthController extends Controller
         if ($username === 'admin' && $hash && Hash::check($password, $hash)) {
             \Session::put('sfw-user-logged', true);
             \Session::put('sfw-user-name', 'admin');
-            return redirect('/' . $prefix);
+            return redirect('/sfw');
         }
 
-        return redirect('/' . $prefix . '/auth/login')->with('error', 'Usuario o contraseÃ±a incorrectos.');
+        return redirect('/sfw/auth/login')->with('error', 'Usuario o contraseña incorrectos.');
     }
 
     /**
@@ -72,10 +68,9 @@ class AuthController extends Controller
      */
     public function logoff()
     {
-        $prefix = SfwComponent::ROUTE_PREFIX;
         \Session::forget('sfw-user-logged');
         \Session::forget('sfw-user-name');
 
-        return redirect('/' . $prefix . '/auth/login');
+        return redirect('/sfw/auth/login');
     }
 }

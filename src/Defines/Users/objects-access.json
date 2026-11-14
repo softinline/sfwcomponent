@@ -1,0 +1,122 @@
+{
+    "type": "screen",
+    "layout": "sfwcomponent::backoffice.layouts.default",
+    "ajax": false,
+    "name": "objects-access",
+    "url": "sfw/users/{id}/objects-access",
+    "components": [
+        {
+            "type": "div",
+            "class": "container-fluid",
+            "components": [
+                {
+                    "type": "function",
+                    "function": "breadcrumbObjectsAccess"
+                },
+                {
+                    "type": "div",
+                    "class": "row",
+                    "components": [
+                        {
+                            "type": "div",
+                            "class": "col-lg-12",
+                            "components": [
+                                {
+                                    "type": "div",
+                                    "class": "card",
+                                    "components": [
+                                        {
+                                            "type": "div",
+                                            "class": "card-body",
+                                            "components": [
+                                                {
+                                                    "type": "div",
+                                                    "class": "row",
+                                                    "components": [
+                                                        {
+                                                            "type": "div",
+                                                            "class": "col-lg-12 text-right",
+                                                            "components": [
+                                                                {
+                                                                    "type": "button",
+                                                                    "action": "link:/sfw/users/{id}/add-all-privileges-objects?mode=add&return=true",
+                                                                    "title": "add_all",
+                                                                    "class": "btn btn-primary mb-1",
+                                                                    "icon": "las la-plus-circle"
+                                                                },
+                                                                {
+                                                                    "type": "button",
+                                                                    "action": "link:/sfw/users/{id}/add-all-privileges-objects?mode=quit&return=true",
+                                                                    "title": "delete_all",
+                                                                    "class": "btn btn-primary mb-1",
+                                                                    "icon": "las la-minus-circle"
+                                                                },
+                                                                {
+                                                                    "type": "button",
+                                                                    "action": "link:/sfw/users/{id}/add-all-privileges-objects?mode=toggle&return=true",
+                                                                    "title": "change_all",
+                                                                    "class": "btn btn-primary mb-1",
+                                                                    "icon": "las la-sync"
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "div",
+                                                    "class": "row",
+                                                    "components": [
+                                                        {
+                                                            "type": "div",
+                                                            "class": "col-lg-12",
+                                                            "components": [
+                                                                {
+                                                                    "type": "datatable",
+                                                                    "class": "table",
+                                                                    "name": "sfw-users-objects-access",
+                                                                    "footer": "true",
+                                                                    "pageLength": "50",
+                                                                    "url": "/sfw/users/{id}/objects-access",
+                                                                    "selector": false,
+                                                                    "columns": [
+                                                                        {
+                                                                            "name": "id",
+                                                                            "field": "id"
+                                                                        },
+                                                                        {
+                                                                            "name": "key",
+                                                                            "field": "key"
+                                                                        },
+                                                                        {
+                                                                            "name": "name",
+                                                                            "field": "name"
+                                                                        },
+                                                                        {
+                                                                            "name": "description",
+                                                                            "field": "description"
+                                                                        },
+                                                                        {
+                                                                            "name": "access",
+                                                                            "field": "access",
+                                                                            "orderable": false,
+                                                                            "searchable": false
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "translationFile": "sfwcomponent::"
+}

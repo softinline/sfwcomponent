@@ -59,18 +59,30 @@
                                                                             "type": "text",
                                                                             "required": true,
                                                                             "title": "subject",
-                                                                            "field": "subject"
+                                                                            "field": "subject",
+                                                                            "translate": true,
+                                                                            "translations": "getTranslations",
+                                                                            "languages": "languages"
                                                                         },
                                                                         {
                                                                             "type": "ckeditor",
                                                                             "required": true,
                                                                             "title": "body",
-                                                                            "field": "body"
+                                                                            "field": "body",
+                                                                            "translate": true,
+                                                                            "translations": "getTranslations",
+                                                                            "languages": "languages"
+                                                                        },
+                                                                        {
+                                                                            "type": "text",
+                                                                            "required": false,
+                                                                            "title": "layout",
+                                                                            "field": "layout"
                                                                         },
                                                                         {
                                                                             "type": "checkbox",
                                                                             "required": false,
-                                                                            "title": "default",
+                                                                            "title": "is_default",
                                                                             "field": "default"
                                                                         }
                                                                     ]
@@ -107,5 +119,6 @@
                 }
             ]
         }
-    ]
+    ],
+    "translationFile": "sfwcomponent::"
 }

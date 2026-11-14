@@ -6,7 +6,6 @@
 
     class SfwComponent
     {
-        
         private $_controller;
         private $_id;
         private $_item;

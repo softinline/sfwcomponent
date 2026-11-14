@@ -1,92 +1,119 @@
 <?php
 
-    use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Route;
 
-    Route::middleware(['web'])->group(function () {
-        // login
-        Route::get('sfw/auth/login', 'Softinline\SfwComponent\Controllers\AuthController@login');
-        Route::post('sfw/auth/login', 'Softinline\SfwComponent\Controllers\AuthController@login');
-        Route::get('sfw/auth/logoff', 'Softinline\SfwComponent\Controllers\AuthController@logoff');
-        // datatable configs
-        Route::post('sfw/datatable/config-columns-save', 'Softinline\SfwComponent\Controllers\DatatableController@configColumnsSave');
-    });
-    
-    Route::middleware(['web', 'SfwProtected'])->group(function () {
-    
-        // home
-        Route::get('sfw', 'Softinline\SfwComponent\Controllers\HomeController@index');
-    
-        // smtps
-        Route::get('sfw/smtps', 'Softinline\SfwComponent\Controllers\SmtpsController@index');
-        Route::get('sfw/smtps/data', 'Softinline\SfwComponent\Controllers\SmtpsController@data');
-        Route::get('sfw/smtps/add', 'Softinline\SfwComponent\Controllers\SmtpsController@add');
-        Route::post('sfw/smtps/add', 'Softinline\SfwComponent\Controllers\SmtpsController@create');
-        Route::get('sfw/smtps/dependend1', 'Softinline\SfwComponent\Controllers\SmtpsController@selectDependend1');
-        Route::get('sfw/smtps/dependend2', 'Softinline\SfwComponent\Controllers\SmtpsController@selectDependend2');
-        Route::get('sfw/smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@edit');
-        Route::post('sfw/smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@update');
-        Route::delete('sfw/smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@delete');
-        Route::post('sfw/smtps/{id}/test-email', 'Softinline\SfwComponent\Controllers\SmtpsController@testEmail');
+Route::prefix('sfw')->middleware(['web'])->group(function () {
+    Route::get('auth/login', 'Softinline\SfwComponent\Controllers\AuthController@loginGet');
+    Route::post('auth/login', 'Softinline\SfwComponent\Controllers\AuthController@loginPost');
+    Route::get('auth/logoff', 'Softinline\SfwComponent\Controllers\AuthController@logoff');
+});
 
-        // roles
-        Route::get('sfw/roles', 'Softinline\SfwComponent\Controllers\RolesController@index');
-        Route::get('sfw/roles/data', 'Softinline\SfwComponent\Controllers\RolesController@data');
-        Route::get('sfw/roles/add', 'Softinline\SfwComponent\Controllers\RolesController@add');
-        Route::post('sfw/roles/add', 'Softinline\SfwComponent\Controllers\RolesController@create');
-        Route::get('sfw/roles/{id}', 'Softinline\SfwComponent\Controllers\RolesController@edit');
-        Route::post('sfw/roles/{id}', 'Softinline\SfwComponent\Controllers\RolesController@update');
-        Route::delete('sfw/roles/{id}', 'Softinline\SfwComponent\Controllers\RolesController@delete');
+Route::prefix('sfw')->middleware(['web', 'SfwProtected'])->group(function () {
+    Route::get('setup', 'Softinline\SfwComponent\Controllers\SetupController@index');
+    Route::post('setup', 'Softinline\SfwComponent\Controllers\SetupController@store');
 
-        // files
-        Route::get('sfw/files', 'Softinline\SfwComponent\Controllers\FilesController@index');
-        Route::get('sfw/files/data', 'Softinline\SfwComponent\Controllers\FilesController@data');
-        Route::get('sfw/files/add', 'Softinline\SfwComponent\Controllers\FilesController@add');
-        Route::post('sfw/files/add', 'Softinline\SfwComponent\Controllers\FilesController@create');
-        Route::get('sfw/files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@edit');
-        Route::post('sfw/files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@update');
-        Route::delete('sfw/files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@delete');
+    Route::post('datatable/config-columns-save', 'Softinline\SfwComponent\Controllers\DatatableController@configColumnsSave');
 
-        // languages
-        Route::get('sfw/languages', 'Softinline\SfwComponent\Controllers\LanguagesController@index');
-        Route::get('sfw/languages/data', 'Softinline\SfwComponent\Controllers\LanguagesController@data');
-        Route::get('sfw/languages/add', 'Softinline\SfwComponent\Controllers\LanguagesController@add');
-        Route::post('sfw/languages/add', 'Softinline\SfwComponent\Controllers\LanguagesController@create');
-        Route::get('sfw/languages/{id}', 'Softinline\SfwComponent\Controllers\LanguagesController@edit');
-        Route::post('sfw/languages/{id}', 'Softinline\SfwComponent\Controllers\LanguagesController@update');
-        Route::delete('sfw/languages/{id}', 'Softinline\SfwComponent\Controllers\LanguagesController@delete');
-        
-        // tasks
-        Route::get('sfw/tasks', 'Softinline\SfwComponent\Controllers\TasksController@index');
-        Route::get('sfw/tasks/data', 'Softinline\SfwComponent\Controllers\TasksController@data');
-        Route::get('sfw/tasks/add', 'Softinline\SfwComponent\Controllers\TasksController@add');
-        Route::post('sfw/tasks/add', 'Softinline\SfwComponent\Controllers\TasksController@create');
-        Route::get('sfw/tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@edit');
-        Route::post('sfw/tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@update');
-        Route::delete('sfw/tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@delete');
+    Route::get('/', 'Softinline\SfwComponent\Controllers\HomeController@index');
 
-        // translations
-        Route::get('sfw/translations', 'Softinline\SfwComponent\Controllers\TranslationsController@index');
-        Route::get('sfw/translations/data', 'Softinline\SfwComponent\Controllers\TranslationsController@data');
-        Route::get('sfw/translations/{id}', 'Softinline\SfwComponent\Controllers\TranslationsController@edit');
-        Route::post('sfw/translations/{id}', 'Softinline\SfwComponent\Controllers\TranslationsController@update');
-        Route::delete('sfw/translations/{id}', 'Softinline\SfwComponent\Controllers\TranslationsController@delete');
+    Route::get('smtps', 'Softinline\SfwComponent\Controllers\SmtpsController@index');
+    Route::get('smtps/data', 'Softinline\SfwComponent\Controllers\SmtpsController@data');
+    Route::get('smtps/add', 'Softinline\SfwComponent\Controllers\SmtpsController@add');
+    Route::post('smtps/add', 'Softinline\SfwComponent\Controllers\SmtpsController@create');
+    Route::get('smtps/dependend1', 'Softinline\SfwComponent\Controllers\SmtpsController@selectDependend1');
+    Route::get('smtps/dependend2', 'Softinline\SfwComponent\Controllers\SmtpsController@selectDependend2');
+    Route::get('smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@edit');
+    Route::post('smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@update');
+    Route::delete('smtps/{id}', 'Softinline\SfwComponent\Controllers\SmtpsController@delete');
+    Route::post('smtps/{id}/test-email', 'Softinline\SfwComponent\Controllers\SmtpsController@testEmail');
 
-        // audits
-        Route::get('sfw/audits', 'Softinline\SfwComponent\Controllers\AuditsController@index');
-        Route::get('sfw/audits/data', 'Softinline\SfwComponent\Controllers\AuditsController@data');    
-        Route::get('sfw/audits/{id}', 'Softinline\SfwComponent\Controllers\AuditsController@edit');
+    Route::get('screens', 'Softinline\SfwComponent\Controllers\ScreensController@index');
+    Route::get('screens/data', 'Softinline\SfwComponent\Controllers\ScreensController@data');
+    Route::get('screens/add', 'Softinline\SfwComponent\Controllers\ScreensController@add');
+    Route::post('screens/add', 'Softinline\SfwComponent\Controllers\ScreensController@create');
+    Route::get('screens/import', 'Softinline\SfwComponent\Controllers\ScreensController@import');
+    Route::post('screens/import', 'Softinline\SfwComponent\Controllers\ScreensController@importExec');
+    Route::get('screens/{id}', 'Softinline\SfwComponent\Controllers\ScreensController@edit');
+    Route::post('screens/{id}', 'Softinline\SfwComponent\Controllers\ScreensController@update');
+    Route::delete('screens/{id}', 'Softinline\SfwComponent\Controllers\ScreensController@delete');
+    Route::get('screens/{id}/detail', 'Softinline\SfwComponent\Controllers\ScreensController@detail');
+    Route::post('screens/{id}/detail', 'Softinline\SfwComponent\Controllers\ScreensController@detail');
+    Route::post('screens/{id}/order', 'Softinline\SfwComponent\Controllers\ScreensController@order');
+    Route::get('screens/{id}/components/add', 'Softinline\SfwComponent\Controllers\ScreensController@componentsAdd');
+    Route::post('screens/{id}/components/add', 'Softinline\SfwComponent\Controllers\ScreensController@componentsCreate');
+    Route::get('screens/{id}/components/{componentId}/edit', 'Softinline\SfwComponent\Controllers\ScreensController@componentsEdit');
+    Route::post('screens/{id}/components/{componentId}/edit', 'Softinline\SfwComponent\Controllers\ScreensController@componentsUpdate');
 
-        // email templates
-        Route::get('sfw/email-templates', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@index');
-        Route::get('sfw/email-templates/data', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@data');
-        Route::get('sfw/email-templates/add', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@add');
-        Route::post('sfw/email-templates/add', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@create');
-        Route::get('sfw/email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@edit');
-        Route::post('sfw/email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@update');
-        Route::delete('sfw/email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@delete');
+    Route::get('objects', 'Softinline\SfwComponent\Controllers\ObjectsController@index');
+    Route::get('objects/data', 'Softinline\SfwComponent\Controllers\ObjectsController@data');
+    Route::get('objects/add', 'Softinline\SfwComponent\Controllers\ObjectsController@add');
+    Route::post('objects/add', 'Softinline\SfwComponent\Controllers\ObjectsController@create');
+    Route::get('objects/{id}', 'Softinline\SfwComponent\Controllers\ObjectsController@edit');
+    Route::post('objects/{id}', 'Softinline\SfwComponent\Controllers\ObjectsController@update');
+    Route::delete('objects/{id}', 'Softinline\SfwComponent\Controllers\ObjectsController@delete');
 
-        // email logs
-        Route::get('sfw/email-logs', 'Softinline\SfwComponent\Controllers\EmailLogsController@index');
-        Route::get('sfw/email-logs/data', 'Softinline\SfwComponent\Controllers\EmailLogsController@data');
-        
-    });
+    Route::get('files', 'Softinline\SfwComponent\Controllers\FilesController@index');
+    Route::get('files/data', 'Softinline\SfwComponent\Controllers\FilesController@data');
+    Route::get('files/add', 'Softinline\SfwComponent\Controllers\FilesController@add');
+    Route::post('files/add', 'Softinline\SfwComponent\Controllers\FilesController@create');
+    Route::post('files/upload', 'Softinline\SfwComponent\Controllers\FilesController@upload');
+    Route::get('files/{id}/download', 'Softinline\SfwComponent\Controllers\FilesController@download');
+    Route::post('files/{id}/main', 'Softinline\SfwComponent\Controllers\FilesController@setMain');
+    Route::get('files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@edit');
+    Route::post('files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@update');
+    Route::delete('files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@delete');
+
+    Route::get('languages', 'Softinline\SfwComponent\Controllers\LanguagesController@index');
+    Route::get('languages/data', 'Softinline\SfwComponent\Controllers\LanguagesController@data');
+    Route::get('languages/add', 'Softinline\SfwComponent\Controllers\LanguagesController@add');
+    Route::post('languages/add', 'Softinline\SfwComponent\Controllers\LanguagesController@create');
+    Route::get('languages/{id}', 'Softinline\SfwComponent\Controllers\LanguagesController@edit');
+    Route::post('languages/{id}', 'Softinline\SfwComponent\Controllers\LanguagesController@update');
+    Route::delete('languages/{id}', 'Softinline\SfwComponent\Controllers\LanguagesController@delete');
+
+    Route::get('tasks', 'Softinline\SfwComponent\Controllers\TasksController@index');
+    Route::get('tasks/data', 'Softinline\SfwComponent\Controllers\TasksController@data');
+    Route::get('tasks/add', 'Softinline\SfwComponent\Controllers\TasksController@add');
+    Route::post('tasks/add', 'Softinline\SfwComponent\Controllers\TasksController@create');
+    Route::get('tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@edit');
+    Route::post('tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@update');
+    Route::delete('tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@delete');
+
+    Route::get('translations', 'Softinline\SfwComponent\Controllers\TranslationsController@index');
+    Route::get('translations/data', 'Softinline\SfwComponent\Controllers\TranslationsController@data');
+    Route::get('translations/{id}', 'Softinline\SfwComponent\Controllers\TranslationsController@edit');
+    Route::post('translations/{id}', 'Softinline\SfwComponent\Controllers\TranslationsController@update');
+    Route::delete('translations/{id}', 'Softinline\SfwComponent\Controllers\TranslationsController@delete');
+
+    Route::get('audits', 'Softinline\SfwComponent\Controllers\AuditsController@index');
+    Route::get('audits/data', 'Softinline\SfwComponent\Controllers\AuditsController@data');
+    Route::get('audits/{id}', 'Softinline\SfwComponent\Controllers\AuditsController@edit');
+
+    Route::get('email-templates', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@index');
+    Route::get('email-templates/data', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@data');
+    Route::get('email-templates/add', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@add');
+    Route::post('email-templates/add', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@create');
+    Route::get('email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@edit');
+    Route::post('email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@update');
+    Route::delete('email-templates/{id}', 'Softinline\SfwComponent\Controllers\EmailTemplatesController@delete');
+
+    Route::get('email-logs', 'Softinline\SfwComponent\Controllers\EmailLogsController@index');
+    Route::get('email-logs/data', 'Softinline\SfwComponent\Controllers\EmailLogsController@data');
+
+    Route::get('tokens', 'Softinline\SfwComponent\Controllers\TokensController@index');
+    Route::get('tokens/data', 'Softinline\SfwComponent\Controllers\TokensController@data');
+    Route::get('tokens/{id}/edit', 'Softinline\SfwComponent\Controllers\TokensController@edit');
+
+    Route::get('users', 'Softinline\SfwComponent\Controllers\UsersController@index');
+    Route::get('users/data', 'Softinline\SfwComponent\Controllers\UsersController@data');
+    Route::get('users/add', 'Softinline\SfwComponent\Controllers\UsersController@add');
+    Route::post('users/add', 'Softinline\SfwComponent\Controllers\UsersController@create');
+    Route::get('users/{id}/edit', 'Softinline\SfwComponent\Controllers\UsersController@edit');
+    Route::get('users/{id}/objects-access', 'Softinline\SfwComponent\Controllers\UsersController@objectsAccess');
+    Route::get('users/{id}/objects-access/data', 'Softinline\SfwComponent\Controllers\UsersController@objectsAccessData');
+    Route::post('users/{id}/objects-access-exec', 'Softinline\SfwComponent\Controllers\UsersController@objectsAccessExec');
+    Route::get('users/{id}/add-all-privileges-objects', 'Softinline\SfwComponent\Controllers\UsersController@addAllPrivilegesObjects');
+    Route::get('users/{id}', 'Softinline\SfwComponent\Controllers\UsersController@edit');
+    Route::post('users/{id}', 'Softinline\SfwComponent\Controllers\UsersController@update');
+    Route::delete('users/{id}', 'Softinline\SfwComponent\Controllers\UsersController@delete');
+});
