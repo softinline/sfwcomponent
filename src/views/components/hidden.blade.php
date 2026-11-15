@@ -1,7 +1,7 @@
 <?php
 
-    // before render    
-    if(array_key_exists('beforeRender', $component)) {
+    // before render
+    if (array_key_exists('beforeRender', $component)) {
         $method = $component['beforeRender'];
         $component = $controller::$method($component, @$item);
     }
@@ -13,4 +13,4 @@
     $value = $component['value'];
 
 ?>
-<input type="hidden" name="{{ $field }}" id="{{ $field }}"  value="{{ $value }}">
+<input type="hidden" name="{{ $field }}" id="{{ $field }}" value="{{ $value }}">
