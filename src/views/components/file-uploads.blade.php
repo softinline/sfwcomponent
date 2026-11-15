@@ -1,4 +1,5 @@
 <?php
+    
     // before render
     if (array_key_exists('beforeRender', $component)) {
         $method = $component['beforeRender'];
@@ -56,6 +57,19 @@
     <label <?php echo $help != '' ? 'title="'.e($help).'" class="sfwcomponent-help-text"' : ''; ?>>{{ ucfirst(trans($translationFile.$title)) }}:</label>
 
     <div class="sfw-file-uploads-list row g-3 mb-3"></div>
+
+    <!-- Modal for file info (loaded via modals.load) -->
+<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>        
+      </div>
+      <div class="modal-body">
+        <!-- Content loaded by modals.load -->
+      </div>
+    </div>
+  </div>
 
     @if($allowUpload)
         <div class="sfw-file-uploads-upload card card-body bg-light">
@@ -184,14 +198,11 @@
         post(base() + '/' + encodeURIComponent(id) + '/delete', {}).then(function(){ load(); }).catch(function(){ notify('ko','Error'); });
     }
     function setMain(id) { post(base() + '/' + encodeURIComponent(id) + '/main', {}).then(function(){ load(); }); }
-    function setOrder(id, order) { post(base() + '/' + encodeURIComponent(id) + '/order', {order: order, sort_order: order}).then(function(res){ if(res && res.success===false) notify('ko', res.message||'Error'); }); }
+    function setOrder(id, order) { post(base() + '/' + encodeURIComponent(id) + '/order', {order: order, sort_order: order}).then(function(res){ if(res && res.success===false) notify('ko', res.message||'Error'); else load(); }); }
     function openInfo(id) {
         var url = base() + '/' + encodeURIComponent(id) + '/info';
-        if (window.modals && modals.show) {
-            modals.show(url, '#modal1', @json(ucfirst(trans('messages.edit'))), {});
-        } else {
-            window.open(url, '_blank');
-        }
+        var title = @json(ucfirst(trans('messages.edit')));
+        modals.show(url, '#modal1', title, {});
     }
 
     function upload() {

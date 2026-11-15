@@ -502,7 +502,7 @@ class FilesService
 
         $item->sort_order = (int) $order;
 
-        return (bool) $item->save();
+        return (bool) $item->save() || SfwFile::where('id', $id)->update(['sort_order' => (int) $order]) >= 0;
     }
 
     /**
