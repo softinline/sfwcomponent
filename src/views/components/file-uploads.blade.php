@@ -59,17 +59,18 @@
     <div class="sfw-file-uploads-list row g-3 mb-3"></div>
 
     <!-- Modal for file info (loaded via modals.load) -->
-<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title"></h5>        
-      </div>
-      <div class="modal-body">
-        <!-- Content loaded by modals.load -->
-      </div>
+    <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"></h5>
+                </div>
+                <div class="modal-body">
+                    <!-- Content loaded by modals.load -->
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
     @if($allowUpload)
         <div class="sfw-file-uploads-upload card card-body bg-light">
