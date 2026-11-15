@@ -29,11 +29,6 @@
                                     "method": "POST",
                                     "components": [
                                         {
-                                            "type": "hidden",
-                                            "field": "_token",
-                                            "value": "csrf_token"
-                                        },
-                                        {
                                             "type": "div",
                                             "class": "card",
                                             "components": [

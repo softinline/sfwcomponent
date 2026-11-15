@@ -38,12 +38,10 @@ class ObjectsController extends Controller
 
         $datatable = Datatables::of($query)
             ->editColumn('is_active', function ($item) {
-                $checked = $item->is_active ? 'checked' : '';
-                return '<input type="checkbox" ' . $checked . ' disabled>';
+                return $item->is_active ? '<i class="las la-check-circle text-success"></i>' : '';
             })
             ->editColumn('system', function ($item) {
-                $checked = $item->system ? 'checked' : '';
-                return '<input type="checkbox" ' . $checked . ' disabled>';
+                return $item->system ? '<i class="las la-check-circle text-success"></i>' : '';
             })
             ->addColumn('actions', function ($item) {
                 $return = '';

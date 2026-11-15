@@ -87,7 +87,8 @@
                                                                 },
                                                                 {
                                                                     "name": "is_system",
-                                                                    "field": "system"
+                                                                    "field": "system",
+                                                                    "title": "is_system"
                                                                 },
                                                                 {
                                                                     "name": "actions",

@@ -62,14 +62,7 @@ Route::prefix('sfw')->middleware(['web', 'SfwProtected'])->group(function () {
 
     Route::get('files', 'Softinline\SfwComponent\Controllers\FilesController@index');
     Route::get('files/data', 'Softinline\SfwComponent\Controllers\FilesController@data');
-    Route::get('files/add', 'Softinline\SfwComponent\Controllers\FilesController@add');
-    Route::post('files/add', 'Softinline\SfwComponent\Controllers\FilesController@create');
-    Route::post('files/upload', 'Softinline\SfwComponent\Controllers\FilesController@upload');
-    Route::get('files/{id}/download', 'Softinline\SfwComponent\Controllers\FilesController@download');
-    Route::post('files/{id}/main', 'Softinline\SfwComponent\Controllers\FilesController@setMain');
-    Route::get('files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@edit');
-    Route::post('files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@update');
-    Route::delete('files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@delete');
+    Route::get('files/{id}', 'Softinline\SfwComponent\Controllers\FilesController@detail');
 
     Route::get('languages', 'Softinline\SfwComponent\Controllers\LanguagesController@index');
     Route::get('languages/data', 'Softinline\SfwComponent\Controllers\LanguagesController@data');

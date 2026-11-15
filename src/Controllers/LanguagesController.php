@@ -39,10 +39,10 @@ class LanguagesController extends Controller
 
         $datatable = Datatables::of($query)
             ->editColumn('is_active', function ($item) {
-                return $item->is_active ? 'Sí' : 'No';
+                return $item->is_active ? '<i class="las la-check-circle text-success"></i>' : '';
             })
             ->editColumn('is_default', function ($item) {
-                return $item->is_default ? 'Sí' : 'No';
+                return $item->is_default ? '<i class="las la-check-circle text-success"></i>' : '';
             })
             ->editColumn('created_at', function ($item) {
                 return $item->created_at != '' ? $item->created_at->format('d/m/Y') : '';
@@ -54,7 +54,7 @@ class LanguagesController extends Controller
                 $return .= '<a href="javascript:void(0)" sfwcomponent-data-id="' . $item->id . '" sfwcomponent-data-url="' . $this->_sfwconfig->getParam('url') . '" sfwcomponent-data-datatable="' . \Request::get('datatable') . '" sfwcomponent-data-title="' . e($item->language ?? $item->name ?? '') . '" class="sfwcomponent-delete" title="' . ucfirst(trans('sfwcomponent::delete')) . '"><i class="las la-trash fa-fw"></i></a>';
                 return $return;
             })
-            ->rawColumns(['actions']);
+            ->rawColumns(['is_active', 'is_default', 'actions']);
 
         return $datatable->make(true);
     }

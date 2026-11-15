@@ -39,12 +39,10 @@ class RolesController extends Controller
 
         $datatable = Datatables::of($query)
             ->editColumn('is_active', function ($item) {
-                $checked = $item->is_active ? 'checked' : '';
-                return '<input type="checkbox" ' . $checked . ' disabled>';
+                return $item->is_active ? '<i class="las la-check-circle text-success"></i>' : '';
             })
             ->editColumn('is_system', function ($item) {
-                $checked = $item->is_system ? 'checked' : '';
-                return '<input type="checkbox" ' . $checked . ' disabled>';
+                return $item->is_system ? '<i class="las la-check-circle text-success"></i>' : '';
             })
             ->addColumn('actions', function ($item) {
                 $return = '';
