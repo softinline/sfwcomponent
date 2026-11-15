@@ -45,8 +45,7 @@ class FilesController extends Controller
                 return self::previewHtml($item, 48);
             })
             ->editColumn('is_main', function ($item) {
-                $checked = !empty($item->is_main) ? 'checked' : '';
-                return '<input type="checkbox" ' . $checked . ' disabled>';
+                return !empty($item->is_main) ? '<i class="las la-check-circle text-success"></i>' : '';
             })
             ->editColumn('created_at', function ($item) {
                 return $item->created_at != '' ? $item->created_at->format('d/m/Y H:i') : '';

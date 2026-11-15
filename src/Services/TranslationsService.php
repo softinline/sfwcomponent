@@ -91,9 +91,11 @@ class TranslationsService
             // prepare array of translations
             $aTranslations = [];
             foreach ($languages as $language) {
-                if (Request::has($field . '_' . $language->id)) {
-                    if (Request::get($field . '_' . $language->id) != '') {
-                        $aTranslations[$language->id] = Request::get($field . '_' . $language->id);
+                $key = $field . '_' . $language->id;
+                if (Request::has($key)) {
+                    $value = Request::get($key);
+                    if ($value !== null && $value !== '') {
+                        $aTranslations[$language->id] = $value;
                     }
                 }
             }
@@ -129,6 +131,21 @@ class TranslationsService
 
         }
 
+    }
+
+    /**
+     * Delete all translations for a record.
+     *
+     * @param string $table
+     * @param string $rowId
+     * @return void
+     */
+    public static function deleteTranslations($table, $rowId)
+    {
+        SfwTranslation::query()
+            ->where('table', '=', $table)
+            ->where('row_id', '=', $rowId)
+            ->delete();
     }
 
     /**

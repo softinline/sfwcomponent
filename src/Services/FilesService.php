@@ -69,43 +69,100 @@ class FilesService
     }
 
     /**
-     * Upload and store a file.
+     * Upload and store a file (uploaded file or raw content).
      *
-     * @param mixed $file
+     * @param mixed $source
      * @param string $object
      * @param string|null $rowId
-     * @param string|null $category
+     * @param array|string|null $options
      * @return SfwFile|null
      */
-    public static function upload($file, $object = 'generic', $rowId = null, $category = null)
+    public static function upload($source, $object = 'generic', $rowId = null, $options = null)
     {
-        if (!$file) {
+        if ($source === null && !(is_array($options) && array_key_exists('content', $options))) {
             return null;
         }
 
+        if (!is_array($options)) {
+            $options = ['category' => $options];
+        }
+
         $object = $object ?: 'generic';
-        $dir = self::ensureDir($object) . '/';
+        $setMain = !empty($options['is_main']) || !empty($options['main']);
+        $category = $options['category'] ?? null;
+
+        if ($setMain) {
+            $q = SfwFile::query()->where('table', $object)->where('row_id', $rowId)->where('is_main', 1);
+            if ($category !== null && $category !== '') {
+                $q->where('category', $category);
+            }
+            foreach ($q->get() as $existing) {
+                self::delete($existing->id);
+            }
+        }
+
+        $dir = self::ensureDir($object);
+        $newId = $options['id'] ?? uniqid('F');
+        $ownerId = $options['owner_user_id'] ?? (Auth::check() ? (string) Auth::id() : null);
+
+        $isUploadedFile = is_object($source) && (method_exists($source, 'getClientOriginalName') || method_exists($source, 'move'));
+        $hasContent = array_key_exists('content', $options);
+
+        if ($isUploadedFile && !$hasContent) {
+            $restrictions = [];
+            foreach (['maxSize', 'max_size', 'accept', 'extensions', 'mimes'] as $rk) {
+                if (array_key_exists($rk, $options)) {
+                    $restrictions[$rk] = $options[$rk];
+                }
+            }
+            if (!empty($restrictions) && self::validateUpload($source, $restrictions) !== null) {
+                return null;
+            }
+        }
+
+        if ($hasContent || !$isUploadedFile) {
+            $content = $hasContent ? $options['content'] : $source;
+            $originalName = $options['filename'] ?? $options['original_name'] ?? (is_string($source) && !$hasContent ? basename($source) : 'file');
+            $mime = $options['mime'] ?? $options['mime_type'] ?? null;
+            $size = $options['size'] ?? strlen((string) $content);
+        } else {
+            $originalName = method_exists($source, 'getClientOriginalName') ? $source->getClientOriginalName() : basename((string) $source);
+            $mime = method_exists($source, 'getClientMimeType') ? $source->getClientMimeType() : ($options['mime'] ?? $options['mime_type'] ?? null);
+            $size = method_exists($source, 'getSize') ? $source->getSize() : ($options['size'] ?? null);
+            $content = null;
+        }
 
         $fileObj = new SfwFile();
-        $fileObj->id = uniqid('F');
-        $fileObj->sfw_user_id = Auth::check() ? (string) Auth::id() : null;
-        $fileObj->sfw_language_id = app()->getLocale();
+        $fileObj->id = $newId;
         $fileObj->table = $object;
         $fileObj->row_id = $rowId;
         $fileObj->category = $category;
-        $fileObj->file = method_exists($file, 'getClientOriginalName') ? $file->getClientOriginalName() : basename((string) $file);
-        $fileObj->mime_type = method_exists($file, 'getClientMimeType') ? $file->getClientMimeType() : null;
-        $fileObj->size = method_exists($file, 'getSize') ? ($file->getSize() / 1024) : null;
-        $fileObj->disk = 'local';
-        $fileObj->path = 'files/' . $object;
-        $fileObj->is_main = 0;
+        $fileObj->fileable_type = $options['fileable_type'] ?? $object;
+        $fileObj->fileable_id = $options['fileable_id'] ?? $rowId;
+        $fileObj->collection = $options['collection'] ?? null;
+        $fileObj->disk = $options['disk'] ?? 'local';
+        $fileObj->path = $options['path'] ?? ('files/' . $object);
+        $fileObj->file = $newId;
+        $fileObj->original_name = $originalName;
+        $fileObj->title = $options['title'] ?? null;
+        $fileObj->description = $options['description'] ?? null;
+        $fileObj->mime_type = $mime;
+        $fileObj->size = $size;
+        $fileObj->is_main = $setMain ? 1 : 0;
+        $fileObj->sort_order = $options['sort_order'] ?? 0;
+        $fileObj->owner_user_id = $ownerId;
+        $fileObj->checksum = $options['checksum'] ?? null;
 
         if (!$fileObj->save()) {
             return null;
         }
 
         try {
-            $file->move($dir, $fileObj->id);
+            if ($hasContent || !$isUploadedFile) {
+                file_put_contents($dir . '/' . $newId, $content);
+            } else {
+                $source->move($dir, $newId);
+            }
         } catch (\Throwable $e) {
             Log::error(__METHOD__ . ' | ' . $e->getMessage());
         }
@@ -381,17 +438,6 @@ class FilesService
      */
     public static function setMain($id)
     {
-        return self::setMainById($id);
-    }
-
-    /**
-     * Set the main file by id.
-     *
-     * @param string $id
-     * @return bool
-     */
-    public static function setMainById($id)
-    {
         $item = SfwFile::getByIdInsecure($id);
         if (!$item) {
             return false;
@@ -415,105 +461,136 @@ class FilesService
      * Add or update title/description info with translations.
      *
      * @param string $id
-     * @param array|string|null $title
-     * @param array|string|null $description
-     * @param string|null $locale
+     * @param string|null $title
+     * @param string|null $description
      * @return bool
      */
-    public static function addInfo($id, $title = null, $description = null, $locale = null)
+    public static function addInfo($id, $title = null, $description = null)
     {
         $item = SfwFile::getByIdInsecure($id);
         if (!$item) {
             return false;
         }
 
-        $locale = $locale ?: app()->getLocale();
-
         if ($title !== null) {
-            $item->title = is_array($title) ? ($title[$locale] ?? reset($title)) : $title;
+            $item->title = $title;
         }
         if ($description !== null) {
-            $item->description = is_array($description) ? ($description[$locale] ?? reset($description)) : $description;
+            $item->description = $description;
         }
 
         $item->save();
 
-        $fields = [];
-        if ($title !== null) {
-            $fields['title'] = $title;
-        }
-        if ($description !== null) {
-            $fields['description'] = $description;
-        }
-
-        if (!empty($fields)) {
-            self::saveTranslations($item->id, $fields);
-        }
+        \Softinline\SfwComponent\Services\TranslationsService::setTranslation('sfw_files', $item->id, ['title', 'description']);
 
         return true;
     }
 
     /**
-     * Save translations for a file.
+     * Set file sort order.
      *
-     * @param string $fileId
-     * @param array $fields
-     * @return void
+     * @param string $id
+     * @param int $order
+     * @return bool
      */
-    protected static function saveTranslations($fileId, array $fields)
+    public static function setOrder($id, $order)
     {
-        $languages = \Softinline\SfwComponent\Models\SfwLanguage::getAll();
-        $table = 'sfw_files';
-
-        foreach ($fields as $field => $value) {
-            $translations = is_array($value) ? $value : [app()->getLocale() => $value];
-
-            $existing = \Softinline\SfwComponent\Models\SfwTranslation::query()
-                ->where('table', '=', $table)
-                ->where('row_id', '=', $fileId)
-                ->where('field', '=', $field)
-                ->first();
-
-            $aTranslations = [];
-            foreach ($languages as $language) {
-                $langKey = $language->id;
-                $isoKey = $language->iso ?? null;
-                $val = null;
-                if (array_key_exists($langKey, $translations)) {
-                    $val = $translations[$langKey];
-                } elseif ($isoKey && array_key_exists($isoKey, $translations)) {
-                    $val = $translations[$isoKey];
-                }
-                if ($val !== null && $val !== '') {
-                    $aTranslations[$langKey] = $val;
-                }
-            }
-
-            if (count($aTranslations) > 0) {
-                if (!$existing) {
-                    $existing = new \Softinline\SfwComponent\Models\SfwTranslation();
-                    $existing->id = uniqid('TR');
-                    $existing->table = $table;
-                    $existing->row_id = $fileId;
-                    $existing->field = $field;
-                }
-                $existing->translation = json_encode($aTranslations);
-                $existing->save();
-            } elseif ($existing) {
-                $existing->delete();
-            }
+        $item = SfwFile::getByIdInsecure($id);
+        if (!$item) {
+            return false;
         }
+
+        $item->sort_order = (int) $order;
+
+        return (bool) $item->save();
     }
 
     /**
-     * Delete a file by id.
+     * Validate an uploaded file against restrictions.
      *
-     * @param string $id
-     * @return bool
+     * @param mixed $file
+     * @param array $restrictions
+     * @return string|null
      */
-    public static function delete($id)
+    public static function validateUpload($file, array $restrictions = [])
     {
-        return self::deleteById($id);
+        if (!$file) {
+            return 'file_required';
+        }
+
+        $maxSize = $restrictions['maxSize'] ?? ($restrictions['max_size'] ?? null);
+        if ($maxSize) {
+            $limitBytes = self::parseSizeLimit($maxSize);
+            $fileSize = method_exists($file, 'getSize') ? (int) $file->getSize() : null;
+            if ($limitBytes !== null && $fileSize !== null && $fileSize > $limitBytes) {
+                return 'file_too_large';
+            }
+        }
+
+        $accept = $restrictions['accept'] ?? ($restrictions['extensions'] ?? ($restrictions['mimes'] ?? null));
+        if ($accept) {
+            $allowed = is_array($accept) ? $accept : preg_split('/[,\s]+/', (string) $accept, -1, PREG_SPLIT_NO_EMPTY);
+            if (!empty($allowed)) {
+                $name = method_exists($file, 'getClientOriginalName') ? (string) $file->getClientOriginalName() : '';
+                $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                $mime = method_exists($file, 'getClientMimeType') ? (string) $file->getClientMimeType() : '';
+                $ok = false;
+                foreach ($allowed as $rule) {
+                    $rule = strtolower(trim((string) $rule));
+                    if ($rule === '') {
+                        continue;
+                    }
+                    if ($rule === $mime || $rule === $ext) {
+                        $ok = true;
+                        break;
+                    }
+                    if (str_starts_with($rule, '.')) {
+                        if ('.' . $ext === $rule) {
+                            $ok = true;
+                            break;
+                        }
+                    } elseif (!str_contains($rule, '/') && $ext === $rule) {
+                        $ok = true;
+                        break;
+                    } elseif (str_ends_with($rule, '/*')) {
+                        $prefix = substr($rule, 0, -1);
+                        if ($mime !== '' && str_starts_with($mime, $prefix)) {
+                            $ok = true;
+                            break;
+                        }
+                    }
+                }
+                if (!$ok) {
+                    return 'file_type_not_allowed';
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Parse size limit string (e.g. 600kb, 6Mb) to bytes.
+     *
+     * @param string|int $size
+     * @return int|null
+     */
+    public static function parseSizeLimit($size)
+    {
+        if (is_numeric($size)) {
+            return (int) $size;
+        }
+        $size = trim((string) $size);
+        if ($size === '') {
+            return null;
+        }
+        if (!preg_match('/^(\d+(?:\.\d+)?)\s*(b|kb|mb|gb)?$/i', $size, $m)) {
+            return null;
+        }
+        $num = (float) $m[1];
+        $unit = strtolower($m[2] ?? 'b');
+        $mul = ['b' => 1, 'kb' => 1024, 'mb' => 1024 * 1024, 'gb' => 1024 * 1024 * 1024];
+        return (int) ($num * ($mul[$unit] ?? 1));
     }
 
     /**
@@ -523,7 +600,7 @@ class FilesService
      * @param bool $deleteForRelatedObject
      * @return bool
      */
-    public static function deleteById($id, $deleteForRelatedObject = false)
+    public static function delete($id, $deleteForRelatedObject = false)
     {
         $item = SfwFile::getByIdInsecure($id);
         if (!$item) {
@@ -536,11 +613,7 @@ class FilesService
             @unlink($path);
         }
 
-        // Remove translations
-        \Softinline\SfwComponent\Models\SfwTranslation::query()
-            ->where('table', '=', 'sfw_files')
-            ->where('row_id', '=', $id)
-            ->delete();
+        \Softinline\SfwComponent\Services\TranslationsService::deleteTranslations('sfw_files', $id);
 
         return $ok;
     }
@@ -565,7 +638,7 @@ class FilesService
 
         $files = $q->get();
         foreach ($files as $f) {
-            self::deleteById($f->id);
+            self::delete($f->id);
         }
     }
 
@@ -605,4 +678,32 @@ class FilesService
 
         return $q->orderBy('sort_order')->orderBy('created_at')->get();
     }
+
+    /**
+     * Get the main file for an entity or fallback to the first file.
+     *
+     * @param string $object
+     * @param string $entityId
+     * @param string|null $category
+     * @return SfwFile|null
+     */
+    public static function getMainOrFirst($object, $entityId, $category = null)
+    {
+        $item = self::getMainForEntity($object, $entityId, $category);
+        if ($item) {
+            return $item;
+        }
+
+        $q = SfwFile::query()
+            ->where('table', $object)
+            ->where('row_id', $entityId);
+
+        if ($category !== null && $category !== '') {
+            $q->where('category', $category);
+        }
+
+        return $q->orderBy('sort_order')->orderBy('created_at')->first();
+    }
+
+
 }
