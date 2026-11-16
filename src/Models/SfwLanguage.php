@@ -53,6 +53,16 @@ class SfwLanguage extends Model
     }
 
     /**
+     * Get all active records.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getAllActive()
+    {
+        return self::query()->where('is_active', 1)->orderByDesc('is_default')->orderBy('sort_order')->orderBy('id')->get();
+    }
+
+    /**
      * Get default language.
      *
      * @return \Softinline\SfwComponent\Models\SfwLanguage|null
