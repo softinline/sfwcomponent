@@ -135,7 +135,108 @@
                 'config' => $config,
             ])->render();
 
+            $screenScript = $this->resolveScreenScript($config);
+            if ($screenScript !== null) {
+                $return .= '<script src="'.url('js/sfw/screens/'.$screenScript).'"></script>';
+            }
+
             return $return;
+
+        }
+
+        /**
+         * Resolve screen script file name from config.
+         *
+         * @param array $config
+         * @return string|null
+         */
+        private function resolveScreenScript($config) {
+
+            $candidates = [];
+
+            if (isset($config['jsFile']) && $config['jsFile'] !== '') {
+                $candidates[] = $this->normalizeScreenScriptName($config['jsFile']);
+            }
+
+            $auto = $this->resolveAutoScreenScriptName($config);
+            if ($auto !== null) {
+                $candidates[] = $auto;
+            }
+
+            foreach ($candidates as $candidate) {
+                if ($candidate === null || $candidate === '') {
+                    continue;
+                }
+
+                if (file_exists(public_path('js/sfw/screens/'.$candidate))) {
+                    return $candidate;
+                }
+            }
+
+            return null;
+
+        }
+
+        /**
+         * Resolve automatic screen script file name from config url.
+         *
+         * @param array $config
+         * @return string|null
+         */
+        private function resolveAutoScreenScriptName($config) {
+
+            if (!isset($config['url']) || $config['url'] === '') {
+                return null;
+            }
+
+            $url = trim((string) $config['url'], '/');
+            if ($url === '') {
+                return null;
+            }
+
+            $segments = array_values(array_filter(explode('/', $url), function($segment) {
+                return $segment !== '';
+            }));
+
+            if (count($segments) === 0) {
+                return null;
+            }
+
+            if (count($segments) >= 2) {
+                $segments = array_slice($segments, 0, 2);
+            }
+
+            $base = implode('-', $segments);
+
+            return $this->normalizeScreenScriptName($base);
+
+        }
+
+        /**
+         * Normalize screen script name.
+         *
+         * @param string $name
+         * @return string|null
+         */
+        private function normalizeScreenScriptName($name) {
+
+            $name = trim((string) $name);
+            if ($name === '') {
+                return null;
+            }
+
+            $name = str_replace('\\', '/', $name);
+            $name = trim($name, '/');
+
+            if ($name === '') {
+                return null;
+            }
+
+            if (substr($name, -3) !== '.js') {
+                $name .= '.js';
+            }
+
+            return $name;
 
         }
 

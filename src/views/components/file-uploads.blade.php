@@ -73,7 +73,7 @@
     </div>
 
     @if($allowUpload)
-        <div class="sfw-file-uploads-upload card card-body bg-light">
+        <div class="sfw-file-uploads-upload card card-body">
             <div class="mb-2">
                 <input type="file" class="form-control sfw-file-uploads-input" {{ $multiple ? 'multiple' : '' }} @if($accept) accept="{{ $accept }}" @endif>
             </div>
@@ -198,8 +198,20 @@
         if (!confirm(@json(ucfirst(trans('messages.are_you_sure'))))) return;
         post(base() + '/' + encodeURIComponent(id) + '/delete', {}).then(function(){ load(); }).catch(function(){ notify('ko','Error'); });
     }
-    function setMain(id) { post(base() + '/' + encodeURIComponent(id) + '/main', {}).then(function(){ load(); }); }
-    function setOrder(id, order) { post(base() + '/' + encodeURIComponent(id) + '/order', {order: order}).then(function(res){ if(res && res.success===false) notify('ko', res.message||'Error'); else load(); }); }
+    function setMain(id) {
+        post(base() + '/' + encodeURIComponent(id) + '/main', {}).then(function(res){
+            if (res && res.success === false) { notify('ko', res.message || 'Error'); return; }
+            notify('ok', @json(ucfirst(trans('messages.saved'))));
+            load();
+        }).catch(function(){ notify('ko', 'Error'); });
+    }
+    function setOrder(id, order) {
+        post(base() + '/' + encodeURIComponent(id) + '/order', {order: order}).then(function(res){
+            if (res && res.success === false) { notify('ko', res.message || 'Error'); return; }
+            notify('ok', @json(ucfirst(trans('messages.saved'))));
+            load();
+        }).catch(function(){ notify('ko', 'Error'); });
+    }
     function openInfo(id) {
         var url = base() + '/' + encodeURIComponent(id) + '/info';
         var title = @json(ucfirst(trans('messages.edit')));
