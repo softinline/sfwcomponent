@@ -472,12 +472,8 @@ class FilesService
             return false;
         }
 
-        if ($title !== null) {
-            $item->title = $title;
-        }
-        if ($description !== null) {
-            $item->description = $description;
-        }
+        $item->title = ($title === '' || $title === null) ? null : $title;
+        $item->description = ($description === '' || $description === null) ? null : $description;
 
         $item->save();
 

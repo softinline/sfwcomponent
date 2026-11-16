@@ -256,7 +256,7 @@
          * @param string $field
          * @return array
          */
-        public static function getTranslations($item, $field)
+        public static function getTranslations($item, $field): array
         {
             return TranslationsService::getTranslation($item, 'sfw_email_templates', $item->id, $field, true);
         }

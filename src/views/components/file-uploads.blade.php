@@ -199,7 +199,7 @@
         post(base() + '/' + encodeURIComponent(id) + '/delete', {}).then(function(){ load(); }).catch(function(){ notify('ko','Error'); });
     }
     function setMain(id) { post(base() + '/' + encodeURIComponent(id) + '/main', {}).then(function(){ load(); }); }
-    function setOrder(id, order) { post(base() + '/' + encodeURIComponent(id) + '/order', {order: order, sort_order: order}).then(function(res){ if(res && res.success===false) notify('ko', res.message||'Error'); else load(); }); }
+    function setOrder(id, order) { post(base() + '/' + encodeURIComponent(id) + '/order', {order: order}).then(function(res){ if(res && res.success===false) notify('ko', res.message||'Error'); else load(); }); }
     function openInfo(id) {
         var url = base() + '/' + encodeURIComponent(id) + '/info';
         var title = @json(ucfirst(trans('messages.edit')));

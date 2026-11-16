@@ -9,72 +9,91 @@ use Softinline\SfwComponent\Models\SfwTranslation;
 class TranslationsService
 {
     /**
-     * return array of translation
-     * @return object
+     * Get translations for one or more fields.
+     *
+     * @param mixed $object
+     * @param string $table
+     * @param string $rowId
+     * @param string|array $fields
+     * @param bool $edit
+     * @return array
      */
-    public static function getTranslation($object, $table, $rowId, $fields = [], $edit = true)
+    public static function getTranslation($object, $table, $rowId, $fields = [], $edit = true): array
     {
         if (!is_array($fields)) {
             $fields = [$fields];
         }
 
-        // get languages
         $languages = SfwLanguage::getAll();
-
         $data = [];
 
-        // init
         foreach ($fields as $field) {
             $data[$field] = [];
             foreach ($languages as $language) {
-                // editing init value
                 if ($edit) {
                     $data[$field][$language->id] = '';
-                }
-                // not editing set def value
-                else {
-                    $data[$field][$language->id] = $object->{$field};
+                } else {
+                    $data[$field][$language->id] = self::fieldValue($object, $field);
                 }
             }
         }
 
-        // get translation
-        $translations = SfwTranslation::query()
-            ->where('table', '=', $table)
-            ->where('row_id', '=', $rowId)
-            ->get();
+        if ($rowId !== null && $rowId !== '') {
+            $translations = SfwTranslation::query()
+                ->where('table', '=', $table)
+                ->where('row_id', '=', $rowId)
+                ->get();
 
-        // add translations found
-        foreach ($translations as $translation) {
-            $temp = json_decode($translation->translation, true);
-            $field = $translation->field;
-            foreach ($languages as $language) {
-                // have translation
-                if (isset($temp[$language->id])) {
-                    // if data is blank and not editing, add default
-                    if (($temp[$language->id] == '') && (!$edit)) {
-                        $data[$field][$language->id] = $object->{$field};
-                    } else {
-                        $data[$field][$language->id] = $temp[$language->id];
-                    }
+            foreach ($translations as $translation) {
+                $temp = json_decode($translation->translation, true);
+                if (!is_array($temp)) {
+                    $temp = [];
                 }
-                // dont have translation
-                else {
-                    if (!$edit) {
-                        $data[$field][$language->id] = $object->{$field};
+
+                $field = $translation->field;
+                if (!array_key_exists($field, $data)) {
+                    continue;
+                }
+
+                foreach ($languages as $language) {
+                    if (isset($temp[$language->id])) {
+                        if (($temp[$language->id] == '') && (!$edit)) {
+                            $data[$field][$language->id] = self::fieldValue($object, $field);
+                        } else {
+                            $data[$field][$language->id] = $temp[$language->id];
+                        }
+                    } elseif (!$edit) {
+                        $data[$field][$language->id] = self::fieldValue($object, $field);
                     }
                 }
             }
         }
 
-        // only one field, return this directly
         if (count($fields) == 1) {
-            return $data[$fields[0]];
+            return $data[$fields[0]] ?? [];
         }
-        // return all fields requested
-        else {
-            return $data;
+
+        return $data;
+    }
+
+    /**
+     * Get a field value from an object for non-edit translation fallback.
+     *
+     * @param mixed $object
+     * @param string $field
+     * @return mixed
+     */
+    private static function fieldValue($object, $field)
+    {
+        if (is_object($object) && isset($object->{$field})) {
+            return $object->{$field};
         }
+
+        if (is_array($object) && array_key_exists($field, $object)) {
+            return $object[$field];
+        }
+
+        return '';
     }
 
     /**
