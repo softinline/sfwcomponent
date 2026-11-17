@@ -31,6 +31,18 @@
         }
 
         /**
+         * Set the loaded config.
+         *
+         * @param array $config
+         * @return void
+         */
+        public function setConfig($config) {
+
+            $this->_config = $config;
+
+        }
+
+        /**
          * return config option
          */
         public function getParam($param) {
@@ -311,37 +323,20 @@
 
             $obj = &$config;
 
-            if(isset($obj['internalId'])) {
-
-                if($obj['internalId'] == $internalId) {
-
-                    $obj = $arr;
-                    
-                }
-                elseif(isset($obj['components'])) {
-
-                    foreach($obj['components'] as $componentKey => $componentValue) {                
-
-                        $this->_setByInternalId($obj['components'][$componenKey], $internalId, $arr);
-                        
-                    }
-
-                }
-                
+            if (isset($obj['internalId']) && $obj['internalId'] == $internalId) {
+                $obj = $arr;
+                return true;
             }
-            else {
 
-                if(isset($obj['components'])) {
-
-                    foreach($obj['components'] as $componenKey => $componentValue) {                
-
-                        $this->_setByInternalId($obj['components'][$componenKey], $internalId, $arr);
-                        
+            if (isset($obj['components'])) {
+                foreach ($obj['components'] as $componentKey => $componentValue) {
+                    if ($this->_setByInternalId($obj['components'][$componentKey], $internalId, $arr)) {
+                        return true;
                     }
-                 
                 }
-                
             }
+
+            return false;
 
         }
 
@@ -362,37 +357,20 @@
 
             $obj = &$config;
 
-            if(isset($obj['id'])) {
-
-                if($obj['id'] == $id) {
-
-                    $obj = $arr;
-                    
-                }
-                elseif(isset($obj['components'])) {
-
-                    foreach($obj['components'] as $componentKey => $componentValue) {                
-
-                        $this->_setById($obj['components'][$componenKey], $id, $arr);
-                        
-                    }
-
-                }
-                
+            if (isset($obj['id']) && $obj['id'] == $id) {
+                $obj = $arr;
+                return true;
             }
-            else {
 
-                if(isset($obj['components'])) {
-
-                    foreach($obj['components'] as $componenKey => $componentValue) {                
-
-                        $this->_setById($obj['components'][$componenKey], $id, $arr);
-                        
+            if (isset($obj['components'])) {
+                foreach ($obj['components'] as $componentKey => $componentValue) {
+                    if ($this->_setById($obj['components'][$componentKey], $id, $arr)) {
+                        return true;
                     }
-                 
                 }
-                
             }
+
+            return false;
 
         }
 

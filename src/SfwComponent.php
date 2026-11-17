@@ -119,9 +119,43 @@
         }
 
         /**
+         * Run screen beforeLoad hook if defined.
+         *
+         * @param array|\Softinline\SfwComponent\SfwConfig $config
+         * @return mixed
+         */
+        private function runBeforeLoad($config) {
+
+            $screen = $config;
+            if ($config instanceof \Softinline\SfwComponent\SfwConfig) {
+                $screen = $config->getConfig();
+            }
+
+            if (!is_array($screen)) {
+                return null;
+            }
+
+            if (isset($screen['beforeLoad']) && $screen['beforeLoad'] !== '') {
+                $method = $screen['beforeLoad'];
+                $result = $this->_controller::$method($screen, $this->_item);
+                if ($result instanceof \Symfony\Component\HttpFoundation\Response) {
+                    return $result;
+                }
+            }
+
+            return null;
+
+        }
+
+        /**
          * render the main component
          */
         public function render($config) {
+
+            $beforeLoad = $this->runBeforeLoad($config);
+            if ($beforeLoad !== null) {
+                return $beforeLoad;
+            }
 
             // get components childrens
             $components = $config['components'];
@@ -347,6 +381,11 @@
          * @return operation
          */
         public function submit($config, $method, $formId = null, $tabKey = null) {
+
+            $beforeLoad = $this->runBeforeLoad($config);
+            if ($beforeLoad !== null) {
+                return $beforeLoad;
+            }
 
             $submitResponse = [
                 'success' => false, // status of the respone
