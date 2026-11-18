@@ -81,22 +81,31 @@
 <?php if($show) { ?>
     <div class="form-group">
         <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-        <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" autocomplete="{{ $autocomplete }}">
-        <input type="hidden" name="{{ $field }}_autocomplete" id="{{ $field }}_autocomplete" value="{{ $hidden }}"/>
+        <div style="position:relative;">
+            <input type="text" name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} value="{{ $value }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" autocomplete="{{ $autocomplete }}">
+            <span id="{{ $field }}_loading" class="spinner-border spinner-border-sm text-secondary" role="status" aria-hidden="true" style="display:none; position:absolute; right:10px; top:50%; margin-top:-8px; pointer-events:none;"></span>
+            <input type="hidden" name="{{ $field }}_autocomplete" id="{{ $field }}_autocomplete" value="{{ $hidden }}"/>
+        </div>
         <script>
             $(function() {
-                $("#{{ $field }}").autocomplete({
+                var $input = $("#{{ $field }}");
+                var $loading = $("#{{ $field }}_loading");
+                $input.autocomplete({
                     source: function( request, response ) {
+                        $loading.show();
+                        $input.addClass('ui-autocomplete-loading');
                         $.ajax({
                             url: "{{ $autocompleteUrl }}",
                             dataType: "jsonp",
                             data: {
-                                term:request.term                                
+                                term: request.term
                             },
                             success: function(data) {
                                 response(data);
                             },
-                            complete: function() {                                
+                            complete: function() {
+                                $loading.hide();
+                                $input.removeClass('ui-autocomplete-loading');
                             }
                         });
                     },

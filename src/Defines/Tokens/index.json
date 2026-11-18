@@ -40,16 +40,32 @@
                                                     "width": "1%"
                                                 },
                                                 {
-                                                    "name": "name",
-                                                    "field": "name"
+                                                    "name": "user_email",
+                                                    "field": "user_email"
                                                 },
                                                 {
-                                                    "name": "tokenable_type",
-                                                    "field": "tokenable_type"
+                                                    "name": "app",
+                                                    "field": "app"
                                                 },
                                                 {
-                                                    "name": "tokenable_id",
-                                                    "field": "tokenable_id"
+                                                    "name": "device_id",
+                                                    "field": "device_id"
+                                                },
+                                                {
+                                                    "name": "platform",
+                                                    "field": "platform"
+                                                },
+                                                {
+                                                    "name": "has_fcm",
+                                                    "field": "has_fcm",
+                                                    "orderable": false,
+                                                    "searchable": false
+                                                },
+                                                {
+                                                    "name": "status",
+                                                    "field": "status",
+                                                    "orderable": false,
+                                                    "searchable": false
                                                 },
                                                 {
                                                     "name": "last_used_at",

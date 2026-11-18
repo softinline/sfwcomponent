@@ -54,8 +54,64 @@
                                                                 },
                                                                 {
                                                                     "type": "text",
+                                                                    "title": "app",
+                                                                    "field": "app",
+                                                                    "disabled": true
+                                                                },
+                                                                {
+                                                                    "type": "text",
                                                                     "title": "device_id",
                                                                     "field": "device_id",
+                                                                    "disabled": true
+                                                                },
+                                                                {
+                                                                    "type": "text",
+                                                                    "title": "device_name",
+                                                                    "field": "device_name",
+                                                                    "disabled": true
+                                                                },
+                                                                {
+                                                                    "type": "text",
+                                                                    "title": "platform",
+                                                                    "field": "platform",
+                                                                    "disabled": true
+                                                                },
+                                                                {
+                                                                    "type": "text",
+                                                                    "title": "has_fcm",
+                                                                    "field": "has_fcm",
+                                                                    "disabled": true,
+                                                                    "beforeRender": "beforeRenderHasFcm"
+                                                                },
+                                                                {
+                                                                    "type": "text",
+                                                                    "title": "status",
+                                                                    "field": "status",
+                                                                    "disabled": true,
+                                                                    "beforeRender": "beforeRenderStatus"
+                                                                },
+                                                                {
+                                                                    "type": "datetime",
+                                                                    "title": "last_used_at",
+                                                                    "field": "last_used_at",
+                                                                    "disabled": true
+                                                                },
+                                                                {
+                                                                    "type": "datetime",
+                                                                    "title": "expires_at",
+                                                                    "field": "expires_at",
+                                                                    "disabled": true
+                                                                },
+                                                                {
+                                                                    "type": "datetime",
+                                                                    "title": "revoked_at",
+                                                                    "field": "revoked_at",
+                                                                    "disabled": true
+                                                                },
+                                                                {
+                                                                    "type": "datetime",
+                                                                    "title": "created_at",
+                                                                    "field": "created_at",
                                                                     "disabled": true
                                                                 }
                                                             ]
@@ -68,7 +124,8 @@
                                                                     "type": "button",
                                                                     "action": "link:sfw/tokens",
                                                                     "title": "cancel",
-                                                                    "class": "btn btn-secondary"
+                                                                    "class": "btn btn-secondary",
+                                                                    "icon": "las la-times"
                                                                 }
                                                             ]
                                                         }

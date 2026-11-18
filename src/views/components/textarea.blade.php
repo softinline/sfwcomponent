@@ -48,6 +48,13 @@
         $rows = $component['rows'];
     }
 
+    // collapsed
+    $collapsed = false;
+    if(isset($component['collapsed'])) {
+        $collapsed = $component['collapsed'];
+    }
+    $collapseId = 'sfwcomponent-collapsible-'.$field;
+
     // class    
     $class = '';
     if(isset($component['class'])) {
@@ -83,7 +90,8 @@
 <?php if($show) { ?>
     <?php if($translate) { ?>
         <div class="form-group">
-            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> <?php if($collapsed) { ?> style="cursor:pointer;" onclick="var e=document.getElementById('{{ $collapseId }}'); if(e.style.display==='none'){e.style.display='block';}else{e.style.display='none';}" <?php } ?>>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}<?php if($collapsed) { ?> <small>(...)</small><?php } ?></label>
+            <div id="{{ $collapseId }}" style="<?php echo $collapsed ? 'display:none;' : ''; ?>">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" href="#tab_{{ $field }}_default" data-toggle="tab" aria-expanded="false" id="li-text-area">
@@ -117,7 +125,8 @@
                         </div>
                     </div>
                 @endforeach                    
-            </div>     
+            </div>
+            </div>
         </div>
     <?php } else { ?>
         <?php
@@ -128,8 +137,10 @@
             }
         ?>
         <div class="form-group">
-            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-            <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">{{ $value }}</textarea>
+            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> <?php if($collapsed) { ?> style="cursor:pointer;" onclick="var e=document.getElementById('{{ $collapseId }}'); if(e.style.display==='none'){e.style.display='block';}else{e.style.display='none';}" <?php } ?>>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}<?php if($collapsed) { ?> <small>(...)</small><?php } ?></label>
+            <div id="{{ $collapseId }}" style="<?php echo $collapsed ? 'display:none;' : ''; ?>">
+                <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $class }} {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}" placeholder="{{ $placeholder }}">{{ $value }}</textarea>
+            </div>
         </div>
     <?php } ?>
 <?php } ?>

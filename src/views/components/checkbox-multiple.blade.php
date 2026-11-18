@@ -55,8 +55,12 @@
                 <input type="text" class="form-control mb-2" name="search-bar-{{ $field }}" id="search-bar-{{ $field }}" placeholder="{{ ucfirst(trans($translationFile.'search')) }}">
             <?php } ?>
             <?php foreach($options['all'] as $optionKey => $optionValue) { ?>
+                <?php
+                    $optionId = $field.'_'.preg_replace('/[^a-zA-Z0-9_-]/', '_', (string) $optionKey);
+                ?>
                 <div class="option-search-bar-{{ $field }}" data-title="{{ mb_strtolower($optionValue) }}">
-                    <input type="checkbox" name="{{ $field }}[]" id="{{ $field }}" style="padding:5px" value="{{ $optionKey }}" <?php echo array_key_exists($optionKey, $options['selected']) ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}"> {{ ucfirst($optionValue) }}
+                    <input type="checkbox" name="{{ $field }}[]" id="{{ $optionId }}" style="padding:5px" value="{{ $optionKey }}" <?php echo array_key_exists($optionKey, $options['selected']) ? 'checked' : ''; ?> sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">
+                    <label for="{{ $optionId }}" class="mb-0 font-weight-normal" style="cursor:pointer;">{{ ucfirst($optionValue) }}</label>
                 </div>
             <?php } ?>
         <?php } ?>

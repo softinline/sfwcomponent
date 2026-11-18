@@ -40,12 +40,34 @@
             $query = SfwToken::getAll();
 
             $datatable = Datatables::of($query)
+                ->addColumn('user_email', function ($item) {
+                    $user = $item->resolveUser();
+                    return $user ? ($user->email ?? '') : '';
+                })
+                ->addColumn('has_fcm', function ($item) {
+                    return !empty($item->fcm_token) ? trans('sfwcomponent::yes') : trans('sfwcomponent::no');
+                })
+                ->addColumn('status', function ($item) {
+                    if ($item->isRevoked()) {
+                        return trans('sfwcomponent::revoked');
+                    }
+                    if ($item->isExpired()) {
+                        return trans('sfwcomponent::expired');
+                    }
+                    return trans('sfwcomponent::active');
+                })
+                ->editColumn('last_used_at', function ($item) {
+                    return $item->last_used_at ? $item->last_used_at->format('d/m/Y H:i') : '';
+                })
+                ->editColumn('expires_at', function ($item) {
+                    return $item->expires_at ? $item->expires_at->format('d/m/Y H:i') : '';
+                })
                 ->editColumn('created_at', function ($item) {
-                    return $item->created_at != '' ? $item->created_at->format('d/m/Y H:i') : '';
+                    return $item->created_at ? $item->created_at->format('d/m/Y H:i') : '';
                 })
                 ->addColumn('actions', function ($item) {
                     $return = '';
-                    $return .= '<a href="'.url('sfw/tokens/'.$item->id.'/edit').'" title="'.ucfirst(trans('sfwcomponent::detail', [], 'en') ?: 'Detail').'"><i class="las la-eye fa-fw"></i></a>';
+                    $return .= '<a href="'.url('sfw/tokens/'.$item->id.'/edit').'" title="Detail"><i class="las la-eye fa-fw"></i></a>';
 
                     return $return;
                 })
@@ -81,18 +103,53 @@
         public static function beforeRenderUserEmail($component, $item) {
 
             $email = null;
-
-            if ($item && isset($item->user_id)) {
-                $userModel = config('auth.providers.users.model');
-                if ($userModel && class_exists($userModel)) {
-                    $user = $userModel::find($item->user_id);
-                    if ($user) {
-                        $email = $user->email ?? null;
-                    }
+            if ($item) {
+                $user = $item->resolveUser();
+                if ($user) {
+                    $email = $user->email ?? null;
                 }
             }
 
             $component['value'] = $email;
+
+            return $component;
+
+        }
+
+        /**
+         * Render FCM presence in the detail form.
+         *
+         * @param array $component
+         * @param mixed $item
+         * @return array
+         */
+        public static function beforeRenderHasFcm($component, $item) {
+
+            $component['value'] = ($item && !empty($item->fcm_token)) ? trans('sfwcomponent::yes') : trans('sfwcomponent::no');
+
+            return $component;
+
+        }
+
+        /**
+         * Render status in the detail form.
+         *
+         * @param array $component
+         * @param mixed $item
+         * @return array
+         */
+        public static function beforeRenderStatus($component, $item) {
+
+            $status = trans('sfwcomponent::active');
+            if ($item) {
+                if ($item->isRevoked()) {
+                    $status = trans('sfwcomponent::revoked');
+                } elseif ($item->isExpired()) {
+                    $status = trans('sfwcomponent::expired');
+                }
+            }
+
+            $component['value'] = $status;
 
             return $component;
 

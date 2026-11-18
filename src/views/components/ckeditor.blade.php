@@ -48,6 +48,13 @@
         $rows = $component['rows'];
     }
 
+    // collapsed
+    $collapsed = false;
+    if(isset($component['collapsed'])) {
+        $collapsed = $component['collapsed'];
+    }
+    $collapseId = 'sfwcomponent-collapsible-'.$field;
+
     // show condition
     $show = true;
     if(array_key_exists('beforeShow', $component)) {
@@ -70,7 +77,8 @@
 <?php if($show) { ?>
     <?php if($translate) { ?>
         <div class="form-group">
-            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
+            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> <?php if($collapsed) { ?> style="cursor:pointer;" onclick="var e=document.getElementById('{{ $collapseId }}'); if(e.style.display==='none'){e.style.display='block'; if(typeof window['sfwcomponentInitCkeditor_{{ $field }}']==='function'){window['sfwcomponentInitCkeditor_{{ $field }}']();}}else{e.style.display='none';}" <?php } ?>>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}<?php if($collapsed) { ?> <small>(...)</small><?php } ?></label>
+            <div id="{{ $collapseId }}" style="<?php echo $collapsed ? 'display:none;' : ''; ?>">
             <ul class="nav nav-tabs" role="tablist">
                 <li class="nav-item">
                     <a class="nav-link active" href="#tab_{{ $field }}_default" data-toggle="tab" aria-expanded="false" id="li-text-area">
@@ -104,36 +112,48 @@
                         </div>
                     </div>
                 @endforeach                    
-            </div>     
+            </div>
+            </div>
         </div>
     <?php } else { ?>
         <div class="form-group">
-            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> >{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}</label>
-            <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">{{ @$item->{$field} }}</textarea>
+            <label <?php echo $help != '' ? 'title="'.$help.'"' : '';?> <?php echo $help != '' ? 'class="sfwcomponent-help-text"' : '';?> <?php if($collapsed) { ?> style="cursor:pointer;" onclick="var e=document.getElementById('{{ $collapseId }}'); if(e.style.display==='none'){e.style.display='block'; if(typeof window['sfwcomponentInitCkeditor_{{ $field }}']==='function'){window['sfwcomponentInitCkeditor_{{ $field }}']();}}else{e.style.display='none';}" <?php } ?>>{{ ucfirst(trans($translationFile.$title)) }}: {{ $required ? '*' : '' }}<?php if($collapsed) { ?> <small>(...)</small><?php } ?></label>
+            <div id="{{ $collapseId }}" style="<?php echo $collapsed ? 'display:none;' : ''; ?>">
+                <textarea name="{{ $field }}" id="{{ $field }}" class="form-control {{ $required ? 'sfwcomponent-frm-item-required' : '' }}" {{ $required ? 'required' : '' }} {{ $disabled ? 'disabled' : '' }} rows="{{ $rows }}" sfwcomponent-data-title="{{ ucfirst(trans($translationFile.$title)) }}">{{ @$item->{$field} }}</textarea>
+            </div>
         </div>
     <?php } ?>
     <script>
         $(document).ready(function() {
-            if(!window.CKEDITOR) {
-                alert('CKEditor not found!');
-            }
-            var options = {
-                skin:'kama',         
-                enterMode: CKEDITOR.ENTER_BR,
-                shiftEnterMode: CKEDITOR.ENTER_BR,
-                coreStyles_bold: {
-                    element: 'b',
-                    overrides: 'strong'       // ← importante para que convierta <strong> → <b>
+            window['sfwcomponentInitCkeditor_{{ $field }}'] = function() {
+                if (window['sfwcomponentCkeditorInited_{{ $field }}']) {
+                    return;
                 }
-                /*extraPlugins:'justify',*/
-            };
-            <?php if($translate) { ?>
-                CKEDITOR.replace('{{ $field }}',options);
-                <?php foreach($languages as $language) { ?>
-                    CKEDITOR.replace('{{ $field }}_{{ $language->id }}',options);
+                if (!window.CKEDITOR) {
+                    alert('CKEditor not found!');
+                    return;
+                }
+                var options = {
+                    skin: 'kama',
+                    enterMode: CKEDITOR.ENTER_BR,
+                    shiftEnterMode: CKEDITOR.ENTER_BR,
+                    coreStyles_bold: {
+                        element: 'b',
+                        overrides: 'strong'
+                    }
+                };
+                <?php if($translate) { ?>
+                    if (document.getElementById('{{ $field }}')) { CKEDITOR.replace('{{ $field }}', options); }
+                    <?php foreach($languages as $language) { ?>
+                        if (document.getElementById('{{ $field }}_{{ $language->id }}')) { CKEDITOR.replace('{{ $field }}_{{ $language->id }}', options); }
+                    <?php } ?>
+                <?php } else { ?>
+                    if (document.getElementById('{{ $field }}')) { CKEDITOR.replace('{{ $field }}', options); }
                 <?php } ?>
-            <?php } else { ?>
-                CKEDITOR.replace('{{ $field }}',options);
+                window['sfwcomponentCkeditorInited_{{ $field }}'] = true;
+            };
+            <?php if(!$collapsed) { ?>
+                window['sfwcomponentInitCkeditor_{{ $field }}']();
             <?php } ?>
         });
     </script>
