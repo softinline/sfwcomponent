@@ -137,8 +137,6 @@ class FilesService
         $fileObj->table = $object;
         $fileObj->row_id = $rowId;
         $fileObj->category = $category;
-        $fileObj->fileable_type = $options['fileable_type'] ?? $object;
-        $fileObj->fileable_id = $options['fileable_id'] ?? $rowId;
         $fileObj->collection = $options['collection'] ?? null;
         $fileObj->disk = $options['disk'] ?? 'local';
         $fileObj->path = $options['path'] ?? ('files/' . $object);
