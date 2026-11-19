@@ -18,7 +18,7 @@
                         <div class="alert alert-success">{{ $success }}</div>
                     @endif
 
-                    <form method="post" action="{{ url(\Softinline\SfwComponent\SfwComponent::ROUTE_PREFIX . '/setup') }}">
+                    <form method="post" action="{{ url('sfw/setup') }}">
                         @csrf
                         <div class="form-group mb-3">
                             <label>{{ trans('sfwcomponent::setup_current_password') }}</label>
