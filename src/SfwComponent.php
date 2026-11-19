@@ -148,7 +148,7 @@
         }
 
         /**
-         * render the main component
+         * Render the main component.
          */
         public function render($config) {
 
@@ -157,14 +157,10 @@
                 return $beforeLoad;
             }
 
-            // get components childrens
-            $components = $config['components'];
-            
-            // render components using tree recursive
+            $components = isset($config['components']) && is_array($config['components']) ? $config['components'] : [];
             $content = self::renderComponents($config, $components);
 
-            // return
-            $return = View('sfwcomponent::wrapper', [                
+            $return = View('sfwcomponent::wrapper', [
                 'content' => $content,
                 'config' => $config,
             ])->render();
@@ -175,6 +171,28 @@
             }
 
             return $return;
+
+        }
+
+        /**
+         * Render a screen stored in database.
+         *
+         * @param string $screenId
+         * @param mixed $item
+         * @param mixed $controller
+         * @return mixed
+         */
+        public function renderFromScreen($screenId, $item = null, $controller = null) {
+
+            if ($controller !== null) {
+                $this->setController($controller);
+            }
+            if ($item !== null) {
+                $this->setItem($item);
+            }
+
+            $screen = \Softinline\SfwComponent\Models\SfwScreen::getByIdOrAbort($screenId);
+            return $this->render($screen->toConfigArray());
 
         }
 

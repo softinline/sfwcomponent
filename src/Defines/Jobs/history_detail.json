@@ -2,12 +2,13 @@
     "type": "screen",
     "layout": "sfwcomponent::backoffice.layouts.default",
     "ajax": false,
-    "name": "edit",
-    "url": "sfw/tasks",
+    "name": "history_detail",
+    "url": "sfw/jobs/history",
+    "translationFile": "sfwcomponent::",
     "components": [
         {
             "type": "function",
-            "function": "breadcrumbEdit"
+            "function": "breadcrumbDetail"
         },
         {
             "type": "div",
@@ -19,9 +20,7 @@
                     "components": [
                         {
                             "type": "form",
-                            "class": "",
-                            "id": "frm-sfw-tasks-edit",
-                            "action": "sfw/tasks/{id}",
+                            "id": "frm-sfw-jobs-history-detail",
                             "components": [
                                 {
                                     "type": "tabs",
@@ -39,13 +38,18 @@
                                                             "type": "div",
                                                             "class": "card-body",
                                                             "components": [
-                                                                {
-                                                                    "type": "select",
-                                                                    "required": true,
-                                                                    "title": "status",
-                                                                    "field": "status",
-                                                                    "selector": "selectStatuses"
-                                                                }
+                                                                { "type": "text", "title": "id", "field": "id", "disabled": true },
+                                                                { "type": "text", "title": "uuid", "field": "uuid", "disabled": true },
+                                                                { "type": "text", "title": "connection", "field": "connection", "disabled": true },
+                                                                { "type": "text", "title": "queue", "field": "queue", "disabled": true },
+                                                                { "type": "text", "title": "job_name", "field": "job_name", "disabled": true },
+                                                                { "type": "text", "title": "status", "field": "status", "disabled": true },
+                                                                { "type": "number", "title": "attempts", "field": "attempts", "disabled": true },
+                                                                { "type": "text", "title": "started_at", "field": "started_at", "disabled": true },
+                                                                { "type": "text", "title": "finished_at", "field": "finished_at", "disabled": true },
+                                                                { "type": "number", "title": "duration_ms", "field": "duration_ms", "disabled": true },
+                                                                { "type": "textarea", "title": "payload", "field": "payload", "disabled": true, "rows": 8 },
+                                                                { "type": "textarea", "title": "exception", "field": "exception", "disabled": true, "rows": 10 }
                                                             ]
                                                         },
                                                         {
@@ -54,15 +58,10 @@
                                                             "components": [
                                                                 {
                                                                     "type": "button",
-                                                                    "action": "js:sfwcomponent.submit('frm-sfw-tasks-edit')",
-                                                                    "title": "accept",
-                                                                    "class": "btn btn-primary"
-                                                                },
-                                                                {
-                                                                    "type": "button",
-                                                                    "action": "link:sfw/tasks",
-                                                                    "title": "cancel",
-                                                                    "class": "btn btn-secondary"
+                                                                    "action": "link:sfw/jobs/history",
+                                                                    "title": "back",
+                                                                    "class": "btn btn-secondary",
+                                                                    "icon": "las la-arrow-left"
                                                                 }
                                                             ]
                                                         }

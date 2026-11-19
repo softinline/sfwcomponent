@@ -33,6 +33,9 @@ Route::prefix('sfw')->middleware(['web', 'SfwProtected'])->group(function () {
     Route::post('screens/add', 'Softinline\SfwComponent\Controllers\ScreensController@create');
     Route::get('screens/import', 'Softinline\SfwComponent\Controllers\ScreensController@import');
     Route::post('screens/import', 'Softinline\SfwComponent\Controllers\ScreensController@importExec');
+    Route::get('screens/{id}/export', 'Softinline\SfwComponent\Controllers\ScreensController@export');
+    Route::post('screens/{id}/import', 'Softinline\SfwComponent\Controllers\ScreensController@importScreen');
+    Route::get('screens/{id}/duplicate', 'Softinline\SfwComponent\Controllers\ScreensController@duplicate');
     Route::get('screens/{id}', 'Softinline\SfwComponent\Controllers\ScreensController@edit');
     Route::post('screens/{id}', 'Softinline\SfwComponent\Controllers\ScreensController@update');
     Route::delete('screens/{id}', 'Softinline\SfwComponent\Controllers\ScreensController@delete');
@@ -43,6 +46,7 @@ Route::prefix('sfw')->middleware(['web', 'SfwProtected'])->group(function () {
     Route::post('screens/{id}/components/add', 'Softinline\SfwComponent\Controllers\ScreensController@componentsCreate');
     Route::get('screens/{id}/components/{componentId}/edit', 'Softinline\SfwComponent\Controllers\ScreensController@componentsEdit');
     Route::post('screens/{id}/components/{componentId}/edit', 'Softinline\SfwComponent\Controllers\ScreensController@componentsUpdate');
+    Route::delete('screens/{id}/components/{componentId}', 'Softinline\SfwComponent\Controllers\ScreensController@componentsDelete');
 
     Route::get('objects', 'Softinline\SfwComponent\Controllers\ObjectsController@index');
     Route::get('objects/data', 'Softinline\SfwComponent\Controllers\ObjectsController@data');
@@ -72,13 +76,15 @@ Route::prefix('sfw')->middleware(['web', 'SfwProtected'])->group(function () {
     Route::post('languages/{id}', 'Softinline\SfwComponent\Controllers\LanguagesController@update');
     Route::delete('languages/{id}', 'Softinline\SfwComponent\Controllers\LanguagesController@delete');
 
-    Route::get('tasks', 'Softinline\SfwComponent\Controllers\TasksController@index');
-    Route::get('tasks/data', 'Softinline\SfwComponent\Controllers\TasksController@data');
-    Route::get('tasks/add', 'Softinline\SfwComponent\Controllers\TasksController@add');
-    Route::post('tasks/add', 'Softinline\SfwComponent\Controllers\TasksController@create');
-    Route::get('tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@edit');
-    Route::post('tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@update');
-    Route::delete('tasks/{id}', 'Softinline\SfwComponent\Controllers\TasksController@delete');
+    Route::get('jobs', 'Softinline\SfwComponent\Controllers\JobsController@index');
+    Route::get('jobs/data', 'Softinline\SfwComponent\Controllers\JobsController@data');
+    Route::get('jobs/history', 'Softinline\SfwComponent\Controllers\JobsHistoryController@index');
+    Route::get('jobs/history/data', 'Softinline\SfwComponent\Controllers\JobsHistoryController@data');
+    Route::get('jobs/history/{id}', 'Softinline\SfwComponent\Controllers\JobsHistoryController@detail');
+    Route::delete('jobs/{id}', 'Softinline\SfwComponent\Controllers\JobsController@delete');
+
+    Route::get('configs', 'Softinline\SfwComponent\Controllers\ConfigsController@index');
+    Route::post('configs', 'Softinline\SfwComponent\Controllers\ConfigsController@update');
 
     Route::get('translations', 'Softinline\SfwComponent\Controllers\TranslationsController@index');
     Route::get('translations/data', 'Softinline\SfwComponent\Controllers\TranslationsController@data');

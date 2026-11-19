@@ -88,9 +88,9 @@
         <script src="https://cdn.softinline.com/lib/swal.js"></script>
         <!-- jquery sortable -->        
         <script src="{{ url('vendor/softinline/sfwcomponent/backoffice.js?'.time()) }}"></script>
-        <!--<script src="{{ url('js/app.js') }}"></script>        
+        <script src="{{ url('js/app.js') }}"></script>        
         <script src="{{ url('js/i18n/'.\App::getLocale().'.js?'.time()) }}"></script>
-        <script src="{{ url('js/i18n.js?'.time()) }}"></script>-->
+        <script src="{{ url('js/i18n.js?'.time()) }}"></script>
         <script src="{{ url('vendor/softinline/sfwcomponent/sfwcomponent.js?'.time()) }}"></script>
         @yield('script')
         <script>

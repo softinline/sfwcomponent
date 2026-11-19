@@ -1,0 +1,70 @@
+{
+    "type": "screen",
+    "layout": "sfwcomponent::backoffice.layouts.default",
+    "ajax": false,
+    "name": "index",
+    "url": "sfw/jobs",
+    "translationFile": "sfwcomponent::",
+    "components": [
+        {
+            "type": "div",
+            "class": "container-fluid",
+            "components": [
+                {
+                    "type": "function",
+                    "function": "breadcrumbIndex"
+                },
+                {
+                    "type": "div",
+                    "class": "row",
+                    "components": [
+                        {
+                            "type": "div",
+                            "class": "col-lg-12",
+                            "components": [
+                                {
+                                    "type": "div",
+                                    "class": "card",
+                                    "components": [
+                                        {
+                                            "type": "div",
+                                            "class": "card-body",
+                                            "components": [
+                                                {
+                                                    "type": "div",
+                                                    "class": "col-lg-12",
+                                                    "components": [
+                                                        {
+                                                            "type": "datatable",
+                                                            "class": "table",
+                                                            "name": "sfw-jobs",
+                                                            "footer": "true",
+                                                            "pageLength": "50",
+                                                            "url": "/sfw/jobs",
+                                                            "selector": false,
+                                                            "columns": [
+                                                                { "name": "id", "field": "id", "width": "1%" },
+                                                                { "name": "queue", "field": "queue" },
+                                                                { "name": "payload", "field": "payload" },
+                                                                { "name": "attempts", "field": "attempts" },
+                                                                { "name": "status", "field": "status" },
+                                                                { "name": "reserved_at", "field": "reserved_at" },
+                                                                { "name": "available_at", "field": "available_at" },
+                                                                { "name": "created_at", "field": "created_at" },
+                                                                { "name": "actions", "field": "actions", "orderable": false, "searchable": false }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -43,6 +43,33 @@
         }
 
         /**
+         * Load config from array.
+         *
+         * @param array $config
+         * @return void
+         */
+        public function loadFromArray(array $config) {
+
+            $this->_file = null;
+            $this->_config = $config;
+
+        }
+
+        /**
+         * Load config from a screen stored in database.
+         *
+         * @param string $screenId
+         * @return void
+         */
+        public function loadFromScreenId($screenId) {
+
+            $screen = \Softinline\SfwComponent\Models\SfwScreen::getByIdOrAbort($screenId);
+            $this->_file = null;
+            $this->_config = $screen->toConfigArray();
+
+        }
+
+        /**
          * return config option
          */
         public function getParam($param) {

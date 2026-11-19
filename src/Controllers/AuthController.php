@@ -58,7 +58,7 @@ class AuthController extends Controller
             return redirect('/sfw');
         }
 
-        return redirect('/sfw/auth/login')->with('error', 'Usuario o contraseña incorrectos.');
+        return redirect('/sfw/auth/login')->with('message_error', 'Usuario o contraseï¿½a incorrectos.');
     }
 
     /**

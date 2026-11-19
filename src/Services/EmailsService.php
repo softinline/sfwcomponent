@@ -2,9 +2,41 @@
 
 namespace Softinline\SfwComponent\Services;
 
+use Softinline\SfwComponent\Jobs\SendEmailJob;
+
 class EmailsService
 {
+    /**
+     * Queue email sending (async).
+     *
+     * @param mixed $to
+     * @param mixed $smtp
+     * @param string $key
+     * @param array $data
+     * @param array $options
+     * @return bool
+     */
     public static function send($to, $smtp, $key, $data = [], $options = [])
+    {
+        $smtpId = is_object($smtp) ? ($smtp->id ?? null) : $smtp;
+        $locale = app()->getLocale();
+
+        SendEmailJob::dispatch($to, $smtpId, $key, $data, $locale, $options);
+
+        return true;
+    }
+
+    /**
+     * Send email immediately (sync).
+     *
+     * @param mixed $to
+     * @param mixed $smtp
+     * @param string $key
+     * @param array $data
+     * @param array $options
+     * @return bool
+     */
+    public static function sendNow($to, $smtp, $key, $data = [], $options = [])
     {
         SmtpsService::register($smtp);
 

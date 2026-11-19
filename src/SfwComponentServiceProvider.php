@@ -3,7 +3,10 @@
 namespace Softinline\SfwComponent;
 
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Softinline\SfwComponent\Console\Commands\PurgeDataCommand;
+use Softinline\SfwComponent\Listeners\SfwJobHistorySubscriber;
 
 class SfwComponentServiceProvider extends ServiceProvider
 {
@@ -25,6 +28,14 @@ class SfwComponentServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/resources' => public_path('vendor/softinline/sfwcomponent'),
         ], 'sfw-assets');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                PurgeDataCommand::class,
+            ]);
+        }
+
+        Event::subscribe(SfwJobHistorySubscriber::class);
 
         $router->middlewareGroup('SfwProtected', [SfwProtectedMiddleware::class]);
     }

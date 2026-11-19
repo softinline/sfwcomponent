@@ -1,10 +1,24 @@
 <link rel="stylesheet" href="https://cdn.softinline.com/plugins/jquery-sortable-lists/jquery-sortable-lists.css">
 <script src="https://cdn.softinline.com/plugins/jquery-sortable-lists/jquery-sortable-lists.min.js"></script>
+<div class="row mb-3">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{{ url('sfw/screens/'.$screen->id.'/import') }}" enctype="multipart/form-data" class="form-inline">
+                    @csrf
+                    <label class="mr-2 mb-0"><strong>{{ ucfirst(trans('sfwcomponent::import')) }} JSON ({{ ucfirst(trans('sfwcomponent::overwrite')) }})</strong></label>
+                    <input type="file" name="file" accept=".json,application/json" class="form-control mr-2" required>
+                    <button type="submit" class="btn btn-warning"><i class="las la-upload"></i> {{ ucfirst(trans('sfwcomponent::import')) }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
-                <?php echo $tree; ?>
+                {!! $tree !!}
             </div>
         </div>
     </div>
@@ -95,14 +109,31 @@
                         else { alert('Error al guardar orden'); }
                         return;
                     }
-                    if (typeof $.notify === 'function') { $.notify('Orden guardado', 'success'); }
-                    else { alert('Orden guardado'); }
+                    if (typeof $.notify === 'function') { $.notify('{{ ucfirst(trans("sfwcomponent::updated_ok")) }}', 'success'); }
+                    else { alert('{{ ucfirst(trans("sfwcomponent::updated_ok")) }}'); }
                 },
                 error: function(xhr) {
                     var msg = 'Error al guardar orden';
                     if (xhr && xhr.responseJSON && xhr.responseJSON.message) { msg = xhr.responseJSON.message; }
                     if (typeof $.notify === 'function') { $.notify(msg, 'error'); }
                     else { alert(msg); }
+                }
+            });
+        };
+
+        window.sfwDeleteScreenComponent = function(screenId, componentId) {
+            if (!confirm('{{ ucfirst(trans("sfwcomponent::are_you_sure")) }}')) {
+                return;
+            }
+            $.ajax({
+                url: '{{ url("sfw/screens") }}/' + screenId + '/components/' + componentId,
+                method: 'DELETE',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function() {
+                    window.location.reload();
+                },
+                error: function() {
+                    alert('Error');
                 }
             });
         };

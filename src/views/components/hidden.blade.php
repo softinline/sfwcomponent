@@ -6,11 +6,9 @@
         $component = $controller::$method($component, @$item);
     }
 
-    // field
     $field = $component['field'];
-
-    // value
-    $value = $component['value'];
+    $name = array_key_exists('name', $component) ? $component['name'] : $field;
+    $value = array_key_exists('value', $component) ? $component['value'] : ($item[$field] ?? '');
 
 ?>
-<input type="hidden" name="{{ $field }}" id="{{ $field }}" value="{{ $value }}">
+<input type="hidden" name="{{ $name }}" id="{{ $field }}" value="{{ $value }}">
