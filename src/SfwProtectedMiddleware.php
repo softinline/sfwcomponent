@@ -41,6 +41,11 @@ class SfwProtectedMiddleware
             return $next($request);
         }
 
+        $user = \Auth::user();
+        if ($user && (($user->role ?? null) === 'admin' || ($user->type ?? null) === 1 || ($user->type ?? null) === '1')) {
+            return $next($request);
+        }
+
         if ($request->ajax() || $request->wantsJson()) {
             return response('Unauthorized.', 401);
         }

@@ -284,5 +284,7 @@
     "sfwcomponent::help_component_redirect": "Redirect URL after submit.",
     "sfwcomponent::help_component_width": "Width (e.g. px, %).",
     "sfwcomponent::help_component_latitude_field": "Field storing latitude.",
-    "sfwcomponent::help_component_longitude_field": "Field storing longitude."
+    "sfwcomponent::help_component_longitude_field": "Field storing longitude.",
+    "sfwcomponent::started_at": "started at",
+    "sfwcomponent::finished_at": "finished at"
 }

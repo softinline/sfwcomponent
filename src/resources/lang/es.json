@@ -284,5 +284,7 @@
     "sfwcomponent::help_component_redirect": "URL de redirección tras enviar.",
     "sfwcomponent::help_component_width": "Ancho (ej. px, %).",
     "sfwcomponent::help_component_latitude_field": "Campo que almacena la latitud.",
-    "sfwcomponent::help_component_longitude_field": "Campo que almacena la longitud."
+    "sfwcomponent::help_component_longitude_field": "Campo que almacena la longitud.",
+    "sfwcomponent::started_at": "iniciado en",
+    "sfwcomponent::finished_at": "finalizado en"
 }
