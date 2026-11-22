@@ -7,6 +7,7 @@
             </div>
             <div class="card-body">            
                 <form action="{{ url('/sfw/auth/login') }}" method="post">
+                    @csrf
                     <p class="login-box-msg"></p>
                     <div class="form-group">
                         <input type="email" class="form-control" placeholder="{{ ucfirst(trans('sfwcomponent::email')) }}" name="email" value="" required>
