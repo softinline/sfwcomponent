@@ -299,23 +299,87 @@ class FilesService
         $mime = $item->mime_type ?: (function_exists('mime_content_type') ? mime_content_type($path) : 'application/octet-stream');
 
         if (self::isImage($mime, $name) && $size && $size !== 'original') {
-            $resized = self::resizeImage($path, $size);
-            if ($resized !== null) {
-                return response($resized['content'], 200, [
-                    'Content-Type' => $resized['mime'],
-                    'Content-Disposition' => $disposition . '; filename="' . addslashes($name) . '"',
-                ]);
+            $cachePath = self::cachePath($item->id, $size);            
+            if ($cachePath !== null) {
+                if (!is_file($cachePath)) {                    
+                    $cached = self::resizeImageToWebpCache($path, $size, $cachePath);
+                    if (!$cached) {
+                        $cachePath = null;
+                    }
+                }
+                                
+                if ($cachePath !== null && is_file($cachePath)) {
+                    $headers = [
+                        'Content-Type' => 'image/webp',
+                        'Cache-Control' => 'public, max-age=31536000, immutable',
+                    ];
+                    if ($disposition === 'attachment') {
+                        return response()->download($cachePath, $name, $headers);
+                    }
+
+                    $headers['Content-Disposition'] = 'inline; filename="' . addslashes($name) . '"';
+                    return response()->file($cachePath, $headers);
+                }
+                
             }
         }
 
+        $headers = [
+            'Content-Type' => $mime,
+            'Cache-Control' => 'public, max-age=31536000, immutable',
+        ];
+
         if ($disposition === 'attachment') {
-            return response()->download($path, $name, ['Content-Type' => $mime]);
+            return response()->download($path, $name, $headers);
+        }
+        
+        $headers['Content-Disposition'] = 'inline; filename="' . addslashes($name) . '"';
+
+        return response()->file($path, $headers);
+    }
+
+    /**
+     * Get cache directory for resized SFW files.
+     *
+     * @return string
+     */
+    protected static function cacheDir()
+    {
+        return public_path('images/sfw-files-cache');
+    }
+
+    /**
+     * Build cache path for a resized file.
+     *
+     * @param string $id
+     * @param string $size
+     * @return string|null
+     */
+    protected static function cachePath($id, $size)
+    {
+        $dimensions = self::parseSize($size);
+        if (!$dimensions) {
+            return null;
         }
 
-        return response()->file($path, [
-            'Content-Type' => $mime,
-            'Content-Disposition' => 'inline; filename="' . addslashes($name) . '"',
-        ]);
+        $width = $dimensions['width'] ?: '0';
+        $height = $dimensions['height'] ?: '0';
+        $sizeKey = $width . 'x' . $height;
+
+        return self::cacheDir() . '/' . $id . '_' . $sizeKey . '.webp';
+    }
+
+    /**
+     * Forget cached resized variants for a file.
+     *
+     * @param string $id
+     * @return void
+     */
+    public static function forgetCache($id)
+    {
+        foreach (glob(self::cacheDir() . '/' . $id . '_*.webp') ?: [] as $file) {
+            @unlink($file);
+        }
     }
 
     /**
@@ -336,6 +400,56 @@ class FilesService
     }
 
     /**
+     * Resize an image and persist it as WebP cache.
+     *
+     * @param string $path
+     * @param string $size
+     * @param string $cachePath
+     * @return bool
+     */
+    protected static function resizeImageToWebpCache($path, $size, $cachePath)
+    {
+        $dimensions = self::parseSize($size);
+        if (!$dimensions) {            
+            return false;
+        }
+
+        try {
+            
+            $cacheDir = dirname($cachePath);
+            if (!is_dir($cacheDir)) {
+                @mkdir($cacheDir, 0775, true);
+            }
+            
+            $manager = ImageManager::usingDriver(GdDriver::class);
+            $image = method_exists($manager, 'read') ? $manager->read($path) : $manager->decodePath($path);
+
+            $width = $dimensions['width'];
+            $height = $dimensions['height'];
+
+            if ($width && $height) {
+                $image->scale($width, $height);
+            } elseif ($width) {
+                $image->scale(width: $width);
+            } elseif ($height) {
+                $image->scale(height: $height);
+            }
+                        
+            $encoded = method_exists($image, 'toWebp')
+                ? $image->toWebp(85)
+                : $image->encode(new \Intervention\Image\Encoders\WebpEncoder(quality: 85));
+            file_put_contents($cachePath, (string) $encoded);
+
+            return is_file($cachePath);
+        } catch (\Throwable $e) {
+            
+            Log::error(__METHOD__ . ' | ' . $e->getMessage());
+
+            return false;
+        }
+    }
+
+    /**
      * Resize an image on-the-fly.
      *
      * @param string $path
@@ -351,7 +465,7 @@ class FilesService
 
         try {
             $manager = ImageManager::usingDriver(GdDriver::class);
-            $image = $manager->read($path);
+            $image = method_exists($manager, 'read') ? $manager->read($path) : $manager->decodePath($path);
 
             $width = $dimensions['width'];
             $height = $dimensions['height'];
@@ -368,27 +482,52 @@ class FilesService
             $encoded = null;
             $mime = 'image/jpeg';
 
-            switch ($ext) {
-                case 'png':
-                    $encoded = $image->toPng();
-                    $mime = 'image/png';
-                    break;
-                case 'gif':
-                    $encoded = $image->toGif();
-                    $mime = 'image/gif';
-                    break;
-                case 'webp':
-                    $encoded = $image->toWebp();
-                    $mime = 'image/webp';
-                    break;
-                case 'bmp':
-                    $encoded = $image->toBitmap();
-                    $mime = 'image/bmp';
-                    break;
-                default:
-                    $encoded = $image->toJpeg();
-                    $mime = 'image/jpeg';
-                    break;
+            if (method_exists($image, 'toJpeg')) {
+                switch ($ext) {
+                    case 'png':
+                        $encoded = $image->toPng();
+                        $mime = 'image/png';
+                        break;
+                    case 'gif':
+                        $encoded = $image->toGif();
+                        $mime = 'image/gif';
+                        break;
+                    case 'webp':
+                        $encoded = $image->toWebp();
+                        $mime = 'image/webp';
+                        break;
+                    case 'bmp':
+                        $encoded = $image->toBitmap();
+                        $mime = 'image/bmp';
+                        break;
+                    default:
+                        $encoded = $image->toJpeg();
+                        $mime = 'image/jpeg';
+                        break;
+                }
+            } else {
+                switch ($ext) {
+                    case 'png':
+                        $encoded = $image->encode(new \Intervention\Image\Encoders\PngEncoder());
+                        $mime = 'image/png';
+                        break;
+                    case 'gif':
+                        $encoded = $image->encode(new \Intervention\Image\Encoders\GifEncoder());
+                        $mime = 'image/gif';
+                        break;
+                    case 'webp':
+                        $encoded = $image->encode(new \Intervention\Image\Encoders\WebpEncoder());
+                        $mime = 'image/webp';
+                        break;
+                    case 'bmp':
+                        $encoded = $image->encode(new \Intervention\Image\Encoders\BmpEncoder());
+                        $mime = 'image/bmp';
+                        break;
+                    default:
+                        $encoded = $image->encode(new \Intervention\Image\Encoders\JpegEncoder());
+                        $mime = 'image/jpeg';
+                        break;
+                }
             }
 
             return [
@@ -421,7 +560,7 @@ class FilesService
         if (preg_match('/^h(\d+)$/i', $size, $m)) {
             return ['width' => null, 'height' => (int) $m[1]];
         }
-        if (preg_match('/^(\d+)[x\-](\d+)$/i', $size, $m)) {
+        if (preg_match('/^(\d+)[x\-_](\d+)$/i', $size, $m)) {
             return ['width' => (int) $m[1], 'height' => (int) $m[2]];
         }
 
@@ -605,6 +744,9 @@ class FilesService
         $ok = (bool) $item->delete();
         if ($ok && $path && is_file($path)) {
             @unlink($path);
+        }
+        if ($ok) {
+            self::forgetCache($id);
         }
 
         \Softinline\SfwComponent\Services\TranslationsService::deleteTranslations('sfw_files', $id);
