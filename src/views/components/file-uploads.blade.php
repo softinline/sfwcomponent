@@ -142,7 +142,7 @@
                 bInfo.type = 'button';
                 bInfo.className = 'btn btn-sm btn-outline-secondary';
                 bInfo.title = @json(ucfirst(trans('messages.edit')));
-                bInfo.innerHTML = '<i class="ti ti-edit"></i>';
+                bInfo.innerHTML = '<i class="fa-solid fa-pen"></i>';
                 (function(fileId){ bInfo.onclick = function() { openInfo(fileId); }; })(id);
                 actions.appendChild(bInfo);
             }
@@ -160,7 +160,7 @@
                 bMain.type = 'button';
                 bMain.className = 'btn btn-sm btn-outline-secondary';
                 bMain.title = @json(ucfirst(trans('messages.set_main')));
-                bMain.innerHTML = '<i class="ti ti-check"></i>';
+                bMain.innerHTML = '<i class="fa-solid fa-check"></i>';
                 (function(fileId){ bMain.onclick = function() { setMain(fileId); }; })(id);
                 actions.appendChild(bMain);
             }
@@ -169,7 +169,7 @@
                 bDel.type = 'button';
                 bDel.className = 'btn btn-sm btn-outline-danger';
                 bDel.title = @json(ucfirst(trans('messages.delete')));
-                bDel.innerHTML = '<i class="ti ti-trash"></i>';
+                bDel.innerHTML = '<i class="fa-solid fa-trash"></i>';
                 (function(fileId){ bDel.onclick = function() { del(fileId); }; })(id);
                 actions.appendChild(bDel);
             }
